@@ -29,7 +29,7 @@ export default class QuestionDetail extends Component {
 
     this.state = {
       warning: null,
-      choice: null,
+      the_choice: null,
       user: null,
       madeIt: null,
       the_question: null,
@@ -75,24 +75,24 @@ export default class QuestionDetail extends Component {
   
 
   onVote = async () => {
-    const { choice, user, the_question } = this.state;
+    const { the_choice, user, the_question } = this.state;
 
-    if(choice === null){
+    if(the_choice === null){
       this.setState({ warning: 'You have not chosen yet'});
       setTimeout(() => this.setState({ warning: ''}),2500);
       return null;
     }
 
     var the_slug = the_question.slug;
-    var your_vote = the_question.choices[choice].choice_text;
+    var your_vote = the_question.choices[the_choice].choice_text;
     var copy=Array.from(the_question.choices);
-    var remove_data = Object.assign({}, copy[choice]);
+    var remove_data = Object.assign({}, copy[the_choice]);
     var add_data = {
-      choice_text: copy[choice].choice_text,
-      votes: parseInt(copy[choice].votes, 10)+1,
+      choice_text: copy[the_choice].choice_text,
+      votes: parseInt(copy[the_choice].votes, 10)+1,
     };
 
-    copy[choice].votes=parseInt(copy[choice].votes, 10)+1;
+    copy[the_choice].votes=parseInt(copy[the_choice].votes, 10)+1;
     the_question.choices=copy;
 
     db.collection('questions').doc(the_slug).update({
@@ -119,14 +119,14 @@ export default class QuestionDetail extends Component {
   }
 
   render() {
-    const { madeIt, choice, warning, the_question } = this.state;
+    const { madeIt, the_choice, warning, the_question } = this.state;
 
     if (the_question === null){
       return (
-        <div><h1>Helo</h1></div>
+        <Loading />
       )
     }
-    // console.log(choice)
+    console.log(the_choice)
 
     return (
       <Fragment>
@@ -150,7 +150,7 @@ export default class QuestionDetail extends Component {
           <Modal />
 
           {/* タイトル */}
-          <h3 className="center">{the_question.title}</h3>
+          <h3 className="center cali2">{the_question.title}</h3>
           <p className="date center">
             Created： {the_question.created_on}
           </p>
@@ -159,10 +159,12 @@ export default class QuestionDetail extends Component {
           <form method="post">
             {the_question.choices.map((choice, idx) => (
               <div className="btn-choice">
-                <button onClick={() => this.setState({ choice: idx })} style={styles.radio} type="button" name="choice" className="btn-choice radio btn btn-outline-primary">{choice.choice_text}</button>
+                {idx !== the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.radio} type="button" name="choice" className="btn-choice radio btn btn-outline-primary">{choice.choice_text}</button>}
+                {idx === the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.radio} type="button" name="choice" className="btn-choice radio btn btn-primary">{choice.choice_text}</button>}
               </div>
             ))}
-            <input style={styles.vote_btn} className="btn btn-success vote_btn disabledInput" id="value" type="submit" name="vote" disabled value="Choose One" />
+            {warning && (<p>{warning}</p>)}
+            <button onClick={this.onVote} style={styles.vote_btn} className="btn btn-success vote_btn cali2" id="value" type="button" name="vote">Vote</button>
           </form>
 
           {/* 削除ボタン */}
@@ -193,11 +195,51 @@ export default class QuestionDetail extends Component {
       </Fragment>
     )
   }
+
+  async componentDidUpdate() {
+    const { uid } = this.props;
+    const { the_slug } = this.props.match.params;
+    if(uid === null || this.state.user !== null) return null;
+
+    var user = {}
+    await db.collection('users').doc(uid).get().then((doc) => {
+      if(doc.exists){
+        user = doc.data()
+        this.setState({ user: doc.data() })
+      }
+    })
+
+    // ここではやんない
+    // var c = true;
+    // for(var i=0; i<user.question_answered.length; i++){
+    //   if (user.question_answered[i].question === the_slug){
+    //     c = false;
+    //     this.setState({ madeIt: true });
+    //   }
+    // }
+
+    if (!user.question_created.includes(the_slug)){
+      this.setState({ madeIt: true });
+    }else{
+      this.setState({ madeIt: false });
+    }
+
+    await db.collection('questions').doc(the_slug).get().then((doc) => {
+      if(doc.exists){
+        this.setState({ the_question: doc.data() })
+      }else{
+        //TODO  ホームに戻る
+      }
+    })
+  }
 }
 
 const styles = {
   radio: {
     borderRadius: 15,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingBottom: 15,
   },
   your_vote: {
     fontSize: 13,
@@ -208,9 +250,6 @@ const styles = {
     paddingTop: 15,
     alignSelf: 'stretch',
     paddingBottom: 30,
-    fontFamily: 'latienne-pro, serif',
-    fontStyle: 'normal',
-    fontWeight: 400,
   },
   vote_btn: {
     borderRadius: 15,
