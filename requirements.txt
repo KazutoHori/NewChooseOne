@@ -1,0 +1,5 @@
+firebase===8.6.2
+node-sass
+react-loading
+react-paginate
+react-router-dom
