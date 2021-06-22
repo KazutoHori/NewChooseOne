@@ -59,7 +59,6 @@ export default class QuestionAnswered extends React.Component {
     await db.collection("users").doc(uid).onSnapshot((doc) => {
       ques = [];
       var qs = doc.data().question_answered;
-      console.log(qs);
       for(let i=0; i<qs.length; i++){
         db.collection('questions').doc(qs[i].question).get().then((doc) => {
           if(doc.exists){
