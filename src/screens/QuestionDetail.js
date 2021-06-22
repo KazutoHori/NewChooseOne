@@ -5,63 +5,143 @@ import '../App.scss';
 
 import Modal from '../components/Modal';
 
+// Firebase
+import firebase from 'firebase/app';
+import "firebase/firestore";
+import "firebase/auth";
+const firebaseConfig = {
+  apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
+  authDomain: "chooseone-105a9.firebaseapp.com",
+  databaseURL: "https://chooseone-default-rtdb.firebaseio.com",
+  projectId: "chooseone",
+  storageBucket: "chooseone.appspot.com",
+  messagingSenderId: "722704825746",
+  appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
+  measurementId: "G-YJ97DZH6V5"
+};
+if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
+var db = firebase.firestore();
+
 export default class QuestionDetail extends Component {
-  render() {
-    const { params } = this.props.match;
-    var the_slug = params.the_slug;
-    if(params === undefined){
+
+  constructor(props){
+    super(props);
+
+    this.state = {
+      warning: null,
+      choice: null,
+      user: null,
+      madeIt: null,
+      the_question: null,
+    }
+  }
+
+  async componentDidMount() {
+    const { uid } = this.props;
+    const { the_slug } = this.props.match.params;
+    if(uid === null || this.state.the_question !== null) return null;
+
+    var user = {}
+    await db.collection('users').doc(uid).get().then((doc) => {
+      if(doc.exists){
+        user = doc.data()
+        this.setState({ user: doc.data() })
+      }
+    })
+
+    // ここではやんない
+    // var c = true;
+    // for(var i=0; i<user.question_answered.length; i++){
+    //   if (user.question_answered[i].question === the_slug){
+    //     c = false;
+    //     this.setState({ madeIt: true });
+    //   }
+    // }
+
+    if (!user.question_created.includes(the_slug)){
+      this.setState({ madeIt: true });
+    }else{
+      this.setState({ madeIt: false });
+    }
+
+    await db.collection('questions').doc(the_slug).get().then((doc) => {
+      if(doc.exists){
+        this.setState({ the_question: doc.data() })
+      }else{
+        //TODO  ホームに戻る
+      }
+    })
+  }
+  
+
+  onVote = async () => {
+    const { choice, user, the_question } = this.state;
+
+    if(choice === null){
+      this.setState({ warning: 'You have not chosen yet'});
+      setTimeout(() => this.setState({ warning: ''}),2500);
       return null;
     }
 
-    // var the_slug = params.the_slug;
-
-    var madeIt = true;
-    var error_message = 'HELLO WORLD!!! THIS IS KAZUTO HORI';
-    var the_question = {
-      all_votes: 917,
-      author: "JBMEXogvCuYl4m4dcVi4yJWnFpU2",
-      created_at: "2021/06/07 07:16:45",
-      created_on: "2021/06/07",
-      id: 13,
-      slug: "which-popular-sport-is-your-favorite",
-      title: the_slug,
-      category: ['Pastime', 'Sports'],
-      choices: [
-        {
-          choice_text: "Basketball",
-          votes: 11,
-        },
-        {
-          choice_text: "Baseball",
-          votes: 8,
-        },
-        {
-          choice_text: "Hockey",
-          votes: 2,
-        },
-        {
-          choice_text: "Soccer",
-          votes: 1,
-        },
-      ],
-      comments: [],
-      users_answered: [],
+    var the_slug = the_question.slug;
+    var your_vote = the_question.choices[choice].choice_text;
+    var copy=Array.from(the_question.choices);
+    var remove_data = Object.assign({}, copy[choice]);
+    var add_data = {
+      choice_text: copy[choice].choice_text,
+      votes: parseInt(copy[choice].votes, 10)+1,
     };
+
+    copy[choice].votes=parseInt(copy[choice].votes, 10)+1;
+    the_question.choices=copy;
+
+    db.collection('questions').doc(the_slug).update({
+      choices: firebase.firestore.FieldValue.arrayRemove(remove_data)
+    });
+    db.collection('questions').doc(the_slug).update({
+      choices: firebase.firestore.FieldValue.arrayUnion(add_data)
+    });
+    db.collection('questions').doc(the_slug).update({
+      all_votes: firebase.firestore.FieldValue.increment(1)
+    })
+
+    await db.collection('users').doc(user.uid).set({
+      question_answered: firebase.firestore.FieldValue.arrayUnion({ question: the_slug, answer: your_vote}) },
+      { merge: true}
+    );
+
+    await db.collection('questions').doc(the_slug).set({
+      users_answered: firebase.firestore.FieldValue.arrayUnion(user.uid) },
+      { merge: true }
+    );
+
+    // navigate('QuestionResult', { from_where: from_where, question: question, your_vote: your_vote })
+  }
+
+  render() {
+    const { madeIt, choice, warning, the_question } = this.state;
+
+    if (the_question === null){
+      return (
+        <div><h1>Helo</h1></div>
+      )
+    }
+    // console.log(choice)
 
     return (
       <Fragment>
         <div style={styles.detail_container} className="detail_container">
           {/* カテゴリー */}
           <p className="center"><span className="text-primary fa fa-tag" />
-            Category:
+            Category:  
             {the_question.category.map((cate, idx) => {
               var len = the_question.category.length;
-              if ( idx === len-1){
+              if ( idx === 0){
                 return (
-                  <a class='text-primary' href={'/category/'+cate}>{cate}</a>
+                  <a class='text-primary' href={'/category/'+cate}> {cate}</a>
                 )
               }else{
-                <a class='text-primary' href={'/category/'+cate}>{cate}, </a>
+                <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
               }
             })}
           </p>
@@ -79,7 +159,7 @@ export default class QuestionDetail extends Component {
           <form method="post">
             {the_question.choices.map((choice, idx) => (
               <div className="btn-choice">
-                <input style={styles.radio} type="button" name="choice" data-id={idx} data-content={choice.choice_text} id={idx} className="btn-choice radio btn btn-outline-primary" value={choice.choice_text} />
+                <button onClick={() => this.setState({ choice: idx })} style={styles.radio} type="button" name="choice" className="btn-choice radio btn btn-outline-primary">{choice.choice_text}</button>
               </div>
             ))}
             <input style={styles.vote_btn} className="btn btn-success vote_btn disabledInput" id="value" type="submit" name="vote" disabled value="Choose One" />
