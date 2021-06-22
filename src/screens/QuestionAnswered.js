@@ -27,13 +27,17 @@ export default class QuestionAnswered extends React.Component {
     super(props);
     this.state = {
       questions: null,
-      user: null,
     };
   }
 
-  getQues = (user) => {
-    db.collection("users").doc(user.uid).onSnapshot((doc) => {
-      var ques = [];
+  async componentDidMount(){
+    const { uid } = this.props;
+    const { questions } = this.state;
+    if (uid === null || questions !== null) return null;
+
+    var ques = [];
+    await db.collection("users").doc(uid).onSnapshot((doc) => {
+      ques = [];
       var qs = doc.data().question_answered;
       for(let i=0; i<qs.length; i++){
         db.collection('questions').doc(qs[i].question).get().then((doc) => {
@@ -47,14 +51,15 @@ export default class QuestionAnswered extends React.Component {
   }
 
   async componentDidUpdate(){
+    const { uid } = this.props;
+    const { questions } = this.state;
+    if (uid === null || questions !== null) return null;
 
     var ques = [];
-    const { user } = this.props;
-
-    if (user === null) {return null;}
-    db.collection("users").doc(user.uid).onSnapshot((doc) => {
+    await db.collection("users").doc(uid).onSnapshot((doc) => {
       ques = [];
       var qs = doc.data().question_answered;
+      console.log(qs);
       for(let i=0; i<qs.length; i++){
         db.collection('questions').doc(qs[i].question).get().then((doc) => {
           if(doc.exists){
@@ -64,32 +69,26 @@ export default class QuestionAnswered extends React.Component {
         });
       }
     });
-    // })
   }
 
   render() {
-    const { user } = this.props;
+    const { uid } = this.props;
     const { questions } = this.state;
-
-    console.log(user);
-    if (user !== null){
-      this.getQues(user);
-    }
-
-    if (questions === null){
-      return (
-        <Fragment>
-          <h3 className='cali'>Questions You Answered</h3>
-          <pre>        You have not added any questions yet.</pre>
-        </Fragment>
-      )
-    }
 
     return (
       <Fragment>
         <h3 className='cali'>Questions You Answered</h3>
-        {user === null && (<Loading  type='bars' color='#184' />)}
-        {user !== null && (<QuestionList questions={questions} />)}
+        {uid === null || questions === null && (<Loading  type='bars' color='#184' />)}
+        {uid !== null && questions !== null && (
+          <Fragment>
+            {questions === [] && (
+              <pre>        You have not answered any questions yet.</pre>
+            )}
+            {questions !== [] && (
+              <QuestionList questions={questions} />
+            )}
+          </Fragment>
+        )}
       </Fragment>
     )
   }

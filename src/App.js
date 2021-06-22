@@ -42,53 +42,9 @@ var db = firebase.firestore();
 export default class App extends Component {
   constructor(props){
     super(props);
-
-    // this.state = {
-    //   uid: '',
-    //   user: '',
-    // }
   }
-
-  // componentDidMount() {
-  //   const lc = localStorage.getItem('chooseoneUid');
-
-  //   var ref = new Date();
-  //   var datetime = ref.toString().slice(4, 25);
-  //   if (lc === null){
-  //     firebase.auth().signInAnonymously()
-  //       .then(() => {
-  //         firebase.auth().onAuthStateChanged((user) => {
-  //           if (user) {
-  //             var uid = user.uid;
-  //             this.setState({ uid });
-  //             localStorage.setItem('chooseoneUid', uid);
-
-  //             var new_user = {
-  //               email: '',
-  //               uid: uid,
-  //               created_at: datetime,
-  //               question_answered: [],
-  //               question_created: [],
-  //               question_liked: [],
-  //               username: '',
-  //             };
-  //             db.collection('users').doc(uid).set(new_user).then(() => {
-  //               this.setState({ user: new_user });
-  //               // this.registerForPushNotificationsAsync(user);
-  //             });
-  //           }
-  //         });          
-  //       })
-  //   }else{
-  //     this.setState({ uid: lc });
-  //     db.collection('users').doc(lc).get().then((doc) => {
-  //       this.setState({ user: doc.data() });
-  //     })
-  //   }
-  // }
-
   render() {
-    const { user } = this.props;
+    const { uid } = this.props;
 
     return (
       <Fragment>
@@ -98,12 +54,12 @@ export default class App extends Component {
               <Switch>
                 <Route exact path='/about' component={About}/>
                 <Route exact path="/contact" component={Contact} />
-                <Route exact path="/create" render={ () => <QuestionCreate user={user}/> } />
-                <Route exact path="/asked" render={ () => <QuestionAsked user={user}/> } />
-                <Route exact path="/answered" render={ () => <QuestionAnswered user={user}/> } />
-                <Route exact path="/liked" render={ () => <QuestionLiked user={user}/> } />
-                <Route path="/category/:category" render={ (props) => <QuestionCategory user={user} {...props} /> } />
-                <Route path='/' render={ () => <Home user={user}/> } />
+                <Route exact path="/create" render={ () => <QuestionCreate uid={uid}/> } />
+                <Route exact path="/asked" render={ () => <QuestionAsked uid={uid}/> } />
+                <Route exact path="/answered" render={ () => <QuestionAnswered uid={uid}/> } />
+                <Route exact path="/liked" render={ () => <QuestionLiked uid={uid}/> } />
+                <Route path="/category/:category" render={ (props) => <QuestionCategory uid={uid} {...props} /> } />
+                <Route path='/' render={ () => <Home uid={uid}/> } />
               </Switch>
           </div>
           <RightBar />

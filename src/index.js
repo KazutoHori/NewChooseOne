@@ -38,7 +38,7 @@ export default class Routing extends React.Component {
     super(props);
 
     this.state = {
-      user: null,
+      uid: null,
       categories: [],
       todays_ranking: [],
       question_popular: [],
@@ -47,9 +47,9 @@ export default class Routing extends React.Component {
 
   componentDidMount() {
     const lc = localStorage.getItem('chooseoneUid');
-    const { user } = this.state;
+    const { uid } = this.state;
 
-    if(user === null) {
+    if(uid === null) {
       if (lc === null){
         var ref = new Date();
         var datetime = ref.toString().slice(4, 25);
@@ -71,24 +71,20 @@ export default class Routing extends React.Component {
                   username: '',
                 };
                 db.collection('users').doc(uid).set(new_user).then(() => {
-                  this.setState({ user: new_user });
-                  // this.registerForPushNotificationsAsync(user);
+                  this.setState({ uid: new_user });
                 });
               }
             });          
           })
       }else{
         this.setState({ uid: lc });
-        db.collection('users').doc(lc).get().then((doc) => {
-          this.setState({ user: doc.data() });
-        })
       }
     }
   }
 
   render () {
 
-    const { user } = this.state;
+    const { uid } = this.state;
     
     return (
       <Fragment>
@@ -119,9 +115,9 @@ export default class Routing extends React.Component {
               <div style={styles.container} className='container'>
                 <div style={styles.home_container} className='home-container'>
                   <Switch>
-                    <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail user={user} {...props} /> } />
-                    <Route path="/result/:the_slug" render={ (props) => <QuestionResult user={user} {...props} /> } />
-                    <Route path="/" render={ () => <App user={user}/> } />
+                    <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
+                    <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
+                    <Route path="/" render={ () => <App uid={uid}/> } />
                   </Switch>
                   <Footer/>
                 </div>
