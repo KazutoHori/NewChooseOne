@@ -179,7 +179,6 @@ export default class QuestionDetail extends Component {
         <Loading />
       )
     }
-    console.log(the_choice)
 
     return (
       <Fragment>
