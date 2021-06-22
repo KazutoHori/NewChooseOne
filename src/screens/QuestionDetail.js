@@ -58,10 +58,10 @@ export default class QuestionDetail extends Component {
               var len = the_question.category.length;
               if ( idx === len-1){
                 return (
-                  <a class='text-primary' href="/category/">{cate}, </a>
+                  <a class='text-primary' href={'/category/'+cate}>{cate}</a>
                 )
               }else{
-                <a class='text-primary' href="/category/">{cate}</a>
+                <a class='text-primary' href={'/category/'+cate}>{cate}, </a>
               }
             })}
           </p>

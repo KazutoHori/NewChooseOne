@@ -19,7 +19,7 @@ export default class QuestionList extends React.Component {
             Category:
             {question.category.map((cate, idx) => {
               var len = question.category.length;
-              if ( idx !== len-1){
+              if ( idx === len-1){
                 return (
                   <a class='text-primary' href={'/category/'+cate}>{cate}</a>
                 )
