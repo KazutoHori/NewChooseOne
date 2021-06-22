@@ -1,9 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import Loading from 'react-loading';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import '../App.scss';
 
-import Modal from '../components/Modal';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import blue from '@material-ui/core/colors/blue';
+
+import ModalDelete from '../components/ModalDelete';
+import '../App.scss';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -22,17 +30,33 @@ const firebaseConfig = {
 if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: 'rgb(3, 122, 255)',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+    green: {
+      main: 'rgb(40, 168, 69)',
+    }
+  },
+});
+
 export default class QuestionDetail extends Component {
 
   constructor(props){
     super(props);
 
     this.state = {
+      modalVisible: false,
       warning: null,
       the_choice: null,
       user: null,
       madeIt: null,
       the_question: null,
+      likeIt: false,
     }
   }
 
@@ -48,17 +72,14 @@ export default class QuestionDetail extends Component {
         this.setState({ user: doc.data() })
       }
     })
+    
+    if (user.question_liked.includes(the_slug)){
+      this.setState({ likeIt: true });
+    }else{
+      this.setState({ likeIt: false });
+    }
 
-    // ここではやんない
-    // var c = true;
-    // for(var i=0; i<user.question_answered.length; i++){
-    //   if (user.question_answered[i].question === the_slug){
-    //     c = false;
-    //     this.setState({ madeIt: true });
-    //   }
-    // }
-
-    if (!user.question_created.includes(the_slug)){
+    if (user.question_created.includes(the_slug)){
       this.setState({ madeIt: true });
     }else{
       this.setState({ madeIt: false });
@@ -118,8 +139,40 @@ export default class QuestionDetail extends Component {
     // navigate('QuestionResult', { from_where: from_where, question: question, your_vote: your_vote })
   }
 
+  onLikeit = () => {
+    const { likeIt, user, the_question } = this.state;
+    if(likeIt){
+      this.setState({ likeIt: false });
+      db.collection("users").doc(user.uid).update({
+        question_liked: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
+      });
+    }else{
+      this.setState({ likeIt: true });
+      db.collection("users").doc(user.uid).update({
+        question_liked: firebase.firestore.FieldValue.arrayUnion(the_question.slug)
+      });
+    }
+  }
+
+  onDelete = () => {
+    const { the_choice, user, the_question } = this.state;
+
+    this.setState({ modalVisible: false });
+
+    db.collection("questions").doc(the_question.slug).delete();
+    db.collection("users").doc(user.uid).update({
+      question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
+    })
+
+    // navigate(from_where);
+  }
+
+  onClose = () => {
+    this.setState({ modalVisible: false });
+  }
+
   render() {
-    const { madeIt, the_choice, warning, the_question } = this.state;
+    const { likeIt, modalVisible, madeIt, the_choice, warning, the_question } = this.state;
 
     if (the_question === null){
       return (
@@ -147,7 +200,7 @@ export default class QuestionDetail extends Component {
           </p>
 
           {/* モーダル */}
-          <Modal />
+          {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
           <h3 className="center cali2">{the_question.title}</h3>
@@ -156,40 +209,28 @@ export default class QuestionDetail extends Component {
           </p>
 
           {/* 選択肢 */}
-          <form method="post">
+          <Fragment>
             {the_question.choices.map((choice, idx) => (
-              <div className="btn-choice">
-                {idx !== the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.radio} type="button" name="choice" className="btn-choice radio btn btn-outline-primary">{choice.choice_text}</button>}
-                {idx === the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.radio} type="button" name="choice" className="btn-choice radio btn btn-primary">{choice.choice_text}</button>}
+              <div style={styles.choiceBtnPos}>
+                {idx !== the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
+                {idx === the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
               </div>
             ))}
             {warning && (<p>{warning}</p>)}
-            <button onClick={this.onVote} style={styles.vote_btn} className="btn btn-success vote_btn cali2" id="value" type="button" name="vote">Vote</button>
-          </form>
+            <div style={styles.voteBtnPos}>
+              <Button startIcon={<ThumbUpAltIcon />}  onClick={this.onVote} style={styles.roundBtn} className='btn  btn-success'>Vote</Button>
+            </div>
+          </Fragment>
 
           {/* 削除ボタン */}
           <div className="buttons_normal fixed">
-            <form method="post">
-              <button style={styles.buttons} className="btn btn-primary likeit" type="submit" name="likeit"><img src="https://img.icons8.com/fluent/20/000000/filled-like.png" /> Like</button>
-            </form>
-            {madeIt && (
-              <button style={styles.buttons} className="btn btn-danger delete" type="button" data-toggle="modal"><img src="https://img.icons8.com/plasticine/20/000000/delete-forever.png" /> Delete</button>
-            )}
-          </div>
-          <div className="buttons_small buttons_detail">
-            {madeIt &&　(
-              <Fragment>
-                <form method="post">
-                  <button style={styles.buttons} className="btn btn-primary likeit" type="submit" name="likeit"><img src="https://img.icons8.com/fluent/15/000000/filled-like.png" /> Like</button>
-                </form>
-                <button className="btn btn-danger delete" type="button" data-toggle="modal"><img src="https://img.icons8.com/plasticine/15/000000/delete-forever.png" /> Delete</button>
-              </Fragment>
-            )}
-            {!madeIt && (
-              <form method="post">
-                <button className="btn btn-primary likeit button_center" type="submit" name="likeit"><img src="https://img.icons8.com/fluent/15/000000/filled-like.png" /> Like</button>
-              </form>
-            )}
+            <ThemeProvider theme={theme}>
+              <ButtonGroup variant="contained" >
+                {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >Like</Button>}
+                {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >Like</Button>}
+                <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>
+              </ButtonGroup>
+            </ThemeProvider>
           </div>
         </div>
       </Fragment>
@@ -209,16 +250,13 @@ export default class QuestionDetail extends Component {
       }
     })
 
-    // ここではやんない
-    // var c = true;
-    // for(var i=0; i<user.question_answered.length; i++){
-    //   if (user.question_answered[i].question === the_slug){
-    //     c = false;
-    //     this.setState({ madeIt: true });
-    //   }
-    // }
+    if (user.question_liked.includes(the_slug)){
+      this.setState({ likeIt: true });
+    }else{
+      this.setState({ likeIt: false });
+    }
 
-    if (!user.question_created.includes(the_slug)){
+    if (user.question_created.includes(the_slug)){
       this.setState({ madeIt: true });
     }else{
       this.setState({ madeIt: false });
@@ -235,11 +273,16 @@ export default class QuestionDetail extends Component {
 }
 
 const styles = {
-  radio: {
+  the_choice: {
+    marginLeft: 0,
+  },
+  roundBtn: {
     borderRadius: 15,
-    paddingRight: 20,
-    paddingLeft: 20,
-    paddingBottom: 15,
+  },
+  choiceBtnPos: {
+    marginLeft: 25,
+    marginBottom: 8,
+    fontSize: 12,
   },
   your_vote: {
     fontSize: 13,
@@ -251,10 +294,11 @@ const styles = {
     alignSelf: 'stretch',
     paddingBottom: 30,
   },
-  vote_btn: {
-    borderRadius: 15,
+  voteBtnPos: {
+    marginTop: 20,
+    marginLeft: 25,
   },
   buttons: {
     borderRadius: 30,
-  }
+  },
 }

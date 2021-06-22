@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Loading from 'react-loading';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import QuestionList from '../components/QuestionList';
-import Modal from '../components/Modal';
+import ModalDelete from '../components/ModalDelete';
 
 export default class QuestionResult extends Component {
 
@@ -67,7 +67,7 @@ export default class QuestionResult extends Component {
           </p>
 
           {/* モーダル */}
-          <Modal />
+          <ModalDelete />
 
           {/* タイトル */}
           <h3 className="center">{the_question.title}</h3>
