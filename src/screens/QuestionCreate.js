@@ -152,7 +152,7 @@ export default class QuestionCreate extends Component {
       question_created: firebase.firestore.FieldValue.arrayUnion(slug)
     });
 
-    // navigate('QuestionResult', { from_where: 'QuestionCreated', question: new_question});
+    window.location.href = "/detail/" + slug;
   };
 
   titleChangeText = (event) => {

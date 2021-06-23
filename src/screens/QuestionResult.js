@@ -158,7 +158,7 @@ export default class QuestionResult extends Component {
       question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
     })
 
-    // navigate(from_where);
+    window.location.href = "/";
   }
 
   onClose = () => {

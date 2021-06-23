@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Loading from 'react-loading';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import QuestionList from '../components/QuestionList.js';
+import { WindMillLoading } from 'react-loadingg';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -42,6 +43,7 @@ export default class QuestionAnswered extends Component {
   }
 
   render() {
+    console.log(window.uid);
     const { questions } = this.state;
 
     if(questions === []){
@@ -49,6 +51,10 @@ export default class QuestionAnswered extends Component {
         <Loading type='bubbles' color='#eba' />
       )
     }
+
+    return (
+      <WindMillLoading color='rgb(39, 169, 68)' speed={1.2} size='large' />
+    )
 
     return (
       <Fragment>

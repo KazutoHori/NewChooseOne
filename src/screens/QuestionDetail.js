@@ -135,7 +135,7 @@ export default class QuestionDetail extends Component {
       { merge: true }
     );
 
-    // navigate('QuestionResult', { from_where: from_where, question: question, your_vote: your_vote })
+    window.location.href = "/result/" + the_slug;
   }
 
   onLikeit = () => {
@@ -163,7 +163,7 @@ export default class QuestionDetail extends Component {
       question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
     })
 
-    // navigate(from_where);
+    window.location.href = "/";
   }
 
   onClose = () => {
