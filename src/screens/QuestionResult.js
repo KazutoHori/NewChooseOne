@@ -68,9 +68,10 @@ export default class QuestionResult extends Component {
   async componentDidMount() {
     const { uid } = this.props;
     const { the_slug } = this.props.match.params;
+
     if(uid === null || this.state.the_question !== null) return null;
 
-    var user = {}
+    var user = {};
     await db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
         user = doc.data()
@@ -169,8 +170,8 @@ export default class QuestionResult extends Component {
     const { madeIt, likeIt, the_question, your_vote, modalVisible, choicesSorted,
         labels, values, colors } = this.state;
 
-    if(this.state.the_question === null){
-      return <Loading />
+    if(the_question === null){
+      return <Loading type='bars' color='#714' />
     }
 
     return (
@@ -222,8 +223,8 @@ export default class QuestionResult extends Component {
             </thead>
             <tbody>
               {choicesSorted.map((choice, idx) => (
-                <tr id='table{idx+1}'>
-                  <th scope="row">&nbsp;{idx+1}</th>
+                <tr style={{ backgroundColor: colors[idx] }} >
+                  <th scope="row">&nbsp;&nbsp;{idx+1}</th>
                   <td >{choice.choice_text}</td>
                   <td>{choice.votes}</td>
                 </tr>
@@ -239,27 +240,13 @@ export default class QuestionResult extends Component {
 
           {/* ボタン系 */}
           <div className="buttons_normal">
-            <form method="post">
-              <button className="btn btn-primary likeit" type="submit" name="likeit"><img src="https://img.icons8.com/fluent/27/000000/filled-like.png" /> Like</button>
-            </form>
-            {madeIt && (
-              <button className="btn btn-danger delete" type="button" data-toggle="modal"><img src="https://img.icons8.com/plasticine/27/000000/delete-forever.png" /> Delete</button>
-            )}
-          </div>
-          <div className="buttons_small">
-            {madeIt && (
-              <Fragment>
-                <form method="post">
-                  <button className="btn btn-primary likeit" type="submit" name="likeit"><img src="https://img.icons8.com/fluent/15/000000/filled-like.png" /> Like</button>
-                </form>
-                <button className="btn btn-danger delete" type="button" data-toggle="modal"><img src="https://img.icons8.com/plasticine/15/000000/delete-forever.png" /> Delete</button>
-              </Fragment>
-            )}
-            {!madeIt && (
-              <form method="post">
-                <button className="btn btn-primary likeit button_center" type="submit" name="likeit"><img src="https://img.icons8.com/fluent/15/000000/filled-like.png" /> Like</button>
-              </form>
-            )}
+            <ThemeProvider theme={theme}>
+              <ButtonGroup variant="contained" >
+                {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >Like</Button>}
+                {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >Like</Button>}
+                <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>
+              </ButtonGroup>
+            </ThemeProvider>
           </div>
           {/* 似ている投稿 */}
           <div className="similar_posts main_list">
@@ -274,11 +261,11 @@ export default class QuestionResult extends Component {
     )
   }
 
-  async componentDidMount() {
+  async componentDidUpdate() {
     const { uid } = this.props;
     const { the_slug } = this.props.match.params;
 
-    if(uid === null || this.state.the_question !== null) return null;
+    if(uid === null || this.state.user !== null) return null;
 
     var user = {}
     await db.collection('users').doc(uid).get().then((doc) => {
@@ -310,37 +297,35 @@ export default class QuestionResult extends Component {
       }
     });
 
-    if(the_question){
-      var copy=Array.from(the_question.choices);
-      copy.sort(function(first, second){
-        if (first.votes > second.votes){
-          return -1;
-        }else if (first.votes < second.votes){
-          return 1;
-        }else{
-          return 0;
-        }
-      });
-      this.setState({ choicesSorted: copy });
-      var l = [];
-      var v = [];
-      var c = [];
-
-      for(let i=0; i<copy.length;  i++){
-        l.push(copy[i].choice_text);
-        v.push(copy[i].votes);
+    var copy=Array.from(the_question.choices);
+    copy.sort(function(first, second){
+      if (first.votes > second.votes){
+        return -1;
+      }else if (first.votes < second.votes){
+        return 1;
+      }else{
+        return 0;
       }
+    });
+    this.setState({ choicesSorted: copy });
+    var l = [];
+    var v = [];
+    var c = [];
 
-      // Chart.defaults.global.barPercentage=1.0;
-      var time = the_question.created_at
-      var seconds = time[-2]+time[-1]
-      if(v !== []){
-        v.forEach((entry, idx) => { // generate some colors
-          c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
-        });
-      }
-      this.setState({ labels: l, values: v, colors: c });
+    for(let i=0; i<copy.length;  i++){
+      l.push(copy[i].choice_text);
+      v.push(copy[i].votes);
     }
+
+    // Chart.defaults.global.barPercentage=1.0;
+    var time = the_question.created_at;
+    var seconds = parseInt(time.slice(-2));
+    if(v !== []){
+      v.forEach((entry, idx) => { // generate some colors
+        c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
+      });
+    }
+    this.setState({ labels: l, values: v, colors: c });
   }
 }
 

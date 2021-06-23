@@ -16,7 +16,7 @@ export default class PieChart extends React.Component {
       datasets: [
         {
           data: values,
-          // backgroundColor: colors,
+          backgroundColor: colors,
           borderColor: colors,
           hoverBackgroundColor: colors,
           borderWidth: 2,
@@ -50,18 +50,6 @@ export default class PieChart extends React.Component {
             return 'black';
           },
         }
-      },
-      scales: {
-        xAxes: [{
-          barPercentage: .5,
-          categoryPercentage: .5,
-        }],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true,
-            callback: function(value) {if (value % 1 === 0) {return value;}}
-          }
-        }]
       },
       plugins: {
         labels: {
