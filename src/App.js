@@ -44,7 +44,7 @@ export default class App extends Component {
     super(props);
   }
   render() {
-    const { uid } = this.props;
+    const { uid, query } = this.props;
 
     return (
       <Fragment>
@@ -59,7 +59,7 @@ export default class App extends Component {
                 <Route exact path="/answered" render={ () => <QuestionAnswered uid={uid}/> } />
                 <Route exact path="/liked" render={ () => <QuestionLiked uid={uid}/> } />
                 <Route path="/category/:category" render={ (props) => <QuestionCategory uid={uid} {...props} /> } />
-                <Route path='/' render={ () => <Home uid={uid}/> } />
+                <Route path='/' render={ () => <Home query={query} uid={uid}/> } />
               </Switch>
           </div>
           <RightBar />

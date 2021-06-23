@@ -39,6 +39,7 @@ export default class Routing extends React.Component {
 
     this.state = {
       uid: null,
+      query: '',
       categories: [],
       todays_ranking: [],
       question_popular: [],
@@ -82,9 +83,13 @@ export default class Routing extends React.Component {
     }
   }
 
+  onSearch = (query) => {
+    this.setState({ query });
+  }
+
   render () {
 
-    const { uid } = this.state;
+    const { uid, query } = this.state;
     
     return (
       <Fragment>
@@ -110,14 +115,14 @@ export default class Routing extends React.Component {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
           </div>
           <div style={styles.background}>
-            <Header/>
+            <Header onSearch={this.onSearch} />
             <div style={styles.wrapper}>
               <div style={styles.container} className='container'>
                 <div style={styles.home_container} className='home-container'>
                   <Switch>
                     <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
                     <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
-                    <Route path="/" render={ () => <App uid={uid}/> } />
+                    <Route path="/" render={ () => <App query={query} uid={uid}/> } />
                   </Switch>
                   <Footer/>
                 </div>
@@ -127,6 +132,43 @@ export default class Routing extends React.Component {
         </Router>
       </Fragment>
     );
+  }
+
+  componentDidUpdate() {
+    const lc = localStorage.getItem('chooseoneUid');
+    const { uid } = this.state;
+
+    if(uid === null) {
+      if (lc === null){
+        var ref = new Date();
+        var datetime = ref.toString().slice(4, 25);
+        firebase.auth().signInAnonymously()
+          .then(() => {
+            firebase.auth().onAuthStateChanged((user) => {
+              if (user) {
+                var uid = user.uid;
+                this.setState({ uid });
+                localStorage.setItem('chooseoneUid', uid);
+
+                var new_user = {
+                  email: '',
+                  uid: uid,
+                  created_at: datetime,
+                  question_answered: [],
+                  question_created: [],
+                  question_liked: [],
+                  username: '',
+                };
+                db.collection('users').doc(uid).set(new_user).then(() => {
+                  this.setState({ uid: new_user });
+                });
+              }
+            });          
+          })
+      }else{
+        this.setState({ uid: lc });
+      }
+    }
   }
 }
 

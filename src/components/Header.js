@@ -1,10 +1,25 @@
 import React, { Component, Fragment } from 'react';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import Input from '@material-ui/core/Input';
+
 import logo from '../ChooseOne1.png';
 import '../App.scss';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
-
 
 export default class Header extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      query: '',
+    }
+  }
+
+  handleSearch = (event) => {
+    const { onSearch } = this.props;
+    onSearch(this.state.query);
+    this.setState({ query: '' })
+  }
+
   render() {
     return (
       <div className='header' style={styles.header}>
@@ -15,8 +30,8 @@ export default class Header extends Component {
               <span className="navbar-toggler-icon" />
             </button>
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
-              <form className="form-inline mr-5 " method="get" action="{% url 'search_results' %}">
-                <input type="text" className="form-control " name="q" placeholder="Search" aria-label="Search" />
+              <form onSubmit={this.handleSearch} onKeyDown={(e) => {if(e.key === 'Enter'){e.preventDefault(); this.handleSearch(); }}} className="form-inline mr-5">
+                <input type='text' value={this.state.query} onChange={(event) => this.setState({ query: event.target.value })} className="form-control" placeholder="Search"  />
               </form>
               <ul className="navbar-nav">
                 <li className="nav-item mr-1">

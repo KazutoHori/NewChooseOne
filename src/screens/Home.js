@@ -52,7 +52,10 @@ export default class QuestionAnswered extends Component {
     }
 
     return (
-      <WindMillLoading color='rgb(39, 169, 68)' speed={1.2} size='large' />
+      <Fragment>
+        <h1>{this.props.query}</h1>
+        <WindMillLoading color='rgb(39, 169, 68)' speed={1.2} size='large' />
+      </Fragment>
     )
 
     return (
