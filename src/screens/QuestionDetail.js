@@ -8,7 +8,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import blue from '@material-ui/core/colors/blue';
 
 import ModalDelete from '../components/ModalDelete';
 import '../App.scss';
