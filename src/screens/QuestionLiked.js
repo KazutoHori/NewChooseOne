@@ -38,7 +38,6 @@ export default class QuestionAnswered extends React.Component {
     var ques = [];
     await db.collection("users").doc(uid).onSnapshot((doc) => {
       ques = [];
-      console.log(doc.data());
       var qs = doc.data().question_liked;
       for(let i=0; i<qs.length; i++){
         db.collection('questions').doc(qs[i]).get().then((doc) => {
@@ -59,7 +58,6 @@ export default class QuestionAnswered extends React.Component {
     var ques = [];
     await db.collection("users").doc(uid).onSnapshot((doc) => {
       ques = [];
-      console.log(doc.data());
       var qs = doc.data().question_liked;
       for(let i=0; i<qs.length; i++){
         db.collection('questions').doc(qs[i]).get().then((doc) => {

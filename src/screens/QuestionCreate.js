@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Loading from 'react-loading';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import QuestionList from '../components/QuestionList.js';
-import slugify from '../utils/slugify.js';
+import { slugify, timeToDay } from '../utils/Funcs.js';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import PostAddIcon from '@material-ui/icons/PostAdd';
@@ -61,41 +61,46 @@ export default class QuestionCreate extends Component {
   onSubmit = async () => {
     const { howManyChoice, title, choices, categories } = this.state;
 
-    const { user } = this.props;
-    var userId = user.uid;
+    const { uid } = this.props;
 
     if(title === ''){
       this.setState({ warning: 'Title cannot be empty.'});
-      setTimeout(() => this.setState({ warning: ''}),2500);
+      setTimeout(() => this.setState({ warning: ''}),5000);
       return null;
     }
-
+    var ifSuperUser = title.slice(0, 5) === 'SUQ__';
+    
     var S = new Set(choices);
     if(choices.length !== S.size) {
       this.setState({ warning: 'There are same choices.'});
-      setTimeout(() => this.setState({ warning: ''}),2500);
+      setTimeout(() => this.setState({ warning: ''}),5000);
       return null;
     }
 
     let new_choices = [];
     for(var i=0; i<howManyChoice; i++){
-      if(choices[i] !== undefined && choices[i] !== ''){
+      if(choices[i] === undefined || choices[i] === ''){
+        this.setState({ warning: 'There is an empty choice.'});
+        setTimeout(() => this.setState({ warning: ''}),5000);
+        return null;
+      }else{
+        var text = ifSuperUser ? choices[i].slice(0, -3) : choices[i];
+        var votes = ifSuperUser ? choices[i].slice(-3) : 0;
+        if(ifSuperUser && !'123456789'.includes(votes[0])){
+          this.setState({ warning: '選択肢の最後の数字忘れてる'});
+          setTimeout(() => this.setState({ warning: ''}),5000);
+          return null;
+        }
         new_choices.push({
-          choice_text: choices[i],
-          votes: 0,
+          choice_text: text,
+          votes: votes,
         });
       }
     }
 
-    if(new_choices.length<2) {
-      this.setState({ warning: 'Choices must be more than two.'});
-      setTimeout(() => this.setState({ warning: ''}),2500);
-      return null;
-    }
-
     if(categories.length === 0){
       this.setState({ warning: 'Category cannot be empty.'});
-      setTimeout(() => this.setState({ warning: ''}),2500);
+      setTimeout(() => this.setState({ warning: ''}),5000);
       return null;
     }
 
@@ -104,44 +109,49 @@ export default class QuestionCreate extends Component {
       how_many = snap.size
     });
 
-    var rep=0;
-    var new_slug=slugify(title);
-    if(new_slug === '') new_slug=title;
+    if(ifSuperUser) var slug = slugify(title.slice(5));
+    else var slug=slugify(title);
+    if(slug === '') slug=title;
 
-    await db.collection('questions').where('slug', '==', new_slug).get().then(snap => {
+    var rep=0;
+    await db.collection('questions').where('slug', '==', slug).get().then(snap => {
       rep=snap.size
     });
-    if(rep !== 0) {
+    while(rep !== 0) {
       rep=rep+1;
-      new_slug=new_slug.concat('___');
-      new_slug=new_slug.concat(rep.toString());
+      var conc = '___'.concat(rep);
+      var now_slug=slug.concat(conc);
+      db.collection('questions').where('slug', '==', slug).get().then(snap => {
+        if(snap.size == 0){
+          slug = now_slug;
+          rep = 0;
+        }
+      });
     }
 
     let current=new Date();
     current=current.toJSON();
+    var day = timeToDay(current.slice(0, 10));
     let new_question = {
       id: how_many+1,
       title: title,
-      author: user.uid,
+      author: uid,
       category: categories,
-      slug: new_slug,
-      created: current.slice(0, 10)+current.slice(11, 19),
+      slug: slug,
+      created_on: day,
+      created_at: current.slice(0, 10)+current.slice(11, 19),
       choices: new_choices,
       comments: [],
       users_answered: [],
       all_votes: 0,
+      active: true,
     }
 
-    db.collection('questions').doc(new_slug).set(new_question);
-    await db.collection('users').doc(userId).update({
-      question_created: firebase.firestore.FieldValue.arrayUnion(new_slug)
+    db.collection('questions').doc(slug).set(new_question);
+    await db.collection('users').doc(uid).update({
+      question_created: firebase.firestore.FieldValue.arrayUnion(slug)
     });
 
-    this.setState({
-      howManyChoice: 0,
-      warning: '',
-      categories: [],
-    });
     // navigate('QuestionResult', { from_where: 'QuestionCreated', question: new_question});
   };
 
@@ -159,7 +169,6 @@ export default class QuestionCreate extends Component {
 
   onCategory = idx => {
     const { categories } = this.state;
-    console.log('hl');
     var copy=categories.slice();
     if(copy.includes(allCategories[idx])){
       copy=copy.filter(c => c !== allCategories[idx]);
@@ -170,6 +179,8 @@ export default class QuestionCreate extends Component {
   }
 
   render() {
+    let current=new Date();
+    current=current.toJSON();
     const { warning, howManyChoice, title, choices } = this.state;
     const theme = createMuiTheme({
       palette: {
