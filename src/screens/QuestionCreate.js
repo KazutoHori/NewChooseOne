@@ -7,10 +7,8 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import FilledInput from '@material-ui/core/FilledInput';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -21,6 +19,9 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -191,8 +192,10 @@ export default class QuestionCreate extends Component {
           <Input
             id="standard-adornment-weight"
             value={choices[i]}
+            style={styles.choiceInput}
             onChange={(event) => this.choiceChangeText(event, i)}
             startAdornment={<InputAdornment position="start">{i+1}. </InputAdornment>}
+            endAdornment={i > 1 && <InputAdornment position="end"><Tooltip title='Delete'><IconButton aria-label="delete" style={{ outline: 'none', }} onClick={() => this.setState({ howManyChoice: howManyChoice-1 })} color='secondary'><DeleteIcon /></IconButton></Tooltip></InputAdornment>}
             aria-describedby="standard-weight-helper-text"
             inputProps={{
               'aria-label': 'weight',
@@ -239,13 +242,12 @@ export default class QuestionCreate extends Component {
             <ThemeProvider theme={theme}>
               <ButtonGroup disableElevation variant="contained" >
                 {howManyChoice < 9 && <StyledButton startIcon={<AddIcon /> } color='primary' onClick={() => this.setState({ howManyChoice: howManyChoice+1 }) } >Add</StyledButton>}
-                {howManyChoice > 2 && <StyledButton startIcon={<RemoveIcon /> } onClick={() => this.setState({ howManyChoice: howManyChoice-1 })} color='secondary' >Remove</StyledButton>}
               </ButtonGroup>
             </ThemeProvider>
           </div>
 
           {/* カテゴリー */}
-          <h4 className='cali2'>Category</h4>
+          <h4 style={styles.cateTitle} className='cali2'>Category</h4>
           <div>
             <div>
               {allCategories.map((cate, idx) => {
@@ -290,7 +292,7 @@ export default class QuestionCreate extends Component {
           {/* 最後 */}
           {warning && <p style={Object.assign({ color: 'red' }, styles.warning)} >{warning}</p>}
           {!warning && <p style={styles.warning}>You can delete but cannot edit after you make one.</p>}
-            <Button startIcon={<PostAddIcon /> } onClick={this.onSubmit} id className="btn btn-success"  >Add Question</Button>
+          <Button startIcon={<PostAddIcon /> } onClick={this.onSubmit} className="btn btn-success"  >Add Question</Button>
         </div>
       </Fragment>
     )
@@ -298,7 +300,12 @@ export default class QuestionCreate extends Component {
 }
 
 const styles = {
+  cateTitle: {
+    marginTop: 25,
+    marginBottom: 20,
+  },
   warning: {
+    marginTop: 20,
     fontSize: 10,
   },
   titleInput: {
@@ -329,14 +336,11 @@ const styles = {
     borderRadius: 25,
   },
   choicePos: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
-  categories: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'space-between',
-    flexWrap: 'wrap',
-  }
+  choiceInput: {
+    width: '50%',
+  },
 }
 
 
@@ -349,6 +353,7 @@ const StyledButton = withStyles({
     color: 'white',
     height: 30,
     padding: '0 15px',
+    outline: 'none',
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   },
   label: {
