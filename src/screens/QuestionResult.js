@@ -151,8 +151,6 @@ export default class QuestionResult extends Component {
   onDelete = () => {
     const { the_choice, user, the_question } = this.state;
 
-    this.setState({ modalVisible: false });
-
     db.collection("questions").doc(the_question.slug).delete();
     db.collection("users").doc(user.uid).update({
       question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)

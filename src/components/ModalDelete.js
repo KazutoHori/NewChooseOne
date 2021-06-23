@@ -23,19 +23,9 @@ export default class ModalDelete extends React.Component {
   
   constructor(props){
     super(props);
-    this.state = {
-      open: true,
-    }
-  }
-
-  onDelete = () => {
-    const { onDelete } = this.props;
-
-    onDelete();
   }
 
   render (){
-    const { open } = this.state;
     const { onDelete, onClose } = this.props;
 
     const body = (

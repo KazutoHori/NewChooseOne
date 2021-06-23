@@ -43,7 +43,6 @@ export default class QuestionAnswered extends Component {
   }
 
   render() {
-    console.log(window.uid);
     const { questions } = this.state;
 
     if(questions === []){
