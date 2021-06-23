@@ -31,7 +31,7 @@ export default class QuestionList extends React.Component {
             })}
           </p>
           <h4><a style={styles.black} class='link' href={'/detail/'+question.slug}>{question.title}</a></h4>
-          <p class="date">&ensp;&ensp;&ensp;Created： { question.created_at } </p>
+          <p class="date">&ensp;&ensp;&ensp;{ question.created_on } </p>
           <ul>
             {question.choices.map((choice,idx) => (
               <div>

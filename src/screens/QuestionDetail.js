@@ -203,7 +203,7 @@ export default class QuestionDetail extends Component {
           {/* タイトル */}
           <h3 className="center cali2">{the_question.title}</h3>
           <p className="date center">
-            Created： {the_question.created_on}
+            {the_question.created_on}
           </p>
 
           {/* 選択肢 */}
