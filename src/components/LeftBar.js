@@ -57,7 +57,7 @@ export default class Home extends Component {
           <h5 style={styles.semiTitle} className='cali'>Categories</h5>
           <ul>
             {categories.map((cate, idx) => (
-              <li><a class='cali2' style={{ color: tabColors[idx] }} id="left{idx}" href={'/category/'+cate}>{cate}</a></li>
+              <li><a className='cali2' style={{ color: tabColors[idx] }} id="left{idx}" href={'/category/'+cate}>{cate}</a></li>
             ))}
           </ul>
           <h5 style={styles.semiTitle} className='cali'>Today's Ranking</h5>

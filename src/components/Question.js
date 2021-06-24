@@ -36,10 +36,10 @@ export default class QuestionList extends React.Component {
                   var len = the_question.category.length;
                   if ( idx === 0){
                     return (
-                      <a class='text-primary' href={'/category/'+cate}> {cate}</a>
+                      <a className='text-primary' href={'/category/'+cate}> {cate}</a>
                     )
                   }else{
-                    <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
+                    <a className='text-primary' href={'/category/'+cate}>, {cate}</a>
                   }
                 })}
               </Fragment>
