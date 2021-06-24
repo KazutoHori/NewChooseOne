@@ -45,14 +45,6 @@ export default class QuestionAnswered extends Component {
   render() {
     const { questions } = this.state;
 
-    if(questions === []){
-      return (
-        <Fragment>
-          <WindMillLoading color='rgb(39, 169, 68)' speed={1.2} size='large' />
-      </Fragment>
-      )
-    }
-
     return (
       <Fragment>
         <QuestionList questions={this.state.questions} />

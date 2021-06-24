@@ -38,22 +38,13 @@ export default class QuestionList extends React.Component {
       },
     });
 
-    if(questions === null || questions.length === 0){
-      const skeletons = new Array(10).fill('skeleton');
-      return (
-        <Fragment>
-          {skeletons.map(skeleton => (
-            <Question the_question={skeleton} />
-          ))}
-        </Fragment>
-      )
-    }
-
     const howManyPages = Math.ceil(questions.length/10);
+    
+    if(questions === null || questions.length === 0) return null;
     return (
       <Fragment>
         {questions.slice(10*(page-1), 10*page).map(question => (
-          <Question the_question={question} />
+          <Question question={question} />
         ))}
         <div style={styles.paginationPos}>
           <ThemeProvider theme={theme}>

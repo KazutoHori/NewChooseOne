@@ -205,6 +205,7 @@ export default class QuestionResult extends Component {
                 })}
               </Fragment>
             )}
+            {!the_question && <Skeleton style={{ marginLeft: 10 }} width={60} />}
           </p>
 
           {/* モーダル */}

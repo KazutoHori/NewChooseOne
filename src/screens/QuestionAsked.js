@@ -77,16 +77,11 @@ export default class QuestionAnswered extends React.Component {
     return (
       <Fragment>
         <h3 className='cali'>Questions You Made</h3>
-        {uid === null || questions === null && (<Loading  type='bars' color='#184' />)}
-        {uid !== null && questions !== null && (
-          <Fragment>
-            {questions === [] && (
-              <pre>        You have not asked any questions yet.</pre>
-            )}
-            {questions !== [] && (
-              <QuestionList questions={questions} />
-            )}
-          </Fragment>
+        {questions === [] && (
+          <pre>        You have not asked any questions yet.</pre>
+        )}
+        {questions !== [] && (
+          <QuestionList questions={questions} />
         )}
       </Fragment>
     )
