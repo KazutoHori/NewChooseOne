@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
 import Paginate from 'react-paginate';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 export default class Pagination extends React.Component {
 
@@ -12,8 +14,9 @@ export default class Pagination extends React.Component {
     return (
       <Fragment>
         <Paginate
-          pageCount={this.props.questions.length / 10}
-          marginPagesDisplayed={100}
+          totalRecords={this.props.questions}
+          pageCount={this.props.questions.length / 5}
+          marginPagesDisplayed={5}
           pageRangeDisplayed={5}
           onPageChange={this.handlePaginate}
           containerClassName="pagination"
@@ -23,8 +26,8 @@ export default class Pagination extends React.Component {
           activeLinkClassName="active"
           previousLinkClassName="previous-link"
           nextLinkClassName="next-link"
-          previousLabel={'<'}
-          nextLabel={'>'}
+          previousLabel={<ArrowBackIosIcon /> }
+          nextLabel={<NavigateNextIcon /> }
           disabledClassName="disabled-button"
         />
       </Fragment>

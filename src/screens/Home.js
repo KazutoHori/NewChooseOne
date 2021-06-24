@@ -44,22 +44,19 @@ export default class QuestionAnswered extends Component {
 
   render() {
     const { questions } = this.state;
+    const { query } = this.props;
 
     if(questions === []){
       return (
-        <Loading type='bubbles' color='#eba' />
+        <Fragment>
+          <WindMillLoading color='rgb(39, 169, 68)' speed={1.2} size='large' />
+      </Fragment>
       )
     }
 
     return (
       <Fragment>
-        <h1>{this.props.query}</h1>
-        <WindMillLoading color='rgb(39, 169, 68)' speed={1.2} size='large' />
-      </Fragment>
-    )
-
-    return (
-      <Fragment>
+        {query && <h3 className='cali'>Search Results</h3>}
         <QuestionList questions={this.state.questions} />
       </Fragment>
     )
