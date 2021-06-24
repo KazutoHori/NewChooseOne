@@ -2,19 +2,59 @@ import React, { Component, Fragment } from 'react';
 import Loading from 'react-loading';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+import { slugify, timeToDay } from '../utils/Funcs.js';
+
+// Firebase
+import firebase from 'firebase/app';
+import "firebase/firestore";
+const firebaseConfig = {
+  apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
+  authDomain: "chooseone-105a9.firebaseapp.com",
+  databaseURL: "https://chooseone-default-rtdb.firebaseio.com",
+  projectId: "chooseone",
+  storageBucket: "chooseone.appspot.com",
+  messagingSenderId: "722704825746",
+  appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
+  measurementId: "G-YJ97DZH6V5"
+};
+if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
+var db = firebase.firestore();
+
 var categories = ['Love', 'News', 'Sports', 'Pastime', 'Health', 'Living', 'Career', 'Academics', 'IT'];
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
 export default class Home extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      todaysRanking: [],
+    }
+  }
+
+  componentDidMount() {
+    if(this.state.todaysRanking !== []) return null;
+
+    let current=new Date();
+    current=current.toJSON();
+    var today = timeToDay(current.slice(0, 10));
+
+    var quesRef = db.collection('questions');
+    quesRef.where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((ques) => {
+      var ques = [];
+      ques.forEach(q => {
+        ques.push(q.data());
+      });
+      this.setState({ todaysRanking: ques });
+    });
+  }
+
   render() {
-    var todays_ranking = [];
-    var question_popular = [];
+    const { todaysRanking } = this.state;
 
     return (
       <Fragment>
-
-        {/* 左バー */}
         <div style={styles.left_side}>
           <h5 style={styles.semiTitle} className='cali'>Categories</h5>
           <ul>
@@ -23,53 +63,77 @@ export default class Home extends Component {
             ))}
           </ul>
           <h5 style={styles.semiTitle} className='cali'>Today's Ranking</h5>
-          {todays_ranking.map((question, idx) => (
-            <div className="rank" style={styles.rank}>
-            <div className="title" style={styles.title}>
-              {idx === 0 && (
-                <div>
-                  <img src="https://img.icons8.com/color/30/000000/first-place-ribbon.png" /><a style={styles.link} className="link" href="{% url 'question_detail' the_slug=question.slug %}"><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{'{'}{'{'}question.title{'}'}{'}'}</strong></h6></a>
-                </div>
-              )}
-              {idx === 1 && (
-                <div>
-                  <img src="https://img.icons8.com/color/30/000000/second-place-ribbon.png" /><a style={styles.link} className="link" href="{% url 'question_detail' the_slug=question.slug %}"><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{'{'}{'{'}question.title{'}'}{'}'}</strong></h6></a>
-                </div>
-              )}
-              {idx === 2 && (
-                <div>
-                  <img src="https://img.icons8.com/color/30/000000/third-place-ribbon.png" /><a style={styles.link} className="link" href="{% url 'question_detail' the_slug=question.slug %}"><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{'{'}{'{'}question.title{'}'}{'}'}</strong></h6></a>{'{'}% endif %{'}'}
-                </div>
-              )}
+          {todaysRanking.map((question, idx) => (
+            <div className="side_question">
+              <div className="title">
+                {idx === 0 && (
+                  <Fragment>
+                    <img src="https://img.icons8.com/color/25/000000/first-place-ribbon.png" />
+                    <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
+                  </Fragment>
+                )}
+                {idx === 1 && (
+                  <Fragment>
+                    <img src="https://img.icons8.com/color/25/000000/second-place-ribbon.png" />
+                    <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
+                  </Fragment>
+                )}
+                {idx === 2 && (
+                  <Fragment>
+                    <img src="https://img.icons8.com/color/25/000000/third-place-ribbon.png" />
+                    <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
+                  </Fragment>
+                )}
+                {idx === 9 && (
+                  <Fragment>
+                    <img src="https://img.icons8.com/color/25/000000/10.png"/>
+                    <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
+                  </Fragment>
+                )}
+                {idx !== 0 && idx !== 1 && idx !== 2 && idx !== 9 && (
+                  <Fragment>
+                    <img src={'https://img.icons8.com/color/20/000000/'+(idx+1)+'-circle-c--v2.png'} />
+                    <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
+                  </Fragment>
+                )}
+              </div>
+              <ul>
+                {question.choices.map(choice => (
+                  <div>
+                    <label>○ {choice.choice_text}</label>
+                    <br />
+                  </div>
+                ))}
+              </ul>
             </div>
-            <ul>
-              {question.choices.map(choice => (
-                <div>
-                  <input type="radio" />
-                  <label>{choice.choice}</label>
-                  <br />
-                </div>
-              ))}
-            </ul>
-          </div>
           ))}
         </div>
 
       </Fragment>
     )
   }
+
+  componentDidUpdate() {
+    if(this.state.todaysRanking !== []) return null;
+
+    let current=new Date();
+    current=current.toJSON();
+    var today = timeToDay(current.slice(0, 10));
+
+    var quesRef = db.collection('questions');
+    quesRef.where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((ques) => {
+      var ques = [];
+      ques.forEach(q => {
+        ques.push(q.data());
+      });
+      this.setState({ todaysRanking: ques });
+    });
+  }
 }
 
 const styles = {
-
-  h3: {
-    fontFamily: 'lust-script, sans-serif',
-    fontStyle: 'normal',
-    fontWeight: 700,
-    marginBottom: 15,
-  },
-  
   left_side: {
+    filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
     width: 200,
     marginRight: 30,
     backgroundColor: 'white',
@@ -77,15 +141,9 @@ const styles = {
     paddingTop: 15,
     paddingBottom: 15,
     height: 'fit-content',
-    filter: 'drop-shadow(0 0 5 rgba(160, 160, 160, 0.7))',
   },
 
   semiTitle: {
     paddingLeft: 10,
   },
-  rank: {
-    margin: 0,
-    position: 'relative',
-  },
-  
 }

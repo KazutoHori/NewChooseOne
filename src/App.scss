@@ -301,6 +301,43 @@
   }
 }
 
+.side_question{
+  margin-left: 10px;
+  .title{
+    display: flex;
+    flex-direction: row;
+  }
+  h6{
+    margin-top: 8px;
+    margin-left: 2px;
+    font-size: 12px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  label{
+    font-size: 5px;
+    padding: 0px;
+    margin: 0px;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  position: relative;
+
+  .link::after{
+    position: absolute;
+    top: 0px; right: 0; bottom: 0; left: 0;
+    z-index: 1;
+    pointer-events: auto;
+    content: '';
+    background-color: transparent;
+  }
+}
+
 
 
 
