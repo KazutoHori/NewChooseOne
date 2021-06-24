@@ -44,7 +44,6 @@ export default class QuestionAnswered extends Component {
 
   render() {
     const { questions } = this.state;
-    const { query } = this.props;
 
     if(questions === []){
       return (
@@ -56,7 +55,6 @@ export default class QuestionAnswered extends Component {
 
     return (
       <Fragment>
-        {query && <h3 className='cali'>Search Results</h3>}
         <QuestionList questions={this.state.questions} />
       </Fragment>
     )

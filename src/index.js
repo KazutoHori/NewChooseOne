@@ -118,7 +118,7 @@ export default class Routing extends React.Component {
             <Header onSearch={this.onSearch} />
             <div style={styles.wrapper}>
               <div style={styles.container} className='container'>
-                <div style={styles.home_container} className='home-container'>
+                <div style={styles.homePos}>
                   <Switch>
                     <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
                     <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
@@ -182,7 +182,7 @@ const styles = {
   background: {
     backgroundColor: '#f1efef',
   },
-  home_container: {
+  homePos: {
     display: 'flex',
   },
   container: {

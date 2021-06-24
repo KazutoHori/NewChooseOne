@@ -15,14 +15,14 @@ export default class Home extends Component {
       <Fragment>
 
         {/* 左バー */}
-        <div className="left_side" style={Object.assign({}, styles.side, { width: 200 })}>
-          <h5 style={styles.h5}>Categories</h5>
+        <div style={styles.left_side}>
+          <h5 style={styles.semiTitle} className='cali'>Categories</h5>
           <ul>
             {categories.map((cate, idx) => (
               <li><a class='cali2' style={{ color: tabColors[idx] }} id="left{idx}" href={'/category/'+cate}>{cate}</a></li>
             ))}
           </ul>
-          <h5>Today's Ranking</h5>
+          <h5 style={styles.semiTitle} className='cali'>Today's Ranking</h5>
           {todays_ranking.map((question, idx) => (
             <div className="rank" style={styles.rank}>
             <div className="title" style={styles.title}>
@@ -71,23 +71,6 @@ const styles = {
   
   left_side: {
     width: 200,
-    fontFamily: 'latienne-pro, serif',
-    fontStyle: 'normal',
-    fontWeight: 400,
-  },
-
-  h5: {
-    fontFamily: 'lust-script, sans-serif',
-    fontStyle: 'normal',
-    fontWeight: 700,
-    paddingLeft: 7,
-  },
-  rank: {
-    margin: 0,
-    position: 'relative',
-  },
-  
-  side: {
     marginRight: 30,
     backgroundColor: 'white',
     borderRadius: 15,
@@ -95,6 +78,14 @@ const styles = {
     paddingBottom: 15,
     height: 'fit-content',
     filter: 'drop-shadow(0 0 5 rgba(160, 160, 160, 0.7))',
+  },
+
+  semiTitle: {
+    paddingLeft: 10,
+  },
+  rank: {
+    margin: 0,
+    position: 'relative',
   },
   
 }

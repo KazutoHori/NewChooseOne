@@ -178,9 +178,9 @@ export default class QuestionDetail extends Component {
 
     return (
       <Fragment>
-        <div style={styles.detail_container} className="detail_container">
+        <div style={styles.detailPos}>
           {/* カテゴリー */}
-          <p className="center"><span className="text-primary fa fa-tag" />
+          <p className="cali2"><span className="text-primary fa fa-tag" />
             Category:  
             {the_question.category.map((cate, idx) => {
               var len = the_question.category.length;
@@ -198,8 +198,8 @@ export default class QuestionDetail extends Component {
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="center cali2">{the_question.title}</h3>
-          <p className="date center">
+          <h3 className="cali2">{the_question.title}</h3>
+          <p style={styles.date}>
             {the_question.created_on}
           </p>
 
@@ -213,12 +213,12 @@ export default class QuestionDetail extends Component {
             ))}
             {warning && (<p>{warning}</p>)}
             <div style={styles.voteBtnPos}>
-              <Button startIcon={<ThumbUpAltIcon />}  onClick={this.onVote} style={styles.roundBtn} className='btn  btn-success'>Vote</Button>
+              <Button startIcon={<ThumbUpAltIcon />}  onClick={this.onVote} style={styles.roundBtn} className='btn btn-success'>Vote</Button>
             </div>
           </Fragment>
 
           {/* 削除ボタン */}
-          <div className="buttons_normal fixed">
+          <div style={styles.buttonsPos}>
             <ThemeProvider theme={theme}>
               <ButtonGroup variant="contained" >
                 {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >Like</Button>}
@@ -268,6 +268,16 @@ export default class QuestionDetail extends Component {
 }
 
 const styles = {
+  buttonsPos: {
+    position: 'absolute',
+    bottom: 210,
+  },
+  date: {
+    marginLeft: 20,
+    fontFamily: 'georgia, serif',
+    fontSize: 12,
+    color: '#457AFB',
+  },
   the_choice: {
     marginLeft: 0,
   },
@@ -283,11 +293,6 @@ const styles = {
     fontSize: 13,
     marginLeft: 5,
     color: 'yellowgreen',
-  },
-  detail_container: {
-    paddingTop: 15,
-    alignSelf: 'stretch',
-    paddingBottom: 30,
   },
   voteBtnPos: {
     marginTop: 20,

@@ -173,10 +173,10 @@ export default class QuestionResult extends Component {
 
     return (
       <Fragment>
-        <div className="detail_container">
+        <div style={styles.resultsPos}>
 
           {/* カテゴリー */}
-          <p className="center"><span className="text-primary fa fa-tag" />
+          <p><span className="text-primary fa fa-tag" />
             Category:
             {the_question.category.map((cate, idx) => {
               var len = the_question.category.length;
@@ -194,23 +194,23 @@ export default class QuestionResult extends Component {
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="center cali2">{the_question.title}</h3>
-          <p className="date center">
-            Created： {the_question.created_on}
+          <h3 className="cali2">{the_question.title}</h3>
+          <p style={styles.date}>
+            {the_question.created_on}
           </p>
           
-          <div className="your_vote">
-            <p className="your_vote">You have voted for {your_vote}</p>
+          <div>
+            <p style={styles.your_vote}>You have voted for {your_vote}</p>
           </div>
-          <div className="share">
-            <a className="tip btn-twitter" href={'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} rel="nofollow" target="_blank"><img src="https://img.icons8.com/color/35/000000/twitter-circled.png" /><span>Share</span></a>
+          <div>
+            <a className="tip" href={'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} rel="nofollow" target="_blank"><img src="https://img.icons8.com/color/35/000000/twitter-circled.png" /><span>Share</span></a>
             <a className="tip" href={"https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} rel="nofollow" target="_blank"><img src="https://img.icons8.com/fluent/35/000000/facebook-new.png" /><span>Share</span></a>
-            <a className="tip btn-line" href={"https://social-plugins.line.me/lineit/share?url=https://www.chooseone.app/"+the_question.slug} target="_blank" rel="nofollow"><img src="https://img.icons8.com/color/35/000000/line-me.png" /><span>Share</span></a>
+            <a className="tip" href={"https://social-plugins.line.me/lineit/share?url=https://www.chooseone.app/"+the_question.slug} target="_blank" rel="nofollow"><img src="https://img.icons8.com/color/35/000000/line-me.png" /><span>Share</span></a>
           </div>
           <style dangerouslySetInnerHTML={{__html: "\n        a.tip span { display: none; padding:3px 5px; margin-top: 30px; margin-left: -20px; font-size: 7px;}\n        a.tip:hover span {display:inline; position:absolute; border-radius: 10px; background:#ffffff; border:1px solid #cccccc; color:#6c6c6c;}\n      " }} />
 
           {/* テーブル */}
-          <table className="block table">
+          <table style={styles.table} className='table'>
             <thead>
               <tr>
                 <td />
@@ -230,13 +230,13 @@ export default class QuestionResult extends Component {
           </table>
 
           {/* グラフ */}
-          <div className="graphs">
-            <div className="block pie-canvas"><PieChart labels={labels} values={values} colors={colors} /></div>
-            <div className="block bar-canvas"><BarChart labels={labels} values={values} colors={colors} /></div>
+          <div style={styles.graphs}>
+            <div style={styles.pieGraph}><PieChart labels={labels} values={values} colors={colors} /></div>
+            <div style={styles.barGraph}><BarChart labels={labels} values={values} colors={colors} /></div>
           </div>
 
           {/* ボタン系 */}
-          <div className="buttons_normal">
+          <div style={styles.buttonsPos}>
             <ThemeProvider theme={theme}>
               <ButtonGroup variant="contained" >
                 {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >Like</Button>}
@@ -245,8 +245,9 @@ export default class QuestionResult extends Component {
               </ButtonGroup>
             </ThemeProvider>
           </div>
+
           {/* 似ている投稿 */}
-          <div className="similar_posts main_list">
+          <div>
             <h3>Questions You May Like</h3>
             <QuestionList questions={[]} />
             {/* {questions == [] && ( */}
@@ -327,5 +328,50 @@ export default class QuestionResult extends Component {
 }
 
 const styles = {
-  
+  table: {
+    filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
+    borderRadius: 15,
+    marginTop: 20,
+    marginBottom: 15,
+    backgroundColor: 'white',
+    width: '100%',
+  },
+  graphs: {
+    display: 'flex',
+    width: '100%',
+    marginBottom: 15,
+  },
+  pieGraph: {
+    filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
+    borderRadius: 15,
+    padding: 10,
+    width: '49%',
+    backgroundColor: 'white',
+    height: 400,
+    marginRight: 10,
+  },
+  barGraph: {
+    filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
+    borderRadius: 15,
+    padding: 10,
+    width: '50%',
+    backgroundColor: 'white',
+    height: 400,
+  },
+  your_vote: {
+    fontSize: 10,
+    color: 'yellowgreen',
+    fontSize: 14,
+  },
+  resultsPos: {
+    paddingTop: 15,
+    width: '100%',
+    paddingBottom: 30,
+  },
+  date: {
+    marginLeft: 20,
+    fontFamily: 'georgia, serif',
+    fontSize: 12,
+    color: '#457AFB',
+  },
 }

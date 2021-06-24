@@ -11,8 +11,8 @@ export default class Home extends Component {
       <Fragment>
 
         {/* 右バー */}
-        <div className="right_side" style={Object.assign({}, styles.side, { width: 221 })}>
-          <h5>Popular Questions</h5>
+        <div style={Object.assign({}, styles.right_side, { width: 221 })}>
+          <h5 className='cali'>Popular Questions</h5>
           {question_popular.map((question, idx) => (
             <div className="rank" style={styles.rank}>
               <div className="title" style={styles.title}>
@@ -57,9 +57,15 @@ export default class Home extends Component {
 const styles = {
   
   // 右バー
-  
   right_side: {
     width: 221,
+    backgroundColor: 'white',
+    filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
+    borderRadius: 15,
+    marginLeft: 30,
+    paddingTop: 15,
+    paddingBottom: 15,
+    height: 'fit-content',
   },
   h5: {
     fontFamily: 'lust-script, sans-serif',

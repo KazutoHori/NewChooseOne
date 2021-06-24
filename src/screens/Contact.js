@@ -7,7 +7,7 @@ export default class Contact extends Component {
   render() {
     return (
       <Fragment>
-        <div style={styles.contact} className="contact">
+        <div style={styles.contact}>
           <h2 className='cali'>Contact Us</h2>
           <p style={styles.p}>If you have any questions or thoughts on this site,<br />
             <span style={styles.span}>please e-mail us!!</span></p>

@@ -14,7 +14,7 @@ export default class QuestionList extends React.Component {
 
     return (
       <Fragment>
-        <div className="onepost" style={styles.onepost}>
+        <div className='onepost'>
           <p><span className='text-primary fa fa-tag'></span>
             Category:
             {question.category.map((cate, idx) => {
@@ -30,7 +30,7 @@ export default class QuestionList extends React.Component {
               }
             })}
           </p>
-          <h4><a style={styles.black} class='link' href={'/detail/'+question.slug}>{question.title}</a></h4>
+          <h4 className='cali2'><a className='link' href={'/detail/'+question.slug}>{question.title}</a></h4>
           <p class="date">&ensp;&ensp;&ensp;{ question.created_on } </p>
           <ul>
             {question.choices.map((choice,idx) => (
@@ -45,15 +45,4 @@ export default class QuestionList extends React.Component {
       </Fragment>
     );
   }
-}
-
-const styles = {
-  onepost: {
-    fontFamily: 'latienne-pro, serif',
-    fontStyle: 'normal',
-    fontWeight: 400,
-  },
-  black: {
-    color: 'black',
-  },
 }

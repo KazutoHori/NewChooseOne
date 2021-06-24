@@ -7,10 +7,10 @@ export default class Footer extends Component {
   render() {
     return (
       <div style={styles.wrap}>
-        <div style={styles.footer} className="footer">
+        <div style={styles.footer}>
           <div style={styles.container}  className="container">
-            <div style={styles.footer_logo} className="footer-logo"><a href="/"><img src={logo} alt="ChooseOne" /></a></div>
-              <div style={styles.footer_list} className="footer-list">
+            <div style={styles.footer_logo}><a href="/"><img src={logo} alt="ChooseOne" /></a></div>
+              <div style={styles.footer_list}>
                 <ul>
                   <li style={styles.li}><a style={styles.a} href="/about">About ChooseOne</a></li>
                   <li style={styles.li}><a style={styles.a} href="/contact">Contact Us</a></li>

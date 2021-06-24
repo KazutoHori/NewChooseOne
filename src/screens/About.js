@@ -10,7 +10,7 @@ export default class Home extends React.Component {
 
     return (
       <Fragment>
-        <div className="about" style={styles.about}>
+        <div style={styles.about}>
           <h1 className='cali' style={styles.h1}>About ChooseOne</h1>
           <br />
           <p style={styles.p}>
@@ -30,7 +30,7 @@ export default class Home extends React.Component {
             and enjoyable to you all even a little. Nothing can be
             substituted with your pleasant experience with ChooseOne for me.
           </p>
-          <h3 style={styles.h3}>Thank you All for using ChooseOne!</h3>
+          <h3 className='cali' style={styles.h3}>Thank you All for using ChooseOne!</h3>
         </div>
       </Fragment>
     );
@@ -57,9 +57,9 @@ const styles = {
     fontStyle: 'normal',
     fontWeight: 700,
   },
-  // p: {
-  //   textIndent: 2,
-  // },
+  p: {
+    lineHeight: 3,
+  },
   h3: {
     textAlign: 'center',
     marginTop: 80,

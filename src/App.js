@@ -5,19 +5,20 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import ReactDOM from "react-dom";
 
-import Header from './components/Header.js';
-import Footer from './components/Footer.js'
-import Home from './screens/Home.js';
-import About from './screens/About.js';
-import QuestionDetail from './screens/QuestionDetail.js'
-import QuestionResult from './screens/QuestionResult.js'
+import Header from './components/Header';
+import Footer from './components/Footer'
+import Home from './screens/Home';
+import About from './screens/About';
+import QuestionDetail from './screens/QuestionDetail'
+import QuestionResult from './screens/QuestionResult'
 
-import Contact from './screens/Contact.js';
-import QuestionCreate from './screens/QuestionCreate.js';
-import QuestionLiked from './screens/QuestionLiked.js';
-import QuestionAsked from './screens/QuestionAsked.js';
-import QuestionAnswered from './screens/QuestionAnswered.js';
-import QuestionCategory from './screens/QuestionCategory.js';
+import Contact from './screens/Contact';
+import QuestionCreate from './screens/QuestionCreate';
+import QuestionLiked from './screens/QuestionLiked';
+import QuestionAsked from './screens/QuestionAsked';
+import QuestionAnswered from './screens/QuestionAnswered';
+import QuestionCategory from './screens/QuestionCategory';
+import QuestionSearch from './screens/QuestionSearch';
 
 import LeftBar from './components/LeftBar';
 import RightBar from './components/RightBar';
@@ -44,13 +45,13 @@ export default class App extends Component {
     super(props);
   }
   render() {
-    const { uid, query } = this.props;
+    const { uid } = this.props;
 
     return (
       <Fragment>
         <Router>
           <LeftBar />
-          <div className='main_list'>
+          <div style={styles.main_list}>
               <Switch>
                 <Route exact path='/about' component={About}/>
                 <Route exact path="/contact" component={Contact} />
@@ -59,7 +60,8 @@ export default class App extends Component {
                 <Route exact path="/answered" render={ () => <QuestionAnswered uid={uid}/> } />
                 <Route exact path="/liked" render={ () => <QuestionLiked uid={uid}/> } />
                 <Route path="/category/:category" render={ (props) => <QuestionCategory uid={uid} {...props} /> } />
-                <Route path='/' render={ () => <Home query={query} uid={uid}/> } />
+                <Route path='/search/:query' render={ (props) => <QuestionSearch uid={uid} {...props} /> } />
+                <Route path='/' render={ () => <Home uid={uid}/> } />
               </Switch>
           </div>
           <RightBar />

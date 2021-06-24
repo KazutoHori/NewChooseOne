@@ -17,12 +17,12 @@ export default class QuestionList extends React.Component {
   }
 
   onPageChange = (event, value) => {
-    const { questions } = this.props;
     this.setState({ page: value });
-    this.setState({ quesOnPage: questions.slice(5*(value-1), 5*value) })
+    window.scrollTo(0, 0);
   }
 
   render() {
+    const { questions } = this.props;
     const { page, quesOnPage } = this.state;
     const theme = createMuiTheme({
       palette: {
@@ -42,12 +42,12 @@ export default class QuestionList extends React.Component {
     
     return (
       <Fragment>
-        {quesOnPage.map(question => (
+        {questions.slice(10*(page-1), 10*page).map(question => (
           <Question question={question} />
         ))}
-        <div class='pagination'>
+        <div style={styles.paginationPos}>
           <ThemeProvider theme={theme}>
-            <Pagination onChange={this.onPageChange} page={page} count={5} color='primary' renderItem={(item) => <PaginationItem style={{ outline: 'none' }} {...item} />} />
+            <Pagination size={'medium'} style={styles.pagination} onChange={this.onPageChange} page={page} count={Math.ceil(questions.length/10)} color='primary' renderItem={(item) => <PaginationItem style={{ outline: 'none' }} {...item} />} />
           </ThemeProvider>
         </div>
       </Fragment>
@@ -56,7 +56,16 @@ export default class QuestionList extends React.Component {
 }
 
 const styles = {
-  onepost: {
-
+  paginationPos: {
+    display: 'flex',
+    width: 'auto',
+    borderRadius: 15,
+    justifyContent: 'center',
+  },
+  pagination: {
+    padding: '5px 0px',
+    filter: 'drop-shadow(0 0 5 rgba(160, 160, 160, 0.7))',
+    borderTop: '1px solid rgba(160, 160, 160, 0.7)',
+    borderBottom: '1px solid rgba(160, 160, 160, 0.7)',
   }
 }

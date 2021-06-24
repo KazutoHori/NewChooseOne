@@ -16,8 +16,9 @@ export default class Header extends Component {
 
   handleSearch = (event) => {
     const { onSearch } = this.props;
-    onSearch(this.state.query);
-    this.setState({ query: '' })
+    window.location.href = '/search/' + this.state.query;
+    // onSearch(this.state.query);
+    // this.setState({ query: '' })
   }
 
   render() {
