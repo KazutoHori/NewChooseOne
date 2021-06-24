@@ -10,6 +10,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import { WindMillLoading } from 'react-loadingg';
 
 import ModalDelete from '../components/ModalDelete';
 import PieChart from '../components/PieChart';
@@ -66,6 +67,7 @@ export default class QuestionResult extends Component {
       labels: [],
       values: [],
       colors: [],
+      relatedQues: [],
     }
   }
 
@@ -137,6 +139,15 @@ export default class QuestionResult extends Component {
       });
     }
     this.setState({ labels: l, values: v, colors: c });
+
+    
+    db.collection('questions').where('category', 'array_contains_any', the_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
+      var questionSimilar = [];
+      docs.forEach(doc => {
+        questionSimilar.push(doc.data());
+      });
+      this.setState({ relatedQues: questionSimilar });
+    })
   }
 
   onLikeit = () => {
@@ -170,7 +181,7 @@ export default class QuestionResult extends Component {
   }
 
   render() {
-    const { madeIt, likeIt, the_question, your_vote, modalVisible, choicesSorted,
+    const { madeIt, likeIt, the_question, your_vote, modalVisible, choicesSorted, relatedQues,
         labels, values, colors } = this.state;
 
     return (
@@ -200,9 +211,9 @@ export default class QuestionResult extends Component {
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#444"><Skeleton width={1000} height={7}  /></SkeletonTheme>}</h3>
+          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={7}  /></SkeletonTheme>}</h3>
           <p style={styles.date}>
-            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#444"><Skeleton color='white' width={100} height={7}/></SkeletonTheme> }
+            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
           </p>
           
           <div style={{ marginLeft: 10, }}>
@@ -248,23 +259,23 @@ export default class QuestionResult extends Component {
               <tbody>
                 <tr style={{ backgroundColor: 'rgb(238, 238, 143)' }} >
                   <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
-                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                 </tr>
                 <tr style={{ backgroundColor: 'rgb(143, 240, 159)' }} >
                   <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
-                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                 </tr>
                 <tr style={{ backgroundColor: 'rgb(143, 207, 239)' }} >
                   <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
-                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                 </tr>
                 <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
                   <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme> </td>
-                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme> </td>
+                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
                 </tr>
               </tbody>
             </table>
@@ -273,9 +284,9 @@ export default class QuestionResult extends Component {
           {/* グラフ */}
           <div style={styles.graphs}>
             {the_question && <div style={styles.pieGraph}><PieChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-            {!the_question && <div style={styles.pieGraph}><PieChart skeleton labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+            {!the_question && <div style={styles.pieGraph}><PieChart Skeleton duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
             {the_question && <div style={styles.barGraph}><BarChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-            {!the_question && <div style={styles.barGraph}><BarChart skeleton labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+            {!the_question && <div style={styles.barGraph}><BarChart Skeleton duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
           </div>
 
           {/* ボタン系 */}
@@ -291,11 +302,11 @@ export default class QuestionResult extends Component {
 
           {/* 似ている投稿 */}
           <div>
-            <h3 className='cali'>Questions You May Like</h3>
-            <QuestionList questions={[]} />
-            {/* {questions == [] && ( */}
-              <pre>There are no similar posts yet.</pre>
-            {/* )} */}
+            <h3 style={{ marginTop: 40 }} className='cali'>Questions You May Like</h3>
+            <div style={styles.similarPostsPos}>
+              {relatedQues.length !== 0 && <QuestionList questions={relatedQues} />}
+              {relatedQues.length === 0 && <WindMillLoading style={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />}
+            </div>
           </div>
         </div>
       </Fragment>
@@ -370,10 +381,26 @@ export default class QuestionResult extends Component {
       });
     }
     this.setState({ labels: l, values: v, colors: c });
+
+    db.collection('questions').where('category', 'array-contains-any', the_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
+      var questionSimilar = [];
+      docs.forEach(doc => {
+        questionSimilar.push(doc.data());
+      });
+      this.setState({ relatedQues: questionSimilar });
+    })
   }
 }
 
 const styles = {
+  similarPostsPos: {
+    width: '70%',
+  },
+  loadingPos: {
+    marginTop: 50,
+    marginLeft: 50,
+    position: 'relative',
+  },
   table: {
     filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
     borderRadius: 15,
