@@ -8,7 +8,7 @@ export default class QuestionList extends React.Component {
 
   render() {
     const { the_question } = this.props;
-    const notSkeleton = the_question !== 'skeleton';
+    const notUseSkeleton = the_question !== 'skeleton';
 
     var choiceSkeleton = [];
     for(var i=0; i<5; i++){
@@ -30,7 +30,7 @@ export default class QuestionList extends React.Component {
         <div className='onepost'>
           <p className='cali2'><span className='text-primary fa fa-tag'></span>
             Category:
-            {notSkeleton && (
+            {notUseSkeleton && (
               <Fragment>
                 {the_question.category.map((cate, idx) => {
                   var len = the_question.category.length;
@@ -44,12 +44,12 @@ export default class QuestionList extends React.Component {
                 })}
               </Fragment>
             )}
-            {!notSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
+            {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
           </p>
-          <h4 className='cali2'><a className='link' href={'/detail/'+the_question.slug}>{notSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={'80%'} height={20}  /></SkeletonTheme> }</a></h4>
-          <p className="date">&ensp;&ensp;&ensp;{notSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={100} height={7}  /></SkeletonTheme> } </p>
+          <h4 className='cali2'><a className='link' href={'/detail/'+the_question.slug}>{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={'80%'} height={20}  /></SkeletonTheme> }</a></h4>
+          <p className="date">&ensp;&ensp;&ensp;{notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={100} height={7}  /></SkeletonTheme> } </p>
           <ul>
-            {notSkeleton && (
+            {notUseSkeleton && (
               <Fragment>
                 {the_question.choices.map((choice,idx) => (
                   <div>
@@ -60,7 +60,7 @@ export default class QuestionList extends React.Component {
                 ))}
               </Fragment>
             )}
-            {!notSkeleton && [choiceSkeleton]}
+            {!notUseSkeleton && [choiceSkeleton]}
           </ul>
         </div>
       </Fragment>

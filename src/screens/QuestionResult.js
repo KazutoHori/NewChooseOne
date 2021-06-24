@@ -184,6 +184,8 @@ export default class QuestionResult extends Component {
     const { madeIt, likeIt, the_question, your_vote, modalVisible, choicesSorted, relatedQues,
         labels, values, colors } = this.state;
 
+    const notUseSkeleton = relatedQues.length !== 0;
+
     return (
       <Fragment>
         <div style={styles.resultsPos}>
@@ -191,7 +193,7 @@ export default class QuestionResult extends Component {
           {/* カテゴリー */}
           <p className='cali2'><span className="text-primary fa fa-tag" />
             Category:
-            {the_question && (
+            {notUseSkeleton && (
               <Fragment>
                 {the_question.category.map((cate, idx) => {
                   var len = the_question.category.length;
@@ -205,16 +207,16 @@ export default class QuestionResult extends Component {
                 })}
               </Fragment>
             )}
-            {!the_question && <Skeleton style={{ marginLeft: 10 }} width={60} />}
+            {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
           </p>
 
           {/* モーダル */}
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
+          <h3 className="cali2">{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
           <p style={styles.date}>
-            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
+            {notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
           </p>
           
           <div style={{ marginLeft: 10, }}>
@@ -222,11 +224,11 @@ export default class QuestionResult extends Component {
           </div>
           <div style={{ marginLeft: 10, }}>
             <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' href={the_question && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
-            <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} href={the_question && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
+            <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} href={notUseSkeleton && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
           </div>
 
           {/* テーブル */}
-          {the_question && (
+          {notUseSkeleton && (
             <table style={styles.table} className='table'>
               <thead>
                 <tr>
@@ -246,7 +248,7 @@ export default class QuestionResult extends Component {
               </tbody>
             </table>
           )}
-          {!the_question && (
+          {!notUseSkeleton && (
             <table style={styles.table} className='table'>
               <thead>
                 <tr>
@@ -282,10 +284,10 @@ export default class QuestionResult extends Component {
 
           {/* グラフ */}
           <div style={styles.graphs}>
-            {the_question && <div style={styles.pieGraph}><PieChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-            {!the_question && <div style={styles.pieGraph}><PieChart Skeleton duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
-            {the_question && <div style={styles.barGraph}><BarChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-            {!the_question && <div style={styles.barGraph}><BarChart Skeleton duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+            {notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
+            {!notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+            {notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
+            {!notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
           </div>
 
           {/* ボタン系 */}
