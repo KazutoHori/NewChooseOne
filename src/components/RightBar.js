@@ -28,8 +28,6 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    if(this.state.questionPopular !== []) return null;
-
     let current=new Date();
     current=current.toJSON();
     var today = timeToDay(current.slice(0, 10));
@@ -52,7 +50,7 @@ export default class Home extends Component {
 
         {/* 右バー */}
         <div style={styles.right_side}>
-          <h5 className='cali'>Popular Questions</h5>
+          <h5 style={styles.semiTitle} className='cali'>Popular Questions</h5>
           {questionPopular.map((question, idx) => (
             <div className="side_question">
               <div className="title">
@@ -132,50 +130,7 @@ const styles = {
     paddingBottom: 15,
     height: 'fit-content',
   },
-  h5: {
-    fontFamily: 'lust-script, sans-serif',
-    fontStyle: 'normal',
-    fontWeight: 400,
-    paddingLeft: 7,
-  },
-
-  title: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  rank: {
+  semiTitle: {
     paddingLeft: 10,
-    margin: 0,
-    position: 'relative',
   },
-  h6: {
-    marginTop: 8,
-    marginLeft: 2,
-    fontSize: 12,
-    maxWidth: 150,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  label: {
-    fontSize: 5,
-    padding: 0,
-    margin: 0,
-    maxWidth: 100,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  // .link::after{
-  link: {
-    position: 'absolute',
-    top: 0, 
-    right: 0, 
-    bottom: 0, 
-    left: 0,
-    zIndex: 1,
-    pointerEvents: 'auto',
-    content: '',
-    backgroundColor: 'transparent',
-  }
 }

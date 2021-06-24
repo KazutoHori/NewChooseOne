@@ -66,8 +66,9 @@ export default class QuestionAnswered extends Component {
       return (
         <Fragment>
           <h3 className='cali'>Search Results</h3>
+          <div style={{ position: 'relative' }}><pre>      Searching ... </pre></div>
           <div style={styles.loadingPos}>
-            <WindMillLoading color='rgb(39, 169, 68)' speed={1.2} size='large' />
+            <WindMillLoading style={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />
           </div>
         </Fragment>
       )
@@ -77,7 +78,12 @@ export default class QuestionAnswered extends Component {
       <Fragment>
         <h3 className='cali'>Search Results</h3>
         {results.length === 0 && <pre>      Your search - {query} - did not match any questions.</pre>}
-        {results.length !== 0 && <QuestionList questions={results} />}
+        {results.length !== 0 && (
+          <Fragment>
+            <pre>      - {query} -</pre>
+            <QuestionList questions={results} />
+          </Fragment>
+        )}
       </Fragment>
     )
   }
@@ -111,8 +117,9 @@ export default class QuestionAnswered extends Component {
 }
 
 const styles = {
-  main_list: {
-    width: 630,
-    height: 'auto',
-  },
+  loadingPos: {
+    marginTop: 50,
+    marginLeft: 50,
+    position: 'relative',
+  }
 }

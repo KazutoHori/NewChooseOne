@@ -34,8 +34,6 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    if(this.state.todaysRanking !== []) return null;
-
     let current=new Date();
     current=current.toJSON();
     var today = timeToDay(current.slice(0, 10));
