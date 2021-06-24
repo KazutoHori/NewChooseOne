@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Loading from 'react-loading';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -170,47 +171,56 @@ export default class QuestionDetail extends Component {
   render() {
     const { likeIt, modalVisible, madeIt, the_choice, warning, the_question } = this.state;
 
-    if (the_question === null){
-      return (
-        <Loading />
-      )
+    var choiceSkeleton = [];
+    for(var i=0; i<3; i++){
+      choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 40 }}><SkeletonTheme color="white" highlightColor="#444"><Skeleton color='white' width={180} height={7}/></SkeletonTheme></div>)
     }
+
 
     return (
       <Fragment>
         <div style={styles.detailPos}>
           {/* カテゴリー */}
           <p className="cali2"><span className="text-primary fa fa-tag" />
-            Category:  
-            {the_question.category.map((cate, idx) => {
-              var len = the_question.category.length;
-              if ( idx === 0){
-                return (
-                  <a class='text-primary' href={'/category/'+cate}> {cate}</a>
-                )
-              }else{
-                <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
-              }
-            })}
+            Category:
+            {the_question && (
+              <Fragment>
+                {the_question.category.map((cate, idx) => {
+                  var len = the_question.category.length;
+                  if ( idx === 0){
+                    return (
+                      <a class='text-primary' href={'/category/'+cate}> {cate}</a>
+                    )
+                  }else{
+                    <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
+                  }
+                })}
+              </Fragment>
+            )}
           </p>
 
           {/* モーダル */}
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="cali2">{the_question.title}</h3>
+          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#444"><Skeleton width={1000} height={7}  /></SkeletonTheme>}</h3>
           <p style={styles.date}>
-            {the_question.created_on}
+            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#444"><Skeleton color='white' width={100} height={7}/></SkeletonTheme> }
           </p>
 
           {/* 選択肢 */}
           <Fragment>
-            {the_question.choices.map((choice, idx) => (
-              <div style={styles.choiceBtnPos}>
-                {idx !== the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
-                {idx === the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
-              </div>
-            ))}
+            {the_question && (
+              <Fragment>
+                {the_question.choices.map((choice, idx) => (
+                  <div style={styles.choiceBtnPos}>
+                    {idx !== the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
+                    {idx === the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
+                  </div>
+                ))}
+              </Fragment>
+            )}
+            {!the_question && [choiceSkeleton]}
             {warning && (<p>{warning}</p>)}
             <div style={styles.voteBtnPos}>
               <Button startIcon={<ThumbUpAltIcon />}  onClick={this.onVote} style={styles.roundBtn} className='btn btn-success'>Vote</Button>
