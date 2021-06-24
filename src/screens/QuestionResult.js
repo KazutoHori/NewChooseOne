@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import Loading from 'react-loading';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import QuestionList from '../components/QuestionList';
 import Button from '@material-ui/core/Button';
@@ -8,6 +7,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 import ModalDelete from '../components/ModalDelete';
 import PieChart from '../components/PieChart';
@@ -30,6 +32,9 @@ const firebaseConfig = {
 };
 if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
+
+var tabColors = ['#ff69b4']
+for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
 const theme = createMuiTheme({
   palette: {
@@ -68,9 +73,9 @@ export default class QuestionResult extends Component {
     const { uid } = this.props;
     const { the_slug } = this.props.match.params;
 
-    if(uid === null || this.state.the_question !== null) return null;
+    if(uid === null || this.state.user !== null) return null;
 
-    var user = {};
+    var user = {}
     await db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
         user = doc.data()
@@ -90,47 +95,48 @@ export default class QuestionResult extends Component {
       this.setState({ madeIt: false });
     }
 
+    for(var i=0; i<user.question_answered; i++){
+      if(user.question_answered[i].question === the_slug) this.setState({ your_vote: user.question_answered[i].answer })
+    }
+
     var the_question = null
     await db.collection('questions').doc(the_slug).get().then((doc) => {
       if(doc.exists){
         the_question = doc.data()
         this.setState({ the_question: doc.data() })
       }else{
-        //TODO  ホームに戻る
+        window.location.href = '/';
       }
     });
 
-    if(the_question){
-      var copy=Array.from(the_question.choices);
-      copy.sort(function(first, second){
-        if (first.votes > second.votes){
-          return -1;
-        }else if (first.votes < second.votes){
-          return 1;
-        }else{
-          return 0;
-        }
-      });
-      this.setState({ choicesSorted: copy });
-      var l = [];
-      var v = [];
-      var c = [];
-
-      for(let i=0; i<copy.length;  i++){
-        l.push(copy[i].choice_text);
-        v.push(copy[i].votes);
+    var copy=Array.from(the_question.choices);
+    copy.sort(function(first, second){
+      if (first.votes > second.votes){
+        return -1;
+      }else if (first.votes < second.votes){
+        return 1;
+      }else{
+        return 0;
       }
+    });
+    this.setState({ choicesSorted: copy });
+    var l = [];
+    var v = [];
+    var c = [];
 
-      // Chart.defaults.global.barPercentage=1.0;
-      var time = the_question.created_at
-      var seconds = time[-2]+time[-1]
-      if(v !== []){
-        v.forEach((entry, idx) => { // generate some colors
-          c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
-        });
-      }
-      this.setState({ labels: l, values: v, colors: c });
+    for(let i=0; i<copy.length;  i++){
+      l.push(copy[i].choice_text);
+      v.push(copy[i].votes);
     }
+
+    var time = the_question.created_at;
+    var seconds = parseInt(time.slice(-2));
+    if(v !== []){
+      v.forEach((entry, idx) => {
+        c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
+      });
+    }
+    this.setState({ labels: l, values: v, colors: c });
   }
 
   onLikeit = () => {
@@ -167,10 +173,6 @@ export default class QuestionResult extends Component {
     const { madeIt, likeIt, the_question, your_vote, modalVisible, choicesSorted,
         labels, values, colors } = this.state;
 
-    if(the_question === null){
-      return <Loading type='bars' color='#714' />
-    }
-
     return (
       <Fragment>
         <div style={styles.resultsPos}>
@@ -178,61 +180,102 @@ export default class QuestionResult extends Component {
           {/* カテゴリー */}
           <p className='cali2'><span className="text-primary fa fa-tag" />
             Category:
-            {the_question.category.map((cate, idx) => {
-              var len = the_question.category.length;
-              if ( idx === 0){
-                return (
-                  <a class='text-primary' href={'/category/'+cate}> {cate}</a>
-                )
-              }else{
-                <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
-              }
-            })}
+            {the_question && (
+              <Fragment>
+                {the_question.category.map((cate, idx) => {
+                  var len = the_question.category.length;
+                  if ( idx === 0){
+                    return (
+                      <a class='text-primary' href={'/category/'+cate}> {cate}</a>
+                    )
+                  }else{
+                    <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
+                  }
+                })}
+              </Fragment>
+            )}
           </p>
 
           {/* モーダル */}
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="cali2">{the_question.title}</h3>
+          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#444"><Skeleton width={1000} height={7}  /></SkeletonTheme>}</h3>
           <p style={styles.date}>
-            {the_question.created_on}
+            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#444"><Skeleton color='white' width={100} height={7}/></SkeletonTheme> }
           </p>
           
-          <div>
+          <div style={{ marginLeft: 10, }}>
             <p style={styles.your_vote}>You have voted for {your_vote}</p>
           </div>
-          <div>
-            <a className="tip" href={'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} rel="nofollow" target="_blank"><img src="https://img.icons8.com/color/35/000000/twitter-circled.png" /><span>Share</span></a>
-            <a className="tip" href={"https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} rel="nofollow" target="_blank"><img src="https://img.icons8.com/fluent/35/000000/facebook-new.png" /><span>Share</span></a>
-            <a className="tip" href={"https://social-plugins.line.me/lineit/share?url=https://www.chooseone.app/"+the_question.slug} target="_blank" rel="nofollow"><img src="https://img.icons8.com/color/35/000000/line-me.png" /><span>Share</span></a>
+          <div style={{ marginLeft: 10, }}>
+            <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' href={the_question && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
+            <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} href={the_question && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
           </div>
-          <style dangerouslySetInnerHTML={{__html: "\n        a.tip span { display: none; padding:3px 5px; margin-top: 30px; margin-left: -20px; font-size: 7px;}\n        a.tip:hover span {display:inline; position:absolute; border-radius: 10px; background:#ffffff; border:1px solid #cccccc; color:#6c6c6c;}\n      " }} />
 
           {/* テーブル */}
-          <table style={styles.table} className='table'>
-            <thead>
-              <tr>
-                <td />
-                <td>Choices</td>
-                <td>Votes</td>
-              </tr>
-            </thead>
-            <tbody>
-              {choicesSorted.map((choice, idx) => (
-                <tr style={{ backgroundColor: colors[idx] }} >
-                  <th scope="row">&nbsp;&nbsp;{idx+1}</th>
-                  <td >{choice.choice_text}</td>
-                  <td>{choice.votes}</td>
+          {the_question && (
+            <table style={styles.table} className='table'>
+              <thead>
+                <tr>
+                  <td />
+                  <td>Choices</td>
+                  <td>Votes</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <Fragment>
+                  {choicesSorted.map((choice, idx) => (
+                    <tr style={{ backgroundColor: colors[idx] }} >
+                      <th scope="row">&nbsp;&nbsp;{idx+1}</th>
+                      <td >{choice.choice_text}</td>
+                      <td>{choice.votes}</td>
+                    </tr>
+                  ))}
+                </Fragment>
+              </tbody>
+            </table>
+          )}
+          {!the_question && (
+            <table style={styles.table} className='table'>
+              <thead>
+                <tr>
+                  <td />
+                  <td>Choices</td>
+                  <td>Votes</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ backgroundColor: 'rgb(238, 238, 143)' }} >
+                  <th scope="row">&nbsp;&nbsp;{1}</th>
+                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                </tr>
+                <tr style={{ backgroundColor: 'rgb(143, 240, 159)' }} >
+                  <th scope="row">&nbsp;&nbsp;{1}</th>
+                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                </tr>
+                <tr style={{ backgroundColor: 'rgb(143, 207, 239)' }} >
+                  <th scope="row">&nbsp;&nbsp;{1}</th>
+                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme></td>
+                </tr>
+                <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
+                  <th scope="row">&nbsp;&nbsp;{1}</th>
+                  <td ><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme> </td>
+                  <td><SkeletonTheme color="white" highlightColor="#444"><Skeleton width={60} height={10}/></SkeletonTheme> </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
 
           {/* グラフ */}
           <div style={styles.graphs}>
-            <div style={styles.pieGraph}><PieChart labels={labels} values={values} colors={colors} /></div>
-            <div style={styles.barGraph}><BarChart labels={labels} values={values} colors={colors} /></div>
+            {the_question && <div style={styles.pieGraph}><PieChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
+            {!the_question && <div style={styles.pieGraph}><PieChart skeleton labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+            {the_question && <div style={styles.barGraph}><BarChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
+            {!the_question && <div style={styles.barGraph}><BarChart skeleton labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
           </div>
 
           {/* ボタン系 */}
@@ -248,7 +291,7 @@ export default class QuestionResult extends Component {
 
           {/* 似ている投稿 */}
           <div>
-            <h3>Questions You May Like</h3>
+            <h3 className='cali'>Questions You May Like</h3>
             <QuestionList questions={[]} />
             {/* {questions == [] && ( */}
               <pre>There are no similar posts yet.</pre>
@@ -285,13 +328,17 @@ export default class QuestionResult extends Component {
       this.setState({ madeIt: false });
     }
 
+    for(var i=0; i<user.question_answered; i++){
+      if(user.question_answered[i].question === the_slug) this.setState({ your_vote: user.question_answered[i].answer })
+    }
+
     var the_question = null
     await db.collection('questions').doc(the_slug).get().then((doc) => {
       if(doc.exists){
         the_question = doc.data()
         this.setState({ the_question: doc.data() })
       }else{
-        //TODO  ホームに戻る
+        window.location.href = '/';
       }
     });
 
@@ -315,11 +362,10 @@ export default class QuestionResult extends Component {
       v.push(copy[i].votes);
     }
 
-    // Chart.defaults.global.barPercentage=1.0;
     var time = the_question.created_at;
     var seconds = parseInt(time.slice(-2));
     if(v !== []){
-      v.forEach((entry, idx) => { // generate some colors
+      v.forEach((entry, idx) => {
         c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
       });
     }

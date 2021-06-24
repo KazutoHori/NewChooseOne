@@ -8,8 +8,8 @@ export default class BarChart extends React.Component {
   }
 
   render () {
-
-    const { labels, values, colors } = this.props;
+    const { skeleton, labels, values, colors } = this.props;
+    var duration = skeleton ? 0 : 5000;
 
     const data = {
       labels: labels,
@@ -33,7 +33,7 @@ export default class BarChart extends React.Component {
         display: false
       },
       animation: {
-        duration: 5000,
+        duration: duration,
       },
       tooltips: {
         backgroundColor: 'white',

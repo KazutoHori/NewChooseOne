@@ -40,11 +40,7 @@ export default class QuestionList extends React.Component {
 
     const howManyPages = Math.ceil(questions.length/10);
     
-    console.log(questions);
-    if(questions === null || questions.length === 0){
-      console.log('HELO');
-      return null;
-    }
+    if(questions === null || questions.length === 0) return null;
     return (
       <Fragment>
         {questions.slice(10*(page-1), 10*page).map(question => (

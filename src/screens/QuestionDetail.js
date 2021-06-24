@@ -172,7 +172,7 @@ export default class QuestionDetail extends Component {
     const { likeIt, modalVisible, madeIt, the_choice, warning, the_question } = this.state;
 
     var choiceSkeleton = [];
-    for(var i=0; i<3; i++){
+    for(var i=0; i<5; i++){
       choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 40 }}><SkeletonTheme color="white" highlightColor="#444"><Skeleton color='white' width={180} height={7}/></SkeletonTheme></div>)
     }
 
