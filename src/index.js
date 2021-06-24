@@ -4,12 +4,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-
 import QuestionDetail from './screens/QuestionDetail';
 import QuestionResult from './screens/QuestionResult';
 import { Fragment } from 'react';
@@ -39,10 +37,6 @@ export default class Routing extends React.Component {
 
     this.state = {
       uid: null,
-      query: '',
-      categories: [],
-      todays_ranking: [],
-      question_popular: [],
     }
   }
 
@@ -83,13 +77,9 @@ export default class Routing extends React.Component {
     }
   }
 
-  onSearch = (query) => {
-    this.setState({ query });
-  }
-
   render () {
 
-    const { uid, query } = this.state;
+    const { uid } = this.state;
     
     return (
       <Fragment>
@@ -115,14 +105,14 @@ export default class Routing extends React.Component {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
           </div>
           <div style={styles.background}>
-            <Header onSearch={this.onSearch} />
+            <Header />
             <div style={styles.wrapper}>
               <div style={styles.container} className='container'>
                 <div style={styles.homePos}>
                   <Switch>
                     <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
                     <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
-                    <Route path="/" render={ () => <App query={query} uid={uid}/> } />
+                    <Route path="/" render={ () => <App uid={uid}/> } />
                   </Switch>
                   <Footer/>
                 </div>

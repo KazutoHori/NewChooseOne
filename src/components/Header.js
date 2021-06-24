@@ -14,11 +14,8 @@ export default class Header extends Component {
     }
   }
 
-  handleSearch = (event) => {
-    const { onSearch } = this.props;
+  onSubmitSearch = (event) => {
     window.location.href = '/search/' + this.state.query;
-    // onSearch(this.state.query);
-    // this.setState({ query: '' })
   }
 
   render() {
@@ -31,7 +28,7 @@ export default class Header extends Component {
               <span className="navbar-toggler-icon" />
             </button>
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
-              <form onSubmit={this.handleSearch} onKeyDown={(e) => {if(e.key === 'Enter'){e.preventDefault(); this.handleSearch(); }}} className="form-inline mr-5">
+              <form onKeyDown={(e) => {if(e.key === 'Enter'){e.preventDefault(); this.onSubmitSearch(); }}} className="form-inline mr-5">
                 <input type='text' value={this.state.query} onChange={(event) => this.setState({ query: event.target.value })} className="form-control" placeholder="Search"  />
               </form>
               <ul className="navbar-nav">
