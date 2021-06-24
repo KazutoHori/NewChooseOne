@@ -58,8 +58,8 @@ export default class BarChart extends React.Component {
         }],
         yAxes: [{
           ticks: {
-            beginAtZero: true,
-            callback: function(value) {if (value % 1 === 0) {return value;}}
+            min: 0,
+            precision: 0,
           }
         }]
       },

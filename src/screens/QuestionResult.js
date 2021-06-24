@@ -95,7 +95,7 @@ export default class QuestionResult extends Component {
       this.setState({ madeIt: false });
     }
 
-    for(var i=0; i<user.question_answered; i++){
+    for(var i=0; i<user.question_answered.length; i++){
       if(user.question_answered[i].question === the_slug) this.setState({ your_vote: user.question_answered[i].answer })
     }
 
@@ -328,7 +328,7 @@ export default class QuestionResult extends Component {
       this.setState({ madeIt: false });
     }
 
-    for(var i=0; i<user.question_answered; i++){
+    for(var i=0; i<user.question_answered.length; i++){
       if(user.question_answered[i].question === the_slug) this.setState({ your_vote: user.question_answered[i].answer })
     }
 
