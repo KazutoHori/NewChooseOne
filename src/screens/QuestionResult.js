@@ -212,7 +212,7 @@ export default class QuestionResult extends Component {
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={7}  /></SkeletonTheme>}</h3>
+          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
           <p style={styles.date}>
             {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
           </p>
@@ -236,15 +236,13 @@ export default class QuestionResult extends Component {
                 </tr>
               </thead>
               <tbody>
-                <Fragment>
-                  {choicesSorted.map((choice, idx) => (
-                    <tr style={{ backgroundColor: colors[idx] }} >
-                      <th scope="row">&nbsp;&nbsp;{idx+1}</th>
-                      <td >{choice.choice_text}</td>
-                      <td>{choice.votes}</td>
-                    </tr>
-                  ))}
-                </Fragment>
+                {choicesSorted.map((choice, idx) => (
+                  <tr style={{ backgroundColor: colors[idx] }} >
+                    <th scope="row">&nbsp;&nbsp;{idx+1}</th>
+                    <td >{choice.choice_text}</td>
+                    <td>{choice.votes}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           )}
@@ -260,22 +258,22 @@ export default class QuestionResult extends Component {
               <tbody>
                 <tr style={{ backgroundColor: 'rgb(238, 238, 143)' }} >
                   <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                   <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                 </tr>
                 <tr style={{ backgroundColor: 'rgb(143, 240, 159)' }} >
-                  <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <th scope="row">&nbsp;&nbsp;{2}</th>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                   <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                 </tr>
                 <tr style={{ backgroundColor: 'rgb(143, 207, 239)' }} >
-                  <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <th scope="row">&nbsp;&nbsp;{3}</th>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                   <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                 </tr>
                 <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
-                  <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td ><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+                  <th scope="row">&nbsp;&nbsp;{4}</th>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
                   <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
                 </tr>
               </tbody>

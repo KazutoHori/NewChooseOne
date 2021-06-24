@@ -173,7 +173,7 @@ export default class QuestionDetail extends Component {
 
     var choiceSkeleton = [];
     for(var i=0; i<5; i++){
-      choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 40 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={180} height={7}/></SkeletonTheme></div>)
+      choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15}/></SkeletonTheme></div>)
     }
 
 
@@ -204,9 +204,9 @@ export default class QuestionDetail extends Component {
           {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
 
           {/* タイトル */}
-          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={7}  /></SkeletonTheme>}</h3>
+          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
           <p style={styles.date}>
-            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={100} height={7}/></SkeletonTheme> }
+            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={50} height={7}/></SkeletonTheme> }
           </p>
 
           {/* 選択肢 */}
