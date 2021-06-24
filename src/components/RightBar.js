@@ -72,15 +72,9 @@ export default class Home extends Component {
                     <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
                   </Fragment>
                 )}
-                {idx === 9 && (
+                {idx !== 0 && idx !== 1 && idx !== 2 && (
                   <Fragment>
-                    <img src="https://img.icons8.com/color/25/000000/10.png"/>
-                    <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
-                  </Fragment>
-                )}
-                {idx !== 0 && idx !== 1 && idx !== 2 && idx !== 9 && (
-                  <Fragment>
-                    <img src={'https://img.icons8.com/color/20/000000/'+(idx+1)+'-circle-c--v2.png'} />
+                    <div style={styles.number}><p>{idx+1}</p></div>
                     <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
                   </Fragment>
                 )}
@@ -133,4 +127,16 @@ const styles = {
   semiTitle: {
     paddingLeft: 10,
   },
+  number: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: 'rgb(2, 122, 255)',
+    color: 'white',
+    fontSize: 5,
+    textAlign: 'center',
+    marginTop: 7,
+    marginRight: 4,
+    marginLeft: 5,
+  }
 }

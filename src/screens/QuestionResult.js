@@ -176,16 +176,16 @@ export default class QuestionResult extends Component {
         <div style={styles.resultsPos}>
 
           {/* カテゴリー */}
-          <p><span className="text-primary fa fa-tag" />
+          <p className='cali2'><span className="text-primary fa fa-tag" />
             Category:
             {the_question.category.map((cate, idx) => {
               var len = the_question.category.length;
-              if ( idx === len-1){
+              if ( idx === 0){
                 return (
-                  <a class='text-primary' href="/category/">{cate}, </a>
+                  <a class='text-primary' href={'/category/'+cate}> {cate}</a>
                 )
               }else{
-                <a class='text-primary' href="/category/">{cate}</a>
+                <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
               }
             })}
           </p>

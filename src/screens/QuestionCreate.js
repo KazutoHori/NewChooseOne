@@ -222,7 +222,7 @@ export default class QuestionCreate extends Component {
     return (
       <Fragment>
         <div style={styles.add}>
-          <h3>Let's Add A New Question!</h3>
+          <h3 className='cali'>Let's Add A New Question!</h3>
           
           {/* タイトル */}
           <h4 className='cali2'>Title</h4>

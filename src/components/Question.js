@@ -15,18 +15,16 @@ export default class QuestionList extends React.Component {
     return (
       <Fragment>
         <div className='onepost'>
-          <p><span className='text-primary fa fa-tag'></span>
+          <p className='cali2'><span className='text-primary fa fa-tag'></span>
             Category:
             {question.category.map((cate, idx) => {
               var len = question.category.length;
-              if ( idx === len-1){
+              if ( idx === 0){
                 return (
-                  <a class='text-primary' href={'/category/'+cate}>{cate}</a>
+                  <a class='text-primary' href={'/category/'+cate}> {cate}</a>
                 )
               }else{
-                return (
-                  <a class='text-primary' href={'/category/'+cate}>{cate}, </a>
-                )
+                <a class='text-primary' href={'/category/'+cate}>, {cate}</a>
               }
             })}
           </p>
