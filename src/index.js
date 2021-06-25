@@ -28,11 +28,12 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default function Routing (props) {
+export default function Routing () {
 
   const [uid, setUid] = useState(null);
 
   useEffect(() => {
+    if(uid !== null) return null;
     const lc = localStorage.getItem('chooseoneUid');
 
     if(uid === null) {
@@ -63,10 +64,10 @@ export default function Routing (props) {
             });          
           })
       }else{
-        setUid(uid);
+        setUid(lc);
       }
     }
-  });
+  }, [uid]);
     
   return (
     <Fragment>

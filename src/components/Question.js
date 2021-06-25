@@ -1,7 +1,4 @@
 import React, { Fragment } from 'react';
-import Loading from 'react-loading';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
-import FacebookIcon from '@material-ui/icons/Facebook';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 export default function QuestionList (props) {
@@ -9,6 +6,7 @@ export default function QuestionList (props) {
   const the_question = props.the_question;
   const notUseSkeleton = the_question !== 'skeleton';
   var choiceSkeleton = [];
+  
   for(var i=0; i<5; i++){
     choiceSkeleton.push(
       <div>

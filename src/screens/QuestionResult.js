@@ -98,6 +98,7 @@ export default function QuestionResult (props) {
       }
     })
 
+
     db.collection('questions').doc(the_slug).get().then((doc) => {
       if(doc.exists){
         setTheQuestion(doc.data())
@@ -182,7 +183,6 @@ export default function QuestionResult (props) {
   const onClose = () => {
     setModalVisible(false);
   }
-
 
   return (
     <Fragment>
