@@ -1,8 +1,6 @@
-import React, { Component, Fragment } from 'react';
-import Loading from 'react-loading';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useState, useEffect, Fragment } from 'react';
 
-import { slugify, timeToDay } from '../utils/Funcs.js';
+import { timeToDay } from '../utils/Funcs.js';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -24,16 +22,12 @@ var categories = ['Love', 'News', 'Sports', 'Pastime', 'Health', 'Living', 'Care
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
-export default class Home extends Component {
+export default function Home (props) {
 
-  constructor(props){
-    super(props);
-    this.state = {
-      todaysRanking: [],
-    }
-  }
+  const [todaysRanking, setTodaysRanking] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
+    if(todaysRanking !== []) return null;
     let current=new Date();
     current=current.toJSON();
     var today = timeToDay(current.slice(0, 10));
@@ -44,83 +38,62 @@ export default class Home extends Component {
       ques.forEach(q => {
         ques.push(q.data());
       });
-      this.setState({ todaysRanking: ques });
+      setTodaysRanking(ques);
     });
-  }
-
-  render() {
-    const { todaysRanking } = this.state;
-
-    return (
-      <Fragment>
-        <div style={styles.left_side}>
-          <h5 style={styles.semiTitle} className='cali'>Categories</h5>
-          <ul>
-            {categories.map((cate, idx) => (
-              <li><a className='cali2' style={{ color: tabColors[idx] }} id="left{idx}" href={'/category/'+cate}>{cate}</a></li>
-            ))}
-          </ul>
-          <h5 style={styles.semiTitle} className='cali'>Today's Ranking</h5>
-          {todaysRanking.map((question, idx) => (
-            <div className="side_question">
-              <div className="title">
-                {idx === 0 && (
-                  <Fragment>
-                    <img src="https://img.icons8.com/color/25/000000/first-place-ribbon.png" />
-                    <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
-                  </Fragment>
-                )}
-                {idx === 1 && (
-                  <Fragment>
-                    <img src="https://img.icons8.com/color/25/000000/second-place-ribbon.png" />
-                    <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
-                  </Fragment>
-                )}
-                {idx === 2 && (
-                  <Fragment>
-                    <img src="https://img.icons8.com/color/25/000000/third-place-ribbon.png" />
-                    <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
-                  </Fragment>
-                )}
-                {idx !== 0 && idx !== 1 && idx !== 2 && (
-                  <Fragment>
-                    <div style={styles.number}><p>(idx+1)</p></div>
-                    <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
-                  </Fragment>
-                )}
-              </div>
-              <ul>
-                {question.choices.map(choice => (
-                  <div>
-                    <label>○ {choice.choice_text}</label>
-                    <br />
-                  </div>
-                ))}
-              </ul>
-            </div>
+  });
+  
+  return (
+    <Fragment>
+      <div style={styles.left_side}>
+        <h5 style={styles.semiTitle} className='cali'>Categories</h5>
+        <ul>
+          {categories.map((cate, idx) => (
+            <li><a className='cali2' style={{ color: tabColors[idx] }} id="left{idx}" href={'/category/'+cate}>{cate}</a></li>
           ))}
-        </div>
+        </ul>
+        <h5 style={styles.semiTitle} className='cali'>Today's Ranking</h5>
+        {todaysRanking.map((question, idx) => (
+          <div className="side_question">
+            <div className="title">
+              {idx === 0 && (
+                <Fragment>
+                  <img src="https://img.icons8.com/color/25/000000/first-place-ribbon.png" />
+                  <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
+                </Fragment>
+              )}
+              {idx === 1 && (
+                <Fragment>
+                  <img src="https://img.icons8.com/color/25/000000/second-place-ribbon.png" />
+                  <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
+                </Fragment>
+              )}
+              {idx === 2 && (
+                <Fragment>
+                  <img src="https://img.icons8.com/color/25/000000/third-place-ribbon.png" />
+                  <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
+                </Fragment>
+              )}
+              {idx !== 0 && idx !== 1 && idx !== 2 && (
+                <Fragment>
+                  <div style={styles.number}><p>(idx+1)</p></div>
+                  <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
+                </Fragment>
+              )}
+            </div>
+            <ul>
+              {question.choices.map(choice => (
+                <div>
+                  <label>○ {choice.choice_text}</label>
+                  <br />
+                </div>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
 
-      </Fragment>
-    )
-  }
-
-  componentDidUpdate() {
-    if(this.state.todaysRanking !== []) return null;
-
-    let current=new Date();
-    current=current.toJSON();
-    var today = timeToDay(current.slice(0, 10));
-
-    var quesRef = db.collection('questions');
-    quesRef.where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((ques) => {
-      var ques = [];
-      ques.forEach(q => {
-        ques.push(q.data());
-      });
-      this.setState({ todaysRanking: ques });
-    });
-  }
+    </Fragment>
+  )
 }
 
 const styles = {

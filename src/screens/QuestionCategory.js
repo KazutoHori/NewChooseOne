@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import Loading from 'react-loading';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { useEffect, useState, Fragment } from 'react';
+
 import QuestionList from '../components/QuestionList.js';
 
 // Firebase
@@ -21,45 +20,25 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default class QuestionAnswered extends React.Component {
+export default function QuestionCategory (props) {
 
-  constructor(props){
-    super(props);
-    this.state = {
-      questions: [],
-    }
-  }
+  const [questions, setQuestions] = useState(null);
+  const category = props.match.params.category;
 
-  componentDidMount(){
-    const { params } = this.props.match;
-    var category = params.category;
-
+  useEffect(() => {
     db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').onSnapshot((querySnapshot) => {
       var ques = [];
       querySnapshot.forEach((doc) => {
           ques.push(doc.data());
       });
-      this.setState({ questions: ques });
+      setQuestions(ques);
     });
-  }
+  });
 
-  render() {
-    const { params } = this.props.match;
-    const { questions } = this.state;
-    var category = params.category;
-
-    return (
-      <Fragment>
-        <h3 className='cali'>Questions Categorized As {category}</h3>
-        <QuestionList questions={this.state.questions} />
-      </Fragment>
-    )
-  }
-}
-
-const styles = {
-  main_list: {
-    width: 630,
-    height: 'auto',
-  },
+  return (
+    <Fragment>
+      <h3 className='cali'>Questions Categorized As {category}</h3>
+      <QuestionList questions={questions} />
+    </Fragment>
+  )
 }

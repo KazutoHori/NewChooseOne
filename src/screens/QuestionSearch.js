@@ -1,6 +1,4 @@
-import React, { Component, Fragment } from 'react';
-import Loading from 'react-loading';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { useState, useEffect, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
 import { WindMillLoading } from 'react-loadingg';
 
@@ -22,20 +20,14 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default class QuestionAnswered extends Component {
+export default function QuestionSearch (props) {
 
-  constructor(props){
-    super(props);
+  const [results, setResults] = useState(null);
+  const query = props.match.params.query;
+  const q = query.toLowerCase();
 
-    this.state = {
-      results: null,
-    }
-  }
-
-  componentDidMount(){
-    const { query } = this.props.match.params;
-    var q = query.toLowerCase();
-
+  useEffect(() => {
+    if(results !== null) return null;
     db.collection("questions").get().then((querySnapshot) => {
       var ques = [];
       querySnapshot.forEach((doc) => {
@@ -54,26 +46,21 @@ export default class QuestionAnswered extends Component {
           }
         }
       }); 
-      this.setState({ results: ques });
+      setResults(ques); 
     });
-  }
+  });
 
-  render() {
-    const { query } = this.props.match.params;
-    const { results } = this.state;
-
-    if(results === null){
-      return (
-        <Fragment>
-          <h3 className='cali'>Search Results</h3>
-          <div style={{ position: 'relative' }}><pre>      Searching ... </pre></div>
-          <div style={styles.loadingPos}>
-            <WindMillLoading style={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />
-          </div>
-        </Fragment>
-      )
-    }
-
+  if(results === null){
+    return (
+      <Fragment>
+        <h3 className='cali'>Search Results</h3>
+        <div style={{ position: 'relative' }}><pre>      Searching ... </pre></div>
+        <div style={styles.loadingPos}>
+          <WindMillLoading style={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />
+        </div>
+      </Fragment>
+    )
+  }else{
     return (
       <Fragment>
         <h3 className='cali'>Search Results</h3>
@@ -86,33 +73,6 @@ export default class QuestionAnswered extends Component {
         )}
       </Fragment>
     )
-  }
-
-  componentDidUpdate(){
-    if(this.state.results !== null) return null;
-    const { query } = this.props.match.params;
-    var q = query.toLowerCase();
-
-    db.collection("questions").get().then((querySnapshot) => {
-      var ques = [];
-      querySnapshot.forEach((doc) => {
-        var question = doc.data();
-        if(question.slug.includes('___')) var slug = question.slug.split('___')[0];
-        else var slug = question.slug;
-        var titleWords = slug.split('-');
-        if(titleWords.includes(q))ques.unshift(question);
-        else{
-          for(var i=0; i<question.choices.length; i++){
-            var c = question.choices[i].choice_text.toLowerCase().split(' ');
-            if(c.includes(q)){ 
-              ques.push(question)
-              break;
-            }
-          }
-        }
-      }); 
-      this.setState({ results: ques });
-    });
   }
 }
 

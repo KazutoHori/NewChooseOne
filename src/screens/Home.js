@@ -1,8 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import Loading from 'react-loading';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { useState, useEffect, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
-import { WindMillLoading } from 'react-loadingg';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -22,40 +19,25 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default class QuestionAnswered extends Component {
+export default function Home () {
 
-  constructor(props){
-    super(props);
+  const [questions, setQuestions] = useState([]);
 
-    this.state = {
-      questions: [],
-    }
-  }
-
-  componentDidMount(){
+  useEffect(() => {
     db.collection("questions").orderBy('created_at', 'desc').onSnapshot((querySnapshot) => {
       var ques = [];
       querySnapshot.forEach((doc) => {
           ques.push(doc.data());
       });
-      this.setState({ questions: ques });
+      setQuestions(ques);
     });
-  }
+  });
 
-  render() {
-    const { questions } = this.state;
+  console.log(questions);
 
-    return (
-      <Fragment>
-        <QuestionList questions={this.state.questions} />
-      </Fragment>
-    )
-  }
-}
-
-const styles = {
-  main_list: {
-    width: 630,
-    height: 'auto',
-  },
+  return (
+    <Fragment>
+      <QuestionList questions={questions} />
+    </Fragment>
+  )
 }

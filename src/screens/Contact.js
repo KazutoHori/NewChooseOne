@@ -1,21 +1,16 @@
-import React, { Component, Fragment } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import QuestionList from '../components/QuestionList.js';
+import React, { Fragment } from 'react';
 
-
-export default class Contact extends Component {
-  render() {
-    return (
-      <Fragment>
-        <div style={styles.contact}>
-          <h2 className='cali'>Contact Us</h2>
-          <p style={styles.p}>If you have any questions or thoughts on this site,<br />
-            <span style={styles.span}>please e-mail us!!</span></p>
-          <p style={styles.p}>Our email address is </p><address><u><strong><a style={{color: 'blue'}} href="mailto:admin@chooseone.app">admin@chooseone.app</a></strong></u></address><p />
-        </div>
-      </Fragment>
-    )
-  }
+export default function Contact() {
+  return (
+    <Fragment>
+      <div style={styles.contact}>
+        <h2 className='cali'>Contact Us</h2>
+        <p style={styles.p}>If you have any questions or thoughts on this site,<br />
+          <span style={styles.span}>please e-mail us!!</span></p>
+        <p style={styles.p}>Our email address is </p><address><u><strong><a style={{color: 'blue'}} href="mailto:admin@chooseone.app">admin@chooseone.app</a></strong></u></address><p />
+      </div>
+    </Fragment>
+  )
 }
 
 const styles = {

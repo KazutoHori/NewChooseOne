@@ -1,24 +1,13 @@
-import React, { Component, Fragment } from 'react';
-import Loading from 'react-loading';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import QuestionList from '../components/QuestionList.js';
+/* eslint-disable no-redeclare */
+import React, { useState, Fragment } from 'react';
 import { slugify, timeToDay } from '../utils/Funcs.js';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import AddIcon from '@material-ui/icons/Add';
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
-import FilledInput from '@material-ui/core/FilledInput';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -44,52 +33,59 @@ var allCategories = ['Love', 'News', 'Sports', 'Pastime', 'Health', 'Living', 'C
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
-export default class QuestionCreate extends Component {
+export default function QuestionCreate (props) {
 
-  constructor(props){
-    super(props);
+  const uid = props.uid;
+  const [categories, setCategories] = useState([]);
+  const [howManyChoice, setHowManyChoice] = useState(2);
+  const [warning, setWarning] = useState('');
+  const [title, setTitle] = useState('');
+  const [choices, setChoices] = useState([]);
+  var added=[];
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: 'rgb(3, 122, 255)',
+      },
+      secondary: {
+        main: '#f50057',
+      },
+      green: {
+        main: 'rgb(40, 168, 69)',
+      }
+    },
+  });
 
-    this.state = {
-      categories: [],
-      howManyChoice: 2,
-      warning: '',
-      title: '',
-      choices: [],
-    }
-  }
-
-  onSubmit = async () => {
-    const { howManyChoice, title, choices, categories } = this.state;
-
-    const { uid } = this.props;
+  async function onSubmit () {
 
     if(title === ''){
-      this.setState({ warning: 'Title cannot be empty.'});
-      setTimeout(() => this.setState({ warning: ''}),5000);
+      setWarning('Title cannot be empty.');
+      setTimeout(() => setWarning(''),5000);
       return null;
     }
     var ifSuperUser = title.slice(0, 5) === 'SUQ__';
-    if(ifSuperUser) title = title.slice(5);
+    if(ifSuperUser) var finalTitle = title.slice(5);
+    else var finalTitle = title;
     
     var S = new Set(choices);
     if(choices.length !== S.size) {
-      this.setState({ warning: 'There are same choices.'});
-      setTimeout(() => this.setState({ warning: ''}),5000);
+      setWarning('There are same choices.');
+      setTimeout(() => setWarning(''),5000);
       return null;
     }
 
     let new_choices = [];
     for(var i=0; i<howManyChoice; i++){
       if(choices[i] === undefined || choices[i] === ''){
-        this.setState({ warning: 'There is an empty choice.'});
-        setTimeout(() => this.setState({ warning: ''}),5000);
+        setWarning('There is an empty choice.');
+        setTimeout(() => setWarning(''),5000);
         return null;
       }else{
         var text = ifSuperUser ? choices[i].slice(0, -3) : choices[i];
         var votes = ifSuperUser ? choices[i].slice(-3) : 0;
         if(ifSuperUser && !'123456789'.includes(votes[0])){
-          this.setState({ warning: '選択肢の最後の数字忘れてる'});
-          setTimeout(() => this.setState({ warning: ''}),5000);
+          setWarning('選択肢の最後の数字忘れてる');
+          setTimeout(() => setWarning(''),5000);
           return null;
         }
         new_choices.push({
@@ -100,8 +96,8 @@ export default class QuestionCreate extends Component {
     }
 
     if(categories.length === 0){
-      this.setState({ warning: 'Category cannot be empty.'});
-      setTimeout(() => this.setState({ warning: ''}),5000);
+      setWarning('Category cannot be empty.');
+      setTimeout(() => setWarning(''),5000);
       return null;
     }
 
@@ -110,8 +106,8 @@ export default class QuestionCreate extends Component {
       how_many = snap.size
     });
 
-    var slug=slugify(title);
-    if(slug === '') slug=title;
+    var slug=slugify(finalTitle);
+    if(slug === '') slug=finalTitle;
 
     var rep=0;
     await db.collection('questions').where('slug', '==', slug).get().then(snap => {
@@ -121,8 +117,9 @@ export default class QuestionCreate extends Component {
       rep=rep+1;
       var conc = '___'.concat(rep);
       var now_slug=slug.concat(conc);
+      // eslint-disable-next-line no-loop-func
       db.collection('questions').where('slug', '==', slug).get().then(snap => {
-        if(snap.size == 0){
+        if(snap.size === 0){
           slug = now_slug;
           rep = 0;
         }
@@ -134,7 +131,7 @@ export default class QuestionCreate extends Component {
     var day = timeToDay(current.slice(0, 10));
     let new_question = {
       id: how_many+1,
-      title: title,
+      title: finalTitle,
       author: uid,
       category: categories,
       slug: slug,
@@ -156,159 +153,134 @@ export default class QuestionCreate extends Component {
     window.location.href = "/detail/" + slug;
   };
 
-  titleChangeText = (event) => {
-    this.setState({ title: event.target.value });
+  function titleChangeText (event) {
+    setTitle(event.target.value);
   };
 
-  choiceChangeText = (event, idx) => {
-    const { choices } = this.state;
+  function choiceChangeText (event, idx) {
     var copy = choices.slice();
     copy[idx] = event.target.value;
 
-    this.setState({ choices: copy });
+    setChoices(copy);
   };
 
-  onCategory = idx => {
-    const { categories } = this.state;
+  function onCategory (idx) {
     var copy=categories.slice();
     if(copy.includes(allCategories[idx])){
       copy=copy.filter(c => c !== allCategories[idx]);
     }else{
       copy.push(allCategories[idx]);
     }
-    this.setState({ categories: copy });
+    setCategories(copy);
   }
 
-  render() {
-    let current=new Date();
-    current=current.toJSON();
-    const { warning, howManyChoice, title, choices } = this.state;
-    const theme = createMuiTheme({
-      palette: {
-        primary: {
-          main: 'rgb(3, 122, 255)',
-        },
-        secondary: {
-          main: '#f50057',
-        },
-        green: {
-          main: 'rgb(40, 168, 69)',
-        }
-      },
-    });
-
-    var added=[];
-    for (let i=0; i<howManyChoice; i++){
-      added.push(
-        <div style={styles.choicePos}>
-          <Input
-            id="standard-adornment-weight"
-            value={choices[i]}
-            style={styles.choiceInput}
-            onChange={(event) => this.choiceChangeText(event, i)}
-            startAdornment={<InputAdornment position="start">{i+1}. </InputAdornment>}
-            endAdornment={i > 1 && <InputAdornment position="end"><Tooltip title='Delete'><IconButton aria-label="delete" style={{ outline: 'none', }} onClick={() => this.setState({ howManyChoice: howManyChoice-1 })} color='secondary'><DeleteIcon /></IconButton></Tooltip></InputAdornment>}
-            aria-describedby="standard-weight-helper-text"
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-        </div>
-      );
-    }
-    if(added.length > howManyChoice) {
-      added.pop();
-    }
-
-    return (
-      <Fragment>
-        <div style={styles.add}>
-          <h3 className='cali'>Let's Add A New Question!</h3>
-          
-          {/* タイトル */}
-          <h4 className='cali2'>Title</h4>
-          <Input
-            id="standard-adornment-weight"
-            style={styles.titleInput}
-            onChange={(event) => this.titleChangeText(event)}
-            value={title}
-            aria-describedby="standard-weight-helper-text"
-            // placeholder='Question'
-            startAdornment={<InputAdornment position="start">Question：  </InputAdornment>}
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-
-
-          {/* 選択肢 */}
-          <h4 className='cali2'>Choices</h4>
-          <div>
-            {howManyChoice !== 0 && (
-              [added]
-            )}
-          </div>
-
-          {/* ボタン */}
-          <div>
-            <ThemeProvider theme={theme}>
-              <ButtonGroup disableElevation variant="contained" >
-                {howManyChoice < 9 && <StyledButton startIcon={<AddIcon /> } color='primary' onClick={() => this.setState({ howManyChoice: howManyChoice+1 }) } >Add</StyledButton>}
-              </ButtonGroup>
-            </ThemeProvider>
-          </div>
-
-          {/* カテゴリー */}
-          <h4 style={styles.cateTitle} className='cali2'>Category</h4>
-          <div>
-            <div>
-              {allCategories.map((cate, idx) => {
-                if (idx >= 3) return null;
-                const { categories } = this.state;
-                if (categories.includes(allCategories[idx])) var changer = { backgroundColor: tabColors[idx], color: 'white'  }
-                else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
-                return (
-                  <Fragment>
-                    <button onClick={() => this.onCategory(idx) } type='button' data-id={idx} style={Object.assign({borderColor: tabColors[idx], outline: 'none' }, styles.label, changer)}  >{cate}</button>
-                  </Fragment>
-                )
-              })}
-            </div>
-            <div>
-              {allCategories.map((cate, idx) => {
-                if (idx <= 2 || idx >= 6) return null;
-                const { categories } = this.state;
-                if (categories.includes(allCategories[idx])) var changer = { backgroundColor: tabColors[idx], color: 'white'  }
-                else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
-                return (
-                  <Fragment>
-                    <button onClick={() => this.onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none' }, styles.label, changer)} >{cate}</button>
-                  </Fragment>
-                )
-              })}
-            </div>
-            <div>
-              {allCategories.map((cate, idx) => {
-                if (idx <= 5) return null;
-                const { categories } = this.state;
-                if (categories.includes(allCategories[idx])) var changer = { backgroundColor: tabColors[idx], color: 'white'  }
-                else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
-                return (
-                  <Fragment>
-                    <button onClick={() => this.onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, styles.label, changer)}  >{cate}</button>
-                  </Fragment>
-                )
-              })}
-            </div>
-          </div>
-          {/* 最後 */}
-          {warning && <p style={Object.assign({ color: 'red' }, styles.warning)} >{warning}</p>}
-          {!warning && <p style={styles.warning}>You can delete but cannot edit after you make one.</p>}
-          <Button startIcon={<PostAddIcon /> } onClick={this.onSubmit} className="btn btn-success"  >Add Question</Button>
-        </div>
-      </Fragment>
-    )
+  for (let i=0; i<howManyChoice; i++){
+    added.push(
+      <div style={styles.choicePos}>
+        <Input
+          id="standard-adornment-weight"
+          value={choices[i]}
+          style={styles.choiceInput}
+          onChange={(event) => choiceChangeText(event, i)}
+          startAdornment={<InputAdornment position="start">{i+1}. </InputAdornment>}
+          endAdornment={i > 1 && <InputAdornment position="end"><Tooltip title='Delete'><IconButton aria-label="delete" style={{ outline: 'none', }} onClick={() => setHowManyChoice(howManyChoice-1)} color='secondary'><DeleteIcon /></IconButton></Tooltip></InputAdornment>}
+          aria-describedby="standard-weight-helper-text"
+          inputProps={{
+            'aria-label': 'weight',
+          }}
+        />
+      </div>
+    );
   }
+  if(added.length > howManyChoice) {
+    added.pop();
+  }
+
+  return (
+    <Fragment>
+      <div style={styles.add}>
+        <h3 className='cali'>Let's Add A New Question!</h3>
+        
+        {/* タイトル */}
+        <h4 className='cali2'>Title</h4>
+        <Input
+          id="standard-adornment-weight"
+          style={styles.titleInput}
+          onChange={(event) => titleChangeText(event)}
+          value={title}
+          aria-describedby="standard-weight-helper-text"
+          // placeholder='Question'
+          startAdornment={<InputAdornment position="start">Question：  </InputAdornment>}
+          inputProps={{
+            'aria-label': 'weight',
+          }}
+        />
+
+
+        {/* 選択肢 */}
+        <h4 className='cali2'>Choices</h4>
+        <div>
+          {howManyChoice !== 0 && (
+            [added]
+          )}
+        </div>
+
+        {/* ボタン */}
+        <div>
+          <ThemeProvider theme={theme}>
+            <ButtonGroup disableElevation variant="contained" >
+              {howManyChoice < 9 && <StyledButton startIcon={<AddIcon /> } color='primary' onClick={() => setHowManyChoice(howManyChoice+1) } >Add</StyledButton>}
+            </ButtonGroup>
+          </ThemeProvider>
+        </div>
+
+        {/* カテゴリー */}
+        <h4 style={styles.cateTitle} className='cali2'>Category</h4>
+        <div>
+          <div>
+            {allCategories.map((cate, idx) => {
+              if (idx >= 3) return null;
+              if (categories.includes(allCategories[idx])) var changer = { backgroundColor: tabColors[idx], color: 'white'  }
+              else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
+              return (
+                <Fragment>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({borderColor: tabColors[idx], outline: 'none' }, styles.label, changer)}  >{cate}</button>
+                </Fragment>
+              )
+            })}
+          </div>
+          <div>
+            {allCategories.map((cate, idx) => {
+              if (idx <= 2 || idx >= 6) return null;
+              if (categories.includes(allCategories[idx])) var changer = { backgroundColor: tabColors[idx], color: 'white'  }
+              else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
+              return (
+                <Fragment>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none' }, styles.label, changer)} >{cate}</button>
+                </Fragment>
+              )
+            })}
+          </div>
+          <div>
+            {allCategories.map((cate, idx) => {
+              if (idx <= 5) return null;
+              if (categories.includes(allCategories[idx])) var changer = { backgroundColor: tabColors[idx], color: 'white'  }
+              else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
+              return (
+                <Fragment>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, styles.label, changer)}  >{cate}</button>
+                </Fragment>
+              )
+            })}
+          </div>
+        </div>
+        {/* 最後 */}
+        {warning && <p style={Object.assign({ color: 'red' }, styles.warning)} >{warning}</p>}
+        {!warning && <p style={styles.warning}>You can delete but cannot edit after you make one.</p>}
+        <Button startIcon={<PostAddIcon /> } onClick={onSubmit} className="btn btn-success"  >Add Question</Button>
+      </div>
+    </Fragment>
+  )
 }
 
 const styles = {
