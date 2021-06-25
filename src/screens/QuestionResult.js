@@ -144,7 +144,7 @@ export default class QuestionResult extends Component {
     db.collection('questions').where('category', 'array_contains_any', the_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
       var questionSimilar = [];
       docs.forEach(doc => {
-        questionSimilar.push(doc.data());
+        if(doc.data().slug !== the_slug) questionSimilar.push(doc.data());
       });
       this.setState({ relatedQues: questionSimilar });
     })
@@ -157,11 +157,19 @@ export default class QuestionResult extends Component {
       db.collection("users").doc(user.uid).update({
         question_liked: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
       });
+      db.collection("questions").doc(the_question.slug).update({
+        likes: firebase.firestore.FieldValue.increment(-1)
+      });
+      this.setState({ the_question: { ...the_question, likes: the_question.likes-1 } })
     }else{
       this.setState({ likeIt: true });
       db.collection("users").doc(user.uid).update({
         question_liked: firebase.firestore.FieldValue.arrayUnion(the_question.slug)
       });
+      db.collection("questions").doc(the_question.slug).update({
+        likes: firebase.firestore.FieldValue.increment(1)
+      });
+      this.setState({ the_question: { ...the_question, likes: the_question.likes+1 } })
     }
   }
 
@@ -196,13 +204,10 @@ export default class QuestionResult extends Component {
             {notUseSkeleton && (
               <Fragment>
                 {the_question.category.map((cate, idx) => {
-                  var len = the_question.category.length;
                   if ( idx === 0){
-                    return (
-                      <a className='text-primary' href={'/category/'+cate}> {cate}</a>
-                    )
+                    return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
                   }else{
-                    <a className='text-primary' href={'/category/'+cate}>, {cate}</a>
+                    return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
                   }
                 })}
               </Fragment>
@@ -294,8 +299,8 @@ export default class QuestionResult extends Component {
           <div style={styles.buttonsPos}>
             <ThemeProvider theme={theme}>
               <ButtonGroup variant="contained" >
-                {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >Like</Button>}
-                {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >Like</Button>}
+                {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
+                {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
                 <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>
               </ButtonGroup>
             </ThemeProvider>
@@ -386,7 +391,7 @@ export default class QuestionResult extends Component {
     db.collection('questions').where('category', 'array-contains-any', the_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
       var questionSimilar = [];
       docs.forEach(doc => {
-        questionSimilar.push(doc.data());
+        if(doc.data().slug !== the_slug) questionSimilar.push(doc.data());
       });
       this.setState({ relatedQues: questionSimilar });
     })

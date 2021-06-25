@@ -33,13 +33,10 @@ export default class QuestionList extends React.Component {
             {notUseSkeleton && (
               <Fragment>
                 {the_question.category.map((cate, idx) => {
-                  var len = the_question.category.length;
                   if ( idx === 0){
-                    return (
-                      <a className='text-primary' href={'/category/'+cate}> {cate}</a>
-                    )
+                    return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
                   }else{
-                    <a className='text-primary' href={'/category/'+cate}>, {cate}</a>
+                    return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
                   }
                 })}
               </Fragment>

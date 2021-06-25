@@ -20,10 +20,10 @@ export default class Header extends Component {
 
   render() {
     return (
-      <div className='header' style={styles.header}>
-        <div className='container' style={styles.container}>
+      <div className='header'>
+        <div className='container'>
           <nav className="navbar-light navbar navbar-expand-lg align-items-center">
-            <a href="/" className="navbar-brand  font-weight-normal" style={{ marginRight: 36 }}><img src={logo} alt="ChooseOne" /></a>
+            <a href="/" className="navbar-brand" style={{ marginRight: 36 }}><img src={logo} alt="ChooseOne" /></a>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon" />
             </button>
@@ -72,14 +72,6 @@ export default class Header extends Component {
 }
 
 const styles = {
-  header: {
-    top: 0,
-    alignSelf: 'stretch',
-    height: 56,
-    zIndex: 12000,
-    backgroundColor: 'red',
-    color: 'white',
-  },
   pic_only: {
     display: 'none',
   },

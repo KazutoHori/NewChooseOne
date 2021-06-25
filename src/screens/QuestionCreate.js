@@ -69,6 +69,7 @@ export default class QuestionCreate extends Component {
       return null;
     }
     var ifSuperUser = title.slice(0, 5) === 'SUQ__';
+    if(ifSuperUser) title = title.slice(5);
     
     var S = new Set(choices);
     if(choices.length !== S.size) {
@@ -109,8 +110,7 @@ export default class QuestionCreate extends Component {
       how_many = snap.size
     });
 
-    if(ifSuperUser) var slug = slugify(title.slice(5));
-    else var slug=slugify(title);
+    var slug=slugify(title);
     if(slug === '') slug=title;
 
     var rep=0;
@@ -145,6 +145,7 @@ export default class QuestionCreate extends Component {
       users_answered: [],
       all_votes: 0,
       active: true,
+      likes: 0,
     }
 
     db.collection('questions').doc(slug).set(new_question);
