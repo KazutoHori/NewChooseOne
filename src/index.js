@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -95,7 +96,7 @@ export default function Routing () {
         <div style={styles.background}>
           <Header />
           <div style={styles.wrapper}>
-            <div style={styles.container} className='container'>
+            <div style={styles.container} className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
               <div style={styles.homePos}>
                 <Switch>
                   <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />

@@ -24,6 +24,7 @@ export default function Home () {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
+    if(questions.length !== 0) return null;
     db.collection("questions").orderBy('created_at', 'desc').onSnapshot((querySnapshot) => {
       var ques = [];
       querySnapshot.forEach((doc) => {
@@ -32,8 +33,6 @@ export default function Home () {
       setQuestions(ques);
     });
   });
-
-  console.log(questions);
 
   return (
     <Fragment>

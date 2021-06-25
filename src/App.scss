@@ -47,7 +47,30 @@
   .date{
     font-family: georgia, serif;
     font-size: 12px;
-    color: #457AFB
+    color: #457AFB;
+  }
+}
+
+@media(max-width: 500px){
+  .onepost{
+    border-radius: 0px;
+    margin-bottom: 4px;
+    filter: none;
+    padding: 5px 7px 0px 7px;
+
+    h4{
+      font-size: 18px;
+    }
+    p{
+      font-size: 5px;
+    }
+    .date{
+      font-size: 5px;
+      color: #457AFB
+    }
+    label, input{
+      font-size: 15px;
+    }
   }
 }
 
@@ -132,12 +155,5 @@
       margin-right: 0px;
       padding: 0px;
     }
-  }
-}
-
-@media(max-width: 700px){
-  .container{
-    padding: 0px;
-    margin: 0px;
   }
 }

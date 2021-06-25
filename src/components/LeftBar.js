@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { timeToDay } from '../utils/Funcs.js';
 
@@ -25,6 +26,7 @@ for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 export default function Home (props) {
 
   const [todaysRanking, setTodaysRanking] = useState([]);
+  const doNotDisplay = useMediaQuery('(max-width:777px)');
 
   useEffect(() => {
     if(todaysRanking !== []) return null;
@@ -33,15 +35,16 @@ export default function Home (props) {
     var today = timeToDay(current.slice(0, 10));
 
     var quesRef = db.collection('questions');
-    quesRef.where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((ques) => {
+    quesRef.where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
       var ques = [];
-      ques.forEach(q => {
+      docs.forEach(q => {
         ques.push(q.data());
       });
       setTodaysRanking(ques);
     });
   });
   
+  if(doNotDisplay) return null;
   return (
     <Fragment>
       <div style={styles.left_side}>

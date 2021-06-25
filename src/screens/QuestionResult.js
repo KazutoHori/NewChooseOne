@@ -1,15 +1,16 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import QuestionList from '../components/QuestionList';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import { makeStyles, createStyles } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { WindMillLoading } from 'react-loadingg';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import ModalDelete from '../components/ModalDelete';
 import PieChart from '../components/PieChart';
@@ -68,6 +69,8 @@ export default function QuestionResult (props) {
   const [relatedQues, setRelatedQues] = useState([]);
 
   const notUseSkeleton = relatedQues.length !== 0;
+  const styles = useStyles();
+  const smallDisplay = useMediaQuery('(max-width:500px)');
 
   useEffect(() => {
     if(uid === null || the_question !== null) return null;
@@ -186,107 +189,111 @@ export default function QuestionResult (props) {
 
   return (
     <Fragment>
-      <div style={styles.resultsPos}>
+      <div className={styles.resultsPos}>
 
-        {/* カテゴリー */}
-        <p className='cali2'><span className="text-primary fa fa-tag" />
-          Category:
-          {notUseSkeleton && (
-            <Fragment>
-              {the_question.category.map((cate, idx) => {
-                if ( idx === 0){
-                  return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
-                }else{
-                  return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
-                }
-              })}
-            </Fragment>
-          )}
-          {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
-        </p>
+        <div className={styles.forSmallerVer}>
+          {/* カテゴリー */}
+          <p className='cali2'><span className="text-primary fa fa-tag" />
+            Category:
+            {notUseSkeleton && (
+              <Fragment>
+                {the_question.category.map((cate, idx) => {
+                  if ( idx === 0){
+                    return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
+                  }else{
+                    return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
+                  }
+                })}
+              </Fragment>
+            )}
+            {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
+          </p>
 
-        {/* モーダル */}
-        {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
+          {/* モーダル */}
+          {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
 
-        {/* タイトル */}
-        <h3 className="cali2">{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
-        <p style={styles.date}>
-          {notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
-        </p>
-        
-        <div style={{ marginLeft: 10, }}>
-          <p style={styles.your_vote}>You have voted for {your_vote}</p>
-        </div>
-        <div style={{ marginLeft: 10, }}>
-          <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' href={the_question && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
-          <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} href={notUseSkeleton && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
+          {/* タイトル */}
+          <h3 className="cali2">{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
+          <p className={styles.date}>
+            {notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
+          </p>
+          
+          <div style={{ marginLeft: 10, }}>
+            <p className={styles.your_vote}>You have voted for {your_vote}</p>
+          </div>
+          <div style={{ marginLeft: 10, }}>
+            <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' rel="noreferrer" href={the_question && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
+            <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} rel="noreferrer" href={notUseSkeleton && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
+          </div>
         </div>
 
         {/* テーブル */}
-        {notUseSkeleton && (
-          <table style={styles.table} className='table'>
-            <thead>
-              <tr>
-                <td />
-                <td>Choices</td>
-                <td>Votes</td>
-              </tr>
-            </thead>
-            <tbody>
-              {choicesSorted.map((choice, idx) => (
-                <tr style={{ backgroundColor: colors[idx] }} >
-                  <th scope="row">&nbsp;&nbsp;{idx+1}</th>
-                  <td >{choice.choice_text}</td>
-                  <td>{choice.votes}</td>
+        <div className={styles.table} >
+          {notUseSkeleton && (
+            <table className='table'>
+              <thead>
+                <tr>
+                  <td />
+                  <td>Choices</td>
+                  <td>Votes</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        {!notUseSkeleton && (
-          <table style={styles.table} className='table'>
-            <thead>
-              <tr>
-                <td />
-                <td>Choices</td>
-                <td>Votes</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{ backgroundColor: 'rgb(238, 238, 143)' }} >
-                <th scope="row">&nbsp;&nbsp;{1}</th>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-              </tr>
-              <tr style={{ backgroundColor: 'rgb(143, 240, 159)' }} >
-                <th scope="row">&nbsp;&nbsp;{2}</th>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-              </tr>
-              <tr style={{ backgroundColor: 'rgb(143, 207, 239)' }} >
-                <th scope="row">&nbsp;&nbsp;{3}</th>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-              </tr>
-              <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
-                <th scope="row">&nbsp;&nbsp;{4}</th>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
-                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
-              </tr>
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {choicesSorted.map((choice, idx) => (
+                  <tr style={{ backgroundColor: colors[idx] }} >
+                    <th scope="row">&nbsp;&nbsp;{idx+1}</th>
+                    <td >{choice.choice_text}</td>
+                    <td>{choice.votes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {!notUseSkeleton && (
+            <table className='table'>
+              <thead>
+                <tr>
+                  <td />
+                  <td>Choices</td>
+                  <td>Votes</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ backgroundColor: 'rgb(238, 238, 143)' }} >
+                  <th scope="row">&nbsp;&nbsp;{1}</th>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                </tr>
+                <tr style={{ backgroundColor: 'rgb(143, 240, 159)' }} >
+                  <th scope="row">&nbsp;&nbsp;{2}</th>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                </tr>
+                <tr style={{ backgroundColor: 'rgb(143, 207, 239)' }} >
+                  <th scope="row">&nbsp;&nbsp;{3}</th>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                </tr>
+                <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
+                  <th scope="row">&nbsp;&nbsp;{4}</th>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+        </div>
 
         {/* グラフ */}
-        <div style={styles.graphs}>
-          {notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-          {!notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
-          {notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-          {!notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+        <div className={styles.graphs}>
+          {notUseSkeleton && <div className={styles.pieGraph}><PieChart skeleton={false} small={smallDisplay} labels={labels} values={values} colors={colors} /></div>}
+          {!notUseSkeleton && <div className={styles.pieGraph}><PieChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+          {notUseSkeleton && <div className={styles.barGraph}><BarChart skeleton={false} small={smallDisplay} labels={labels} values={values} colors={colors} /></div>}
+          {!notUseSkeleton && <div className={styles.barGraph}><BarChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
         </div>
 
         {/* ボタン系 */}
-        <div style={styles.buttonsPos}>
+        <div className={styles.buttonsPos}>
           <ThemeProvider theme={theme}>
             <ButtonGroup variant="contained" >
               {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
@@ -299,9 +306,9 @@ export default function QuestionResult (props) {
         {/* 似ている投稿 */}
         <div>
           <h3 style={{ marginTop: 40 }} className='cali'>Questions You May Like</h3>
-          <div style={styles.similarPostsPos}>
+          <div className={styles.similarPostsPos}>
             {relatedQues.length !== 0 && <QuestionList questions={relatedQues} />}
-            {relatedQues.length === 0 && <WindMillLoading style={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />}
+            {relatedQues.length === 0 && <WindMillLoading style={{ position: 'relative', marginTop: 50, marginLeft: 50,}} color='rgb(39, 169, 68)' speed={1.2} size='large' />}
           </div>
         </div>
       </div>
@@ -309,14 +316,9 @@ export default function QuestionResult (props) {
   )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   similarPostsPos: {
     width: '70%',
-  },
-  loadingPos: {
-    marginTop: 50,
-    marginLeft: 50,
-    position: 'relative',
   },
   table: {
     filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
@@ -349,7 +351,6 @@ const styles = {
     height: 400,
   },
   your_vote: {
-    fontSize: 10,
     color: 'yellowgreen',
     fontSize: 14,
   },
@@ -364,4 +365,28 @@ const styles = {
     fontSize: 12,
     color: '#457AFB',
   },
-}
+
+  '@media (max-width: 500px)': {
+    forSmallerVer: {
+      padding: '0px 8px',
+    },
+    // graphs: {
+    //   display: 'block',
+    // },
+    pieGraph: {
+      // width: '100%',
+      height: 150,
+      marginBottom: 7,
+      borderRadius: 0,
+      padding: 4,
+      marginRight: 3,
+    },
+    barGraph: {
+      // width: '100%',
+      height: 150,
+      marginBottom: 4,
+      borderRadius: 0,
+      padding: 4,
+    }
+  },
+}));

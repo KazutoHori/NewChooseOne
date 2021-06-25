@@ -1,16 +1,23 @@
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles, createStyles } from '@material-ui/core';
+
 import logo from '../ChooseOne1.png';
+import logoSmall from '../ChooseOne80.png';
 
 export default function Footer () {
 
+  const smallDisplay = useMediaQuery('(max-width:500px)');
+  const styles = useStyles();
+
   return (
-    <div style={styles.wrap}>
-      <div style={styles.footer}>
-        <div style={styles.container}  className="container">
-          <div style={styles.footer_logo}><a href="/"><img src={logo} alt="ChooseOne" /></a></div>
-            <div style={styles.footer_list}>
+    <div className={styles.wrap}>
+      <div className={styles.footer}>
+        <div className='container' >
+          <div className={styles.footer_logo}><a href="/"><img src={smallDisplay ? logoSmall : logo} alt="ChooseOne" /></a></div>
+            <div className={styles.footer_list}>
               <ul>
-                <li style={styles.li}><a style={styles.a} href="/about">About ChooseOne</a></li>
-                <li style={styles.li}><a style={styles.a} href="/contact">Contact Us</a></li>
+                <li className={styles.li}><a className={styles.a} href="/about">About ChooseOne</a></li>
+                <li className={styles.li}><a className={styles.a} href="/contact">Contact Us</a></li>
               </ul>
             </div>
         </div>
@@ -18,8 +25,7 @@ export default function Footer () {
     </div>
   )
 }
-
-const styles = {
+const useStyles =  makeStyles(() => createStyles({
   footer: {
     float: 'clear',
     backgroundColor: 'red',
@@ -38,15 +44,20 @@ const styles = {
   footer_logo: {
     float: 'left',
   },
-  container: {
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
   li: {
     listStyle: 'none',
     paddingBottom: 20,
   },
   a: {
     color: 'white',
-  }
-}
+  },
+
+  '@media (max-width: 500px)': {
+    footer: {
+      height: 125,
+    },
+    a: {
+      fontSize: 10,
+    }
+  },
+}));

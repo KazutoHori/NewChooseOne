@@ -3,8 +3,9 @@ import { Pie } from 'react-chartjs-2';
 
 export default function PieChart (props) {
 
-  const { skeleton, labels, values, colors } = props;
-  const duration = skeleton ? 0 : 5000;
+  const { small, skeleton, labels, values, colors } = props;
+  var duration = skeleton ? 0 : 5000;
+  if(small) duration = 2000;
 
   const data = {
     labels: labels,
@@ -24,9 +25,6 @@ export default function PieChart (props) {
 
   const options = {
     maintainAspectRatio: false,
-    legend: {
-      display: false
-    },
     animation: {
       duration: duration,
     },
@@ -47,9 +45,13 @@ export default function PieChart (props) {
       }
     },
     plugins: {
+      legend: {
+        display: false
+      },
       labels: {
         render: 'value',
         precision: 0,
+        legend: false,
       }
     },
     layout: {

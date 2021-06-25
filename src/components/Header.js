@@ -1,4 +1,6 @@
 import React, { useState, Fragment } from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import Input from '@material-ui/core/Input';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,6 +24,7 @@ const styles = {
 export default function Header (props) {
 
   const [query, setQuery] = useState('');
+  const smallDisplay = useMediaQuery('(max-width:500px)');
 
   const onSubmitSearch = (event) => {
     window.location.href = '/search/' + query;
@@ -31,7 +34,7 @@ export default function Header (props) {
   return (<div className='header'>
       <div className='container' style={{ }}>
         <nav className="navbar-light navbar navbar-expand-lg align-items-center">
-          <a href="/" className="navbar-brand" style={{ marginRight: 36 }}><img src={logo} alt="ChooseOne" /></a>
+          <a href="/" className="navbar-brand" style={{ marginRight: 36 }}><img src={smallDisplay ? logoSmall : logo} alt="ChooseOne" /></a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon" />
           </button>

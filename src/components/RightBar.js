@@ -1,4 +1,5 @@
 import React, { useEffect, useState, Fragment } from 'react';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { timeToDay } from '../utils/Funcs.js';
 
@@ -21,12 +22,10 @@ var db = firebase.firestore();
 export default function RightBar (props) {
 
   const [questionPopular, setQuestionPopular] = useState([]);
+  const doNotDisplay = useMediaQuery('(max-width:777px)');
 
   useEffect(() => {
     if(questionPopular !== []) return null;
-    let current=new Date();
-    current=current.toJSON();
-    var today = timeToDay(current.slice(0, 10));
 
     var quesRef = db.collection('questions');
     quesRef.orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
@@ -38,6 +37,7 @@ export default function RightBar (props) {
     });
   });
 
+  if(doNotDisplay) return null;
   return (
     <Fragment>
       {/* 右バー */}

@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 export default function QuestionList (props) {
 
   const the_question = props.the_question;
   const notUseSkeleton = the_question !== 'skeleton';
   var choiceSkeleton = [];
-  
+
   for(var i=0; i<5; i++){
     choiceSkeleton.push(
       <div>
@@ -46,8 +47,7 @@ export default function QuestionList (props) {
             <Fragment>
               {the_question.choices.map((choice,idx) => (
                 <div>
-                  <input type="radio" name="choice" id="choice{idx}" value="{choice.id}" />
-                  <label for="choice{idx}">&ensp;{choice.choice_text}</label>
+                  <label for="choice{idx}">○ {choice.choice_text}</label>
                   <br></br>
                 </div>
               ))}
