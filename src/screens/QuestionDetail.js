@@ -175,7 +175,7 @@ export default function QuestionDetail (props) {
     <Fragment>
       <div style={styles.detailPos}>
         {/* カテゴリー */}
-        <p className="cali2"><span className="text-primary fa fa-tag" />
+        <p style={styles.category}><span className="text-primary fa fa-tag" />
           Category:
           {the_question && (
             <Fragment>
@@ -195,7 +195,7 @@ export default function QuestionDetail (props) {
         {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
 
         {/* タイトル */}
-        <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
+        <h3 style={styles.title}>{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
         <p style={styles.date}>
           {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={50} height={7}/></SkeletonTheme> }
         </p>
@@ -235,6 +235,16 @@ export default function QuestionDetail (props) {
 }
 
 const styles = {
+  category: {
+    fontFamily: 'latienne-pro, serif',
+    fontStyle: 'normal',
+    fontWeight: 400,
+  },
+  title: {
+    fontFamily: 'latienne-pro, serif',
+    fontStyle: 'normal',
+    fontWeight: 400,
+  },
   buttonsPos: {
     position: 'absolute',
     bottom: 210,

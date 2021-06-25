@@ -194,7 +194,7 @@ export default function QuestionResult (props) {
         <div className={styles.forSmallerVer}>
           {/* カテゴリー */}
           <div className='category'>
-            <p className={styles.title}><span className="text-primary fa fa-tag" />
+            <p className={styles.category}><span className="text-primary fa fa-tag" />
               Category:
               {notUseSkeleton && (
                 <Fragment>
@@ -215,15 +215,15 @@ export default function QuestionResult (props) {
           {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
 
           {/* タイトル */}
-          <h3 className="cali2">{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
+          <h3 className={styles.title}>{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
           <p className={styles.date}>
             {notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
           </p>
           
-          <div style={{ marginLeft: 10, }}>
+          <div>
             <p className={styles.your_vote}>You have voted for {your_vote}</p>
           </div>
-          <div style={{ marginLeft: 10, }}>
+          <div>
             <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' rel="noreferrer" href={the_question && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
             <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} rel="noreferrer" href={notUseSkeleton && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
           </div>
@@ -319,6 +319,11 @@ export default function QuestionResult (props) {
 }
 
 const useStyles = makeStyles(() => createStyles({
+  category: {
+    fontFamily: 'latienne-pro, serif',
+    fontStyle: 'normal',
+    fontWeight: 400,
+  },
   title: {
     fontFamily: 'latienne-pro, serif',
     fontStyle: 'normal',
@@ -375,24 +380,27 @@ const useStyles = makeStyles(() => createStyles({
   date: {
     marginLeft: 20,
     fontFamily: 'georgia, serif',
-    fontSize: 12,
+    fontSize: 10,
     color: '#457AFB',
   },
 
   '@media (max-width: 500px)': {
-    mayLike: {
-      margin: '30px 0px 5px 10px',
-      fontSize: 25,
-    },
-    buttonsPos: {
-      marginLeft: 5,
-      height: 20,
-    },
-    h3: {
+    category: {
       fontSize: 10,
     },
+    title: {
+      fontSize: 23,
+    },
+    mayLike: {
+      margin: '40px 0px 5px 10px',
+      fontSize: 20,
+    },
+    buttonsPos: {
+      marginLeft: 10,
+      height: 20,
+    },
     forSmallerVer: {
-      padding: '0px 8px',
+      paddingLeft: 10,
     },
     table: {
       filter: 'drop-shadow(5px 0px 4px rgba(160, 160, 160, 0.7))',
