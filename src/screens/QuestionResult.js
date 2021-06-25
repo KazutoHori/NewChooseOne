@@ -1,11 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import QuestionList from '../components/QuestionList';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import FacebookIcon from '@material-ui/icons/Facebook';
@@ -51,131 +50,127 @@ const theme = createMuiTheme({
   },
 });
 
-export default class QuestionResult extends Component {
+export default function QuestionResult (props) {
 
-  constructor(props){
-    super(props);
+  const uid = props.uid;
+  const the_slug = props.match.params.the_slug;
 
-    this.state = {
-      modalVisible: false,
-      user: null,
-      madeIt: null,
-      the_question: null,
-      your_vote: null,
-      likeIt: false,
-      choicesSorted: [],
-      labels: [],
-      values: [],
-      colors: [],
-      relatedQues: [],
-    }
-  }
+  const [modalVisible, setModalVisible] = useState(false);
+  const [user, setUser] = useState(null);
+  const [madeIt, setMadeIt] = useState(null);
+  const [the_question, setTheQuestion] = useState(null);
+  const [likeIt, setLikeIt] = useState(false);
+  const [your_vote, setYourVote] = useState(null);
+  const [choicesSorted, setChoiceSorted] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const [values, setValues] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [relatedQues, setRelatedQues] = useState([]);
 
-  async componentDidMount() {
-    const { uid } = this.props;
-    const { the_slug } = this.props.match.params;
+  const notUseSkeleton = relatedQues.length !== 0;
 
-    if(uid === null || this.state.user !== null) return null;
+  useEffect(() => {
+    if(uid === null || the_question !== null) return null;
 
-    var user = {}
-    await db.collection('users').doc(uid).get().then((doc) => {
+    db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
-        user = doc.data()
-        if(!user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/detail/'+the_slug;
-        this.setState({ user: doc.data() })
+        var the_user = doc.data()
+        if(!the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/detail/'+the_slug;
+        else{
+          setUser(the_user)
+
+          if (the_user.question_liked.includes(the_slug)){
+            setLikeIt(true);
+          }else{
+            setLikeIt(false);
+          }
+
+          if (the_user.question_created.includes(the_slug)){
+            setMadeIt(true);
+          }else{
+            setMadeIt(false);
+          }
+
+          for(var i=0; i<the_user.question_answered.length; i++){
+            if(the_user.question_answered[i].question === the_slug) setYourVote(the_user.question_answered[i].answer)
+          }
+        }
       }
     })
-    
-    if (user.question_liked.includes(the_slug)){
-      this.setState({ likeIt: true });
-    }else{
-      this.setState({ likeIt: false });
-    }
 
-    if (user.question_created.includes(the_slug)){
-      this.setState({ madeIt: true });
-    }else{
-      this.setState({ madeIt: false });
-    }
-
-    for(var i=0; i<user.question_answered.length; i++){
-      if(user.question_answered[i].question === the_slug) this.setState({ your_vote: user.question_answered[i].answer })
-    }
-
-    var the_question = null
-    await db.collection('questions').doc(the_slug).get().then((doc) => {
+    db.collection('questions').doc(the_slug).get().then((doc) => {
       if(doc.exists){
-        the_question = doc.data()
-        this.setState({ the_question: doc.data() })
+        setTheQuestion(doc.data())
+        var now_question = doc.data()
+
+        var copy=Array.from(now_question.choices);
+        copy.sort(function(first, second){
+          if (first.votes > second.votes){
+            return -1;
+          }else if (first.votes < second.votes){
+            return 1;
+          }else{
+            return 0;
+          }
+        });
+        setChoiceSorted(copy);
+        var l = [];
+        var v = [];
+        var c = [];
+
+        for(let i=0; i<copy.length;  i++){
+          l.push(copy[i].choice_text);
+          v.push(copy[i].votes);
+        }
+
+        var time = now_question.created_at;
+        var seconds = parseInt(time.slice(-2));
+        if(v !== []){
+          v.forEach((entry, idx) => {
+            c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
+          });
+        }
+        setLabels(l);
+        setValues(v);
+        setColors(c);
+        
+        db.collection('questions').where('category', 'array-contains-any', now_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
+          var questionSimilar = [];
+          docs.forEach(doc => {
+            if(doc.data().slug !== the_slug) questionSimilar.push(doc.data());
+          });
+          setRelatedQues(questionSimilar);
+        })
       }else{
         window.location.href = '/';
       }
     });
 
-    var copy=Array.from(the_question.choices);
-    copy.sort(function(first, second){
-      if (first.votes > second.votes){
-        return -1;
-      }else if (first.votes < second.votes){
-        return 1;
-      }else{
-        return 0;
-      }
-    });
-    this.setState({ choicesSorted: copy });
-    var l = [];
-    var v = [];
-    var c = [];
+  });
 
-    for(let i=0; i<copy.length;  i++){
-      l.push(copy[i].choice_text);
-      v.push(copy[i].votes);
-    }
-
-    var time = the_question.created_at;
-    var seconds = parseInt(time.slice(-2));
-    if(v !== []){
-      v.forEach((entry, idx) => {
-        c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
-      });
-    }
-    this.setState({ labels: l, values: v, colors: c });
-
-    
-    db.collection('questions').where('category', 'array_contains_any', the_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
-      var questionSimilar = [];
-      docs.forEach(doc => {
-        if(doc.data().slug !== the_slug) questionSimilar.push(doc.data());
-      });
-      this.setState({ relatedQues: questionSimilar });
-    })
-  }
-
-  onLikeit = () => {
-    const { likeIt, user, the_question } = this.state;
+  const onLikeit = () => {
     if(likeIt){
-      this.setState({ likeIt: false });
+      setLikeIt(false);
       db.collection("users").doc(user.uid).update({
         question_liked: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
       });
       db.collection("questions").doc(the_question.slug).update({
         likes: firebase.firestore.FieldValue.increment(-1)
       });
-      this.setState({ the_question: { ...the_question, likes: the_question.likes-1 } })
+      setTheQuestion({ ...the_question, likes: the_question.likes-1 });
     }else{
-      this.setState({ likeIt: true });
+      setLikeIt({ likeIt: true });
       db.collection("users").doc(user.uid).update({
         question_liked: firebase.firestore.FieldValue.arrayUnion(the_question.slug)
       });
       db.collection("questions").doc(the_question.slug).update({
         likes: firebase.firestore.FieldValue.increment(1)
       });
-      this.setState({ the_question: { ...the_question, likes: the_question.likes+1 } })
+      setTheQuestion({ ...the_question, likes: the_question.likes+1 })
     }
   }
 
-  onDelete = async () => {
-    const { user, the_question } = this.state;
+  const onDelete = async () => {
     await db.collection("questions").doc(the_question.slug).delete();
     await db.collection("users").doc(user.uid).update({
       question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
@@ -184,219 +179,134 @@ export default class QuestionResult extends Component {
     window.location.href = "/";
   }
   
-  onClose = () => {
-    this.setState({ modalVisible: false });
+  const onClose = () => {
+    setModalVisible(false);
   }
 
-  render() {
-    const { madeIt, likeIt, the_question, your_vote, modalVisible, choicesSorted, relatedQues,
-        labels, values, colors } = this.state;
 
-    const notUseSkeleton = relatedQues.length !== 0;
+  return (
+    <Fragment>
+      <div style={styles.resultsPos}>
 
-    return (
-      <Fragment>
-        <div style={styles.resultsPos}>
-
-          {/* カテゴリー */}
-          <p className='cali2'><span className="text-primary fa fa-tag" />
-            Category:
-            {notUseSkeleton && (
-              <Fragment>
-                {the_question.category.map((cate, idx) => {
-                  if ( idx === 0){
-                    return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
-                  }else{
-                    return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
-                  }
-                })}
-              </Fragment>
-            )}
-            {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
-          </p>
-
-          {/* モーダル */}
-          {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
-
-          {/* タイトル */}
-          <h3 className="cali2">{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
-          <p style={styles.date}>
-            {notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
-          </p>
-          
-          <div style={{ marginLeft: 10, }}>
-            <p style={styles.your_vote}>You have voted for {your_vote}</p>
-          </div>
-          <div style={{ marginLeft: 10, }}>
-            <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' href={the_question && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
-            <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} href={notUseSkeleton && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
-          </div>
-
-          {/* テーブル */}
+        {/* カテゴリー */}
+        <p className='cali2'><span className="text-primary fa fa-tag" />
+          Category:
           {notUseSkeleton && (
-            <table style={styles.table} className='table'>
-              <thead>
-                <tr>
-                  <td />
-                  <td>Choices</td>
-                  <td>Votes</td>
-                </tr>
-              </thead>
-              <tbody>
-                {choicesSorted.map((choice, idx) => (
-                  <tr style={{ backgroundColor: colors[idx] }} >
-                    <th scope="row">&nbsp;&nbsp;{idx+1}</th>
-                    <td >{choice.choice_text}</td>
-                    <td>{choice.votes}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <Fragment>
+              {the_question.category.map((cate, idx) => {
+                if ( idx === 0){
+                  return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
+                }else{
+                  return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
+                }
+              })}
+            </Fragment>
           )}
-          {!notUseSkeleton && (
-            <table style={styles.table} className='table'>
-              <thead>
-                <tr>
-                  <td />
-                  <td>Choices</td>
-                  <td>Votes</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style={{ backgroundColor: 'rgb(238, 238, 143)' }} >
-                  <th scope="row">&nbsp;&nbsp;{1}</th>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                </tr>
-                <tr style={{ backgroundColor: 'rgb(143, 240, 159)' }} >
-                  <th scope="row">&nbsp;&nbsp;{2}</th>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                </tr>
-                <tr style={{ backgroundColor: 'rgb(143, 207, 239)' }} >
-                  <th scope="row">&nbsp;&nbsp;{3}</th>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
-                </tr>
-                <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
-                  <th scope="row">&nbsp;&nbsp;{4}</th>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
-                </tr>
-              </tbody>
-            </table>
-          )}
+          {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
+        </p>
 
-          {/* グラフ */}
-          <div style={styles.graphs}>
-            {notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-            {!notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
-            {notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
-            {!notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
-          </div>
+        {/* モーダル */}
+        {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
 
-          {/* ボタン系 */}
-          <div style={styles.buttonsPos}>
-            <ThemeProvider theme={theme}>
-              <ButtonGroup variant="contained" >
-                {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
-                {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
-                {madeIt && <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
-              </ButtonGroup>
-            </ThemeProvider>
-          </div>
+        {/* タイトル */}
+        <h3 className="cali2">{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
+        <p style={styles.date}>
+          {notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
+        </p>
+        
+        <div style={{ marginLeft: 10, }}>
+          <p style={styles.your_vote}>You have voted for {your_vote}</p>
+        </div>
+        <div style={{ marginLeft: 10, }}>
+          <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' href={the_question && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
+          <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} href={notUseSkeleton && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
+        </div>
 
-          {/* 似ている投稿 */}
-          <div>
-            <h3 style={{ marginTop: 40 }} className='cali'>Questions You May Like</h3>
-            <div style={styles.similarPostsPos}>
-              {relatedQues.length !== 0 && <QuestionList questions={relatedQues} />}
-              {relatedQues.length === 0 && <WindMillLoading style={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />}
-            </div>
+        {/* テーブル */}
+        {notUseSkeleton && (
+          <table style={styles.table} className='table'>
+            <thead>
+              <tr>
+                <td />
+                <td>Choices</td>
+                <td>Votes</td>
+              </tr>
+            </thead>
+            <tbody>
+              {choicesSorted.map((choice, idx) => (
+                <tr style={{ backgroundColor: colors[idx] }} >
+                  <th scope="row">&nbsp;&nbsp;{idx+1}</th>
+                  <td >{choice.choice_text}</td>
+                  <td>{choice.votes}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {!notUseSkeleton && (
+          <table style={styles.table} className='table'>
+            <thead>
+              <tr>
+                <td />
+                <td>Choices</td>
+                <td>Votes</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ backgroundColor: 'rgb(238, 238, 143)' }} >
+                <th scope="row">&nbsp;&nbsp;{1}</th>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+              </tr>
+              <tr style={{ backgroundColor: 'rgb(143, 240, 159)' }} >
+                <th scope="row">&nbsp;&nbsp;{2}</th>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+              </tr>
+              <tr style={{ backgroundColor: 'rgb(143, 207, 239)' }} >
+                <th scope="row">&nbsp;&nbsp;{3}</th>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
+              </tr>
+              <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
+                <th scope="row">&nbsp;&nbsp;{4}</th>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+                <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+              </tr>
+            </tbody>
+          </table>
+        )}
+
+        {/* グラフ */}
+        <div style={styles.graphs}>
+          {notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
+          {!notUseSkeleton && <div style={styles.pieGraph}><PieChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+          {notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={false} labels={labels} values={values} colors={colors} /></div>}
+          {!notUseSkeleton && <div style={styles.barGraph}><BarChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+        </div>
+
+        {/* ボタン系 */}
+        <div style={styles.buttonsPos}>
+          <ThemeProvider theme={theme}>
+            <ButtonGroup variant="contained" >
+              {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
+              {likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
+              {madeIt && <Button onClick={() => setModalVisible(true)} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
+            </ButtonGroup>
+          </ThemeProvider>
+        </div>
+
+        {/* 似ている投稿 */}
+        <div>
+          <h3 style={{ marginTop: 40 }} className='cali'>Questions You May Like</h3>
+          <div style={styles.similarPostsPos}>
+            {relatedQues.length !== 0 && <QuestionList questions={relatedQues} />}
+            {relatedQues.length === 0 && <WindMillLoading style={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />}
           </div>
         </div>
-      </Fragment>
-    )
-  }
-
-  async componentDidUpdate() {
-    const { uid } = this.props;
-    const { the_slug } = this.props.match.params;
-
-    if(uid === null || this.state.user !== null) return null;
-
-    var user = {}
-    await db.collection('users').doc(uid).get().then((doc) => {
-      if(doc.exists){
-        user = doc.data()
-        if(!user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/detail/'+the_slug;
-        this.setState({ user: doc.data() })
-      }
-    })
-    
-    if (user.question_liked.includes(the_slug)){
-      this.setState({ likeIt: true });
-    }else{
-      this.setState({ likeIt: false });
-    }
-
-    if (user.question_created.includes(the_slug)){
-      this.setState({ madeIt: true });
-    }else{
-      this.setState({ madeIt: false });
-    }
-
-    for(var i=0; i<user.question_answered.length; i++){
-      if(user.question_answered[i].question === the_slug) this.setState({ your_vote: user.question_answered[i].answer })
-    }
-
-    var the_question = null
-    await db.collection('questions').doc(the_slug).get().then((doc) => {
-      if(doc.exists){
-        the_question = doc.data()
-        this.setState({ the_question: doc.data() })
-      }else{
-        window.location.href = '/';
-      }
-    });
-
-    var copy=Array.from(the_question.choices);
-    copy.sort(function(first, second){
-      if (first.votes > second.votes){
-        return -1;
-      }else if (first.votes < second.votes){
-        return 1;
-      }else{
-        return 0;
-      }
-    });
-    this.setState({ choicesSorted: copy });
-    var l = [];
-    var v = [];
-    var c = [];
-
-    for(let i=0; i<copy.length;  i++){
-      l.push(copy[i].choice_text);
-      v.push(copy[i].votes);
-    }
-
-    var time = the_question.created_at;
-    var seconds = parseInt(time.slice(-2));
-    if(v !== []){
-      v.forEach((entry, idx) => {
-        c.push('hsla('+((idx+seconds)*70)+',75%,75%,1)');
-      });
-    }
-    this.setState({ labels: l, values: v, colors: c });
-
-    db.collection('questions').where('category', 'array-contains-any', the_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
-      var questionSimilar = [];
-      docs.forEach(doc => {
-        if(doc.data().slug !== the_slug) questionSimilar.push(doc.data());
-      });
-      this.setState({ relatedQues: questionSimilar });
-    })
-  }
+      </div>
+    </Fragment>
+  )
 }
 
 const styles = {

@@ -19,44 +19,37 @@ const theme = createMuiTheme({
   },
 });
 
-export default class ModalDelete extends React.Component {
-  
-  constructor(props){
-    super(props);
-  }
+export default function ModalDelete (props) {
 
-  render (){
-    const { onDelete, onClose } = this.props;
-
-    const body = (
-      <div style={styles.modal}>
-        <div style={styles.addForm} id="addForm">
-          <h4 style={styles.h4}>Delete this question?</h4>
-          <div style={styles.whichone}>
-            <ThemeProvider theme={theme}>
-              <ButtonGroup variant="contained" >
-                <Button onClick={onClose} startIcon={<CancelIcon/>} color='primary' >no</Button>
-                <Button onClick={onDelete} startIcon={<DeleteIcon />} color='secondary' >yes</Button>
-              </ButtonGroup>
-            </ThemeProvider>
-          </div>
+  const { onDelete, onClose } = this.props;
+  const body = (
+    <div style={styles.modal}>
+      <div style={styles.addForm} id="addForm">
+        <h4 style={styles.h4}>Delete this question?</h4>
+        <div style={styles.whichone}>
+          <ThemeProvider theme={theme}>
+            <ButtonGroup variant="contained" >
+              <Button onClick={onClose} startIcon={<CancelIcon/>} color='primary' >no</Button>
+              <Button onClick={onDelete} startIcon={<DeleteIcon />} color='secondary' >yes</Button>
+            </ButtonGroup>
+          </ThemeProvider>
         </div>
       </div>
-    );
+    </div>
+  );
 
-    return (
-      <Fragment>
-        <Modal
-          open={true}
-          onClose={onClose}
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-        >
-          {body}
-        </Modal>
-      </Fragment>
-    )
-  }
+  return (
+    <Fragment>
+      <Modal
+        open={true}
+        onClose={onClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {body}
+      </Modal>
+    </Fragment>
+  )
 }
 
 const styles = {

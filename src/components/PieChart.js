@@ -1,73 +1,67 @@
 import React, { Fragment } from 'react';
 import { Pie } from 'react-chartjs-2';
 
-export default class PieChart extends React.Component {
+export default function PieChart (props) {
 
-  constructor(props){
-    super(props);
-  }
+  const { skeleton, labels, values, colors } = this.props;
+  const duration = skeleton ? 0 : 5000;
 
-  render () {
-    const { skeleton, labels, values, colors } = this.props;
-    var duration = skeleton ? 0 : 5000;
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        data: values,
+        backgroundColor: colors,
+        borderColor: colors,
+        hoverBackgroundColor: colors,
+        borderWidth: 2,
+        hoverBorderColor: colors,
+        hoverBorderWidth: 7,
+        borderSkipped: 'top'
+      }
+    ]
+  };
 
-    const data = {
-      labels: labels,
-      datasets: [
-        {
-          data: values,
-          backgroundColor: colors,
-          borderColor: colors,
-          hoverBackgroundColor: colors,
-          borderWidth: 2,
-          hoverBorderColor: colors,
-          hoverBorderWidth: 7,
-          borderSkipped: 'top'
-        }
-      ]
-    };
-
-    const options = {
-      maintainAspectRatio: false,
-      legend: {
-        display: false
-      },
-      animation: {
-        duration: duration,
-      },
-      tooltips: {
-        backgroundColor: 'white',
-        titleFontColor: 'black',
-        caretSize: 5,
-        callbacks: {
-          labelColor: function(tooltipItem, chart){
-            return {
-              borderColor: 'white',
-              backgroundColor: 'white',
-            }
-          },
-          labelTextColor: function(tooltipItem, chart){
-            return 'black';
-          },
-        }
-      },
-      plugins: {
-        labels: {
-          render: 'value',
-          precision: 0,
-        }
-      },
-      layout: {
-        padding: {
-          top: 13,
+  const options = {
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+    animation: {
+      duration: duration,
+    },
+    tooltips: {
+      backgroundColor: 'white',
+      titleFontColor: 'black',
+      caretSize: 5,
+      callbacks: {
+        labelColor: function(tooltipItem, chart){
+          return {
+            borderColor: 'white',
+            backgroundColor: 'white',
+          }
         },
+        labelTextColor: function(tooltipItem, chart){
+          return 'black';
+        },
+      }
+    },
+    plugins: {
+      labels: {
+        render: 'value',
+        precision: 0,
+      }
+    },
+    layout: {
+      padding: {
+        top: 13,
       },
-    };
+    },
+  };
 
-    return (
-      <Fragment>
-        <Pie data={data} options={options} />
-      </Fragment>
-    )
-  }
+  return (
+    <Fragment>
+      <Pie data={data} options={options} />
+    </Fragment>
+  )
 }

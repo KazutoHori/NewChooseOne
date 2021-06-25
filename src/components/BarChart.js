@@ -3,7 +3,7 @@ import { Bar } from 'react-chartjs-2';
 
 export default function BarChart (props) {
 
-  const { skeleton, labels, values, colors } = this.props;
+  const { skeleton, labels, values, colors } = props;
   const duration = skeleton ? 0 : 5000;
   const data = {
     labels: labels,

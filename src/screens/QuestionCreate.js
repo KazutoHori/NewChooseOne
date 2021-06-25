@@ -56,7 +56,7 @@ export default function QuestionCreate (props) {
     },
   });
 
-  async function onSubmit () {
+  const onSubmit = async () => {
 
     if(title === ''){
       setWarning('Title cannot be empty.');
@@ -153,18 +153,18 @@ export default function QuestionCreate (props) {
     window.location.href = "/detail/" + slug;
   };
 
-  function titleChangeText (event) {
+  const titleChangeText = (event) => {
     setTitle(event.target.value);
   };
 
-  function choiceChangeText (event, idx) {
+  const choiceChangeText = (event, idx) => {
     var copy = choices.slice();
     copy[idx] = event.target.value;
 
     setChoices(copy);
   };
 
-  function onCategory (idx) {
+  const onCategory = (idx) => {
     var copy=categories.slice();
     if(copy.includes(allCategories[idx])){
       copy=copy.filter(c => c !== allCategories[idx]);

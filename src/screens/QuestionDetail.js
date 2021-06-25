@@ -1,6 +1,4 @@
-import React, { Component, Fragment } from 'react';
-import Loading from 'react-loading';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { useEffect, useState, Fragment } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 import Button from '@material-ui/core/Button';
@@ -44,64 +42,60 @@ const theme = createMuiTheme({
   },
 });
 
-export default class QuestionDetail extends Component {
+export default function QuestionDetail (props) {
 
-  constructor(props){
-    super(props);
-
-    this.state = {
-      modalVisible: false,
-      warning: null,
-      the_choice: null,
-      user: null,
-      madeIt: null,
-      the_question: null,
-      likeIt: false,
-    }
+  const uid = props.uid;
+  const the_slug = props.match.params.the_slug;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [warning, setWarning] = useState(null);
+  const [the_choice, setTheChoice] = useState(null);
+  const [user, setUser] = useState(null);
+  const [madeIt, setMadeIt] = useState(null);
+  const [the_question, setTheQuestion] = useState(null);
+  const [likeIt, setLikeIt] = useState(false);
+  var choiceSkeleton = [];
+  for(var i=0; i<5; i++){
+    choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15}/></SkeletonTheme></div>)
   }
 
-  async componentDidMount() {
-    const { uid } = this.props;
-    const { the_slug } = this.props.match.params;
-    if(uid === null || this.state.user !== null) return null;
+  useEffect(() => {
+    if(uid === null) return null;
 
-    var user = {}
-    await db.collection('users').doc(uid).get().then((doc) => {
-      if(doc.exists){
-        user = doc.data()
-        if(user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
-        this.setState({ user: doc.data() })
+    db.collection('users').doc(uid).get().then((doc) => {
+      var the_user = doc.data();
+      if(the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
+      else{
+        setUser(the_user);
+
+        if (the_user.question_liked.includes(the_slug)){
+          setLikeIt(true);
+        }else{
+          setLikeIt(false);
+        }
+
+        if (the_user.question_created.includes(the_slug)){
+          setMadeIt(true);
+        }else{
+          setMadeIt(false);
+        }
+
+        db.collection('questions').doc(the_slug).get().then((doc) => {
+          if(doc.exists){
+            setTheQuestion(doc.data())
+          }else{
+            window.location.href = '/';
+          }
+        })
       }
     })
-    
-    if (user.question_liked.includes(the_slug)){
-      this.setState({ likeIt: true });
-    }else{
-      this.setState({ likeIt: false });
-    }
-
-    if (user.question_created.includes(the_slug)){
-      this.setState({ madeIt: true });
-    }else{
-      this.setState({ madeIt: false });
-    }
-
-    await db.collection('questions').doc(the_slug).get().then((doc) => {
-      if(doc.exists){
-        this.setState({ the_question: doc.data() })
-      }else{
-        window.location.href = '/';
-      }
-    })
-  }
+  });
   
 
-  onVote = async () => {
-    const { the_choice, user, the_question } = this.state;
+  const onVote = async () => {
 
     if(the_choice === null){
-      this.setState({ warning: 'You have not chosen yet'});
-      setTimeout(() => this.setState({ warning: ''}),2500);
+      setWarning({ warning: 'You have not chosen yet'});
+      setTimeout(() => setWarning(''),2500);
       return null;
     }
 
@@ -140,31 +134,30 @@ export default class QuestionDetail extends Component {
     window.location.href = "/result/" + the_slug;
   }
 
-  onLikeit = () => {
-    const { likeIt, user, the_question } = this.state;
+  const onLikeit = () => {
+
     if(likeIt){
-      this.setState({ likeIt: false });
+      setLikeIt(false);
       db.collection("users").doc(user.uid).update({
         question_liked: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
       });
       db.collection("questions").doc(the_question.slug).update({
         likes: firebase.firestore.FieldValue.increment(-1)
       });
-      this.setState({ the_question: { ...the_question, likes: the_question.likes-1 } })
+      setTheQuestion({ ...the_question, likes: the_question.likes-1 })
     }else{
-      this.setState({ likeIt: true });
+      setLikeIt(true);
       db.collection("users").doc(user.uid).update({
         question_liked: firebase.firestore.FieldValue.arrayUnion(the_question.slug)
       });
       db.collection("questions").doc(the_question.slug).update({
         likes: firebase.firestore.FieldValue.increment(1)
       });
-      this.setState({ the_question: { ...the_question, likes: the_question.likes+1 } })
+      setTheQuestion({ ...the_question, likes: the_question.likes+1 })
     }
   }
 
-  onDelete = async () => {
-    const { user, the_question } = this.state;
+  const onDelete = async () => {
     await db.collection("questions").doc(the_question.slug).delete();
     await db.collection("users").doc(user.uid).update({
       question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
@@ -173,116 +166,72 @@ export default class QuestionDetail extends Component {
     window.location.href = "/";
   }
 
-  onClose = () => {
-    this.setState({ modalVisible: false });
+  const onClose = () => {
+    setModalVisible(false);
   }
 
-  render() {
-    const { likeIt, modalVisible, madeIt, the_choice, warning, the_question } = this.state;
 
-    var choiceSkeleton = [];
-    for(var i=0; i<5; i++){
-      choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15}/></SkeletonTheme></div>)
-    }
+  return (
+    <Fragment>
+      <div style={styles.detailPos}>
+        {/* カテゴリー */}
+        <p className="cali2"><span className="text-primary fa fa-tag" />
+          Category:
+          {the_question && (
+            <Fragment>
+              {the_question.category.map((cate, idx) => {
+                if ( idx === 0){
+                  return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
+                }else{
+                  return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
+                }
+              })}
+            </Fragment>
+          )}
+          {!the_question && <Skeleton style={{ marginLeft: 10 }} width={60} />}
+        </p>
 
+        {/* モーダル */}
+        {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
 
-    return (
-      <Fragment>
-        <div style={styles.detailPos}>
-          {/* カテゴリー */}
-          <p className="cali2"><span className="text-primary fa fa-tag" />
-            Category:
-            {the_question && (
-              <Fragment>
-                {the_question.category.map((cate, idx) => {
-                  if ( idx === 0){
-                    return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
-                  }else{
-                    return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
-                  }
-                })}
-              </Fragment>
-            )}
-            {!the_question && <Skeleton style={{ marginLeft: 10 }} width={60} />}
-          </p>
+        {/* タイトル */}
+        <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
+        <p style={styles.date}>
+          {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={50} height={7}/></SkeletonTheme> }
+        </p>
 
-          {/* モーダル */}
-          {modalVisible &&  <ModalDelete onClose={this.onClose} onDelete={this.onDelete} />}
-
-          {/* タイトル */}
-          <h3 className="cali2">{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
-          <p style={styles.date}>
-            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={50} height={7}/></SkeletonTheme> }
-          </p>
-
-          {/* 選択肢 */}
-          <Fragment>
-            {the_question && (
-              <Fragment>
-                {the_question.choices.map((choice, idx) => (
-                  <div style={styles.choiceBtnPos}>
-                    {idx !== the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
-                    {idx === the_choice && <button onClick={() => this.setState({ the_choice: idx })} style={styles.roundBtn} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
-                  </div>
-                ))}
-              </Fragment>
-            )}
-            {!the_question && [choiceSkeleton]}
-            {warning && (<p>{warning}</p>)}
-            <div style={styles.voteBtnPos}>
-              <Button startIcon={<ThumbUpAltIcon />}  onClick={this.onVote} style={styles.roundBtn} className='btn btn-success'>Vote</Button>
-            </div>
-          </Fragment>
-
-          {/* 削除ボタン */}
-          <div style={styles.buttonsPos}>
-            <ThemeProvider theme={theme}>
-              <ButtonGroup variant="contained" >
-                {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
-                {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
-                {madeIt && <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
-              </ButtonGroup>
-            </ThemeProvider>
+        {/* 選択肢 */}
+        <Fragment>
+          {the_question && (
+            <Fragment>
+              {the_question.choices.map((choice, idx) => (
+                <div style={styles.choiceBtnPos}>
+                  {idx !== the_choice && <button onClick={() => setTheChoice(idx)} style={styles.roundBtn} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
+                  {idx === the_choice && <button onClick={() => setTheChoice(idx)} style={styles.roundBtn} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
+                </div>
+              ))}
+            </Fragment>
+          )}
+          {!the_question && [choiceSkeleton]}
+          {warning && (<p>{warning}</p>)}
+          <div style={styles.voteBtnPos}>
+            <Button startIcon={<ThumbUpAltIcon />}  onClick={onVote} style={styles.roundBtn} className='btn btn-success'>Vote</Button>
           </div>
+        </Fragment>
+
+        {/* 削除ボタン */}
+        <div style={styles.buttonsPos}>
+          <ThemeProvider theme={theme}>
+            <ButtonGroup variant="contained" >
+              {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
+              {likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
+              {madeIt && <Button onClick={() => setModalVisible(true)} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
+            </ButtonGroup>
+          </ThemeProvider>
         </div>
-      </Fragment>
-    )
-  }
-
-  async componentDidUpdate() {
-    const { uid } = this.props;
-    const { the_slug } = this.props.match.params;
-    if(uid === null || this.state.user !== null) return null;
-
-    var user = {}
-    await db.collection('users').doc(uid).get().then((doc) => {
-      if(doc.exists){
-        user = doc.data()
-        if(user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
-        this.setState({ user: doc.data() })
-      }
-    })
-
-    if (user.question_liked.includes(the_slug)){
-      this.setState({ likeIt: true });
-    }else{
-      this.setState({ likeIt: false });
-    }
-
-    if (user.question_created.includes(the_slug)){
-      this.setState({ madeIt: true });
-    }else{
-      this.setState({ madeIt: false });
-    }
-
-    await db.collection('questions').doc(the_slug).get().then((doc) => {
-      if(doc.exists){
-        this.setState({ the_question: doc.data() })
-      }else{
-        window.location.href = '/';
-      }
-    })
-  }
+      </div>
+    </Fragment>
+  )
 }
 
 const styles = {

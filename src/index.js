@@ -1,5 +1,4 @@
-import React from 'react';
-import Loading from 'react-loading';
+import React, { Fragment, useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -10,7 +9,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import QuestionDetail from './screens/QuestionDetail';
 import QuestionResult from './screens/QuestionResult';
-import { Fragment } from 'react';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -30,19 +28,12 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default class Routing extends React.Component {
+export default function Routing (props) {
 
-  constructor(props) {
-    super(props);
+  const [uid, setUid] = useState(null);
 
-    this.state = {
-      uid: null,
-    }
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     const lc = localStorage.getItem('chooseoneUid');
-    const { uid } = this.state;
 
     if(uid === null) {
       if (lc === null){
@@ -53,7 +44,7 @@ export default class Routing extends React.Component {
             firebase.auth().onAuthStateChanged((user) => {
               if (user) {
                 var uid = user.uid;
-                this.setState({ uid });
+                setUid(uid);
                 localStorage.setItem('chooseoneUid', uid);
 
                 var new_user = {
@@ -66,100 +57,58 @@ export default class Routing extends React.Component {
                   username: '',
                 };
                 db.collection('users').doc(uid).set(new_user).then(() => {
-                  this.setState({ uid: new_user });
+                  setUid(new_user);
                 });
               }
             });          
           })
       }else{
-        this.setState({ uid: lc });
+        setUid(uid);
       }
     }
-  }
-
-  render () {
-
-    const { uid } = this.state;
+  });
     
-    return (
-      <Fragment>
-        <Router>
-          <div>
-            <meta charSet="utf-8" />
-            <title>ChooseOne</title>
-            <meta name="description" content="{% block description %}ChooseOne{% endblock %}" />
-            <meta name="keywords" content="{% block keywords %}ChooseOne{% endblock %}" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossOrigin="anonymous" />
-            <link rel="stylesheet" href="https://use.typekit.net/wjg1qds.css" />
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
-            <link rel="stylesheet" type="text/css" href="{% sass_src 'css/base.scss' %}" />
-            <link rel="stylesheet" href="https://use.typekit.net/wjg1qds.css" />
-            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
-            <meta name="google-site-verification" content="ZLvGG7OEMwGguqr5Nome2wbtPSHJZU16uVVaw5QkEGc" />
-            <script src='https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js'></script>
-            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-          </div>
-          <div style={styles.background}>
-            <Header />
-            <div style={styles.wrapper}>
-              <div style={styles.container} className='container'>
-                <div style={styles.homePos}>
-                  <Switch>
-                    <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
-                    <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
-                    <Route path="/" render={ () => <App uid={uid}/> } />
-                  </Switch>
-                  <Footer/>
-                </div>
+  return (
+    <Fragment>
+      <Router>
+        <div>
+          <meta charSet="utf-8" />
+          <title>ChooseOne</title>
+          <meta name="description" content="{% block description %}ChooseOne{% endblock %}" />
+          <meta name="keywords" content="{% block keywords %}ChooseOne{% endblock %}" />
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossOrigin="anonymous" />
+          <link rel="stylesheet" href="https://use.typekit.net/wjg1qds.css" />
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+          <link rel="stylesheet" type="text/css" href="{% sass_src 'css/base.scss' %}" />
+          <link rel="stylesheet" href="https://use.typekit.net/wjg1qds.css" />
+          <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+          <meta name="google-site-verification" content="ZLvGG7OEMwGguqr5Nome2wbtPSHJZU16uVVaw5QkEGc" />
+          <script src='https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js'></script>
+          <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+        </div>
+        <div style={styles.background}>
+          <Header />
+          <div style={styles.wrapper}>
+            <div style={styles.container} className='container'>
+              <div style={styles.homePos}>
+                <Switch>
+                  <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
+                  <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
+                  <Route path="/" render={ () => <App uid={uid}/> } />
+                </Switch>
+                <Footer/>
               </div>
             </div>
           </div>
-        </Router>
-      </Fragment>
-    );
-  }
-
-  componentDidUpdate() {
-    const lc = localStorage.getItem('chooseoneUid');
-    const { uid } = this.state;
-
-    if(uid === null) {
-      if (lc === null){
-        var ref = new Date();
-        var datetime = ref.toString().slice(4, 25);
-        firebase.auth().signInAnonymously()
-          .then(() => {
-            firebase.auth().onAuthStateChanged((user) => {
-              if (user) {
-                var uid = user.uid;
-                this.setState({ uid });
-                localStorage.setItem('chooseoneUid', uid);
-
-                var new_user = {
-                  email: '',
-                  uid: uid,
-                  created_at: datetime,
-                  question_answered: [],
-                  question_created: [],
-                  question_liked: [],
-                  username: '',
-                };
-                db.collection('users').doc(uid).set(new_user).then(() => {
-                  this.setState({ uid: new_user });
-                });
-              }
-            });          
-          })
-      }else{
-        this.setState({ uid: lc });
-      }
-    }
-  }
+        </div>
+      </Router>
+    </Fragment>
+  );
 }
 
 const styles = {
