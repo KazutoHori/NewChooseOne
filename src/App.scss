@@ -43,6 +43,12 @@
   p{
     font-size: 12px;
   }
+
+  .date{
+    font-family: georgia, serif;
+    font-size: 12px;
+    color: #457AFB
+  }
 }
 
 .side_question{
@@ -126,5 +132,12 @@
       margin-right: 0px;
       padding: 0px;
     }
+  }
+}
+
+@media(max-width: 700px){
+  .container{
+    padding: 0px;
+    margin: 0px;
   }
 }

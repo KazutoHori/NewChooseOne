@@ -1,9 +1,23 @@
 import React, { Component, Fragment } from 'react';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import Input from '@material-ui/core/Input';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import logo from '../ChooseOne1.png';
+import logoSmall from '../ChooseOne80.png';
 import '../App.scss';
+
+const styles = {
+  header: {
+    position: 'fixed',
+    top: 0,
+    width: '100%',
+    height: 56,
+    zIndex: 1,
+    color: 'white',
+  },
+}
 
 export default class Header extends Component {
 
@@ -20,8 +34,13 @@ export default class Header extends Component {
 
   render() {
     return (
+      
+
+
+
+
       <div className='header'>
-        <div className='container'>
+        <div className='container' style={{ }}>
           <nav className="navbar-light navbar navbar-expand-lg align-items-center">
             <a href="/" className="navbar-brand" style={{ marginRight: 36 }}><img src={logo} alt="ChooseOne" /></a>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,25 +89,3 @@ export default class Header extends Component {
     )
   }
 }
-
-const styles = {
-  pic_only: {
-    display: 'none',
-  },
-  home: {
-    backgroundColor: 'rgb(40, 168, 69)',
-  },
-  answered: {
-    marginLeft: 25,
-  },
-  btnPrimary: {
-    backgroundColor: 'rgb(3, 122, 255)',
-  },
-  btn: {
-    height: 39,
-    textAlign: 'center',
-    paddingRight: 10,
-    paddingLeft: 10,
-    fontSize: 16,
-  },
-};
