@@ -9,7 +9,6 @@ export default function QuestionList (props) {
   const questions = props.questions;
 
   const [page, setPage] = useState(1);
-  const howManyPages = Math.ceil(questions.length/10);
 
   const theme = createMuiTheme({
       palette: {
@@ -47,7 +46,7 @@ export default function QuestionList (props) {
       ))}
       <div style={styles.paginationPos}>
         <ThemeProvider theme={theme}>
-          {howManyPages !== 1 && <Pagination size={'medium'} style={styles.pagination} onChange={onPageChange} page={page} count={howManyPages} color='primary' renderItem={(item) => <PaginationItem style={{ outline: 'none' }} {...item} />} />}
+          {Math.ceil(questions.length/10) !== 1 && <Pagination size={'medium'} style={styles.pagination} onChange={onPageChange} page={page} count={Math.ceil(questions.length/10)} color='primary' renderItem={(item) => <PaginationItem style={{ outline: 'none' }} {...item} />} />}
         </ThemeProvider>
       </div>
     </Fragment>
