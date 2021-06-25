@@ -45,7 +45,7 @@ export default function QuestionAsked (props) {
 
   return (
     <Fragment>
-      <h3 className='cali'>Questions You Made</h3>
+      <h3 style={styles.title}>Questions You Made</h3>
       {questions === [] && (
         <pre>        You have not asked any questions yet.</pre>
       )}
@@ -54,4 +54,12 @@ export default function QuestionAsked (props) {
       )}
     </Fragment>
   )
+}
+
+const styles = {
+  title: {
+    fontFamily: 'lust-script, sans-serif',
+    fontStyle: 'normal',
+    fontWeight: 700,
+  }
 }

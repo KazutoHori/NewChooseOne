@@ -5,7 +5,7 @@ export default function About () {
   return (
     <Fragment>
       <div style={styles.about}>
-        <h1 className='cali' style={styles.h1}>About ChooseOne</h1>
+        <h1 style={styles.title}>About ChooseOne</h1>
         <br />
         <p style={styles.p}>
           ChooseOne's <strong style={styles.strong}>MISSION</strong> is to let you have access
@@ -24,7 +24,7 @@ export default function About () {
           and enjoyable to you all even a little. Nothing can be
           substituted with your pleasant experience with ChooseOne for me.
         </p>
-        <h3 className='cali' style={styles.h3}>Thank you All for using ChooseOne!</h3>
+        <h3 style={styles.thankYou}>Thank you All for using ChooseOne!</h3>
       </div>
     </Fragment>
   );
@@ -32,7 +32,7 @@ export default function About () {
 
 const styles = {
 
-  h3: {
+  thankYou: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
@@ -44,7 +44,10 @@ const styles = {
     filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
     borderRadius: 15,
   },
-  h1: {
+  title: {
+    fontFamily: 'lust-script, sans-serif',
+    fontStyle: 'normal',
+    fontWeight: 700,
     textAlign: 'center',
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
@@ -52,12 +55,6 @@ const styles = {
   },
   p: {
     lineHeight: 3,
-  },
-  h3: {
-    textAlign: 'center',
-    marginTop: 80,
-    marginBottom: 30,
-    fontWeight: 'bold',
   },
   strong: {
     fontWeight: 600,

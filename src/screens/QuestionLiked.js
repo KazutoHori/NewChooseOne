@@ -45,7 +45,7 @@ export default function QuestionLiked (props) {
 
   return (
     <Fragment>
-      <h3 className='cali'>Questions You Liked</h3>
+      <h3 style={styles.title}>Questions You Liked</h3>
       {questions === [] && (
         <pre>        There are no questions you like</pre>
       )}
@@ -55,3 +55,12 @@ export default function QuestionLiked (props) {
     </Fragment>
   )
 }
+
+const styles = {
+  title: {
+    fontFamily: 'lust-script, sans-serif',
+    fontStyle: 'normal',
+    fontWeight: 700,
+  }
+}
+

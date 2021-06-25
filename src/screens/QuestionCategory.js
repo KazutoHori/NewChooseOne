@@ -37,8 +37,17 @@ export default function QuestionCategory (props) {
 
   return (
     <Fragment>
-      <h3 className='cali'>Questions Categorized As {category}</h3>
+      <h3 stylee={styles.title}>Questions Categorized As {category}</h3>
       <QuestionList questions={questions} />
     </Fragment>
   )
 }
+
+const styles = {
+  title: {
+    fontFamily: 'lust-script, sans-serif',
+    fontStyle: 'normal',
+    fontWeight: 700,
+  }
+}
+

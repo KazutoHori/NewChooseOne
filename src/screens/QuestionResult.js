@@ -193,21 +193,23 @@ export default function QuestionResult (props) {
 
         <div className={styles.forSmallerVer}>
           {/* カテゴリー */}
-          <p className='cali2'><span className="text-primary fa fa-tag" />
-            Category:
-            {notUseSkeleton && (
-              <Fragment>
-                {the_question.category.map((cate, idx) => {
-                  if ( idx === 0){
-                    return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
-                  }else{
-                    return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
-                  }
-                })}
-              </Fragment>
-            )}
-            {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
-          </p>
+          <div className='category'>
+            <p className='cali2'><span className="text-primary fa fa-tag" />
+              Category:
+              {notUseSkeleton && (
+                <Fragment>
+                  {the_question.category.map((cate, idx) => {
+                    if ( idx === 0){
+                      return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
+                    }else{
+                      return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
+                    }
+                  })}
+                </Fragment>
+              )}
+              {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
+            </p>
+          </div>
 
           {/* モーダル */}
           {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
@@ -230,7 +232,7 @@ export default function QuestionResult (props) {
         {/* テーブル */}
         <div className={styles.table} >
           {notUseSkeleton && (
-            <table className='table'>
+            <table className='table' style={{ margin: 0 }}>
               <thead>
                 <tr>
                   <td />
@@ -295,17 +297,17 @@ export default function QuestionResult (props) {
         {/* ボタン系 */}
         <div className={styles.buttonsPos}>
           <ThemeProvider theme={theme}>
-            <ButtonGroup variant="contained" >
-              {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
+            <ButtonGroup size={smallDisplay ? 'small' : 'default'} variant="contained" >
+              {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon fontSize='small'/>} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
               {likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
-              {madeIt && <Button onClick={() => setModalVisible(true)} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
+              {madeIt && <Button onClick={() => setModalVisible(true)} startIcon={<DeleteIcon fontSize='small' />} color='secondary' >Delete</Button>}
             </ButtonGroup>
           </ThemeProvider>
         </div>
 
         {/* 似ている投稿 */}
         <div>
-          <h3 style={{ marginTop: 40 }} className='cali'>Questions You May Like</h3>
+          <h3 className={styles.mayLike}>Questions You May Like</h3>
           <div className={styles.similarPostsPos}>
             {relatedQues.length !== 0 && <QuestionList questions={relatedQues} />}
             {relatedQues.length === 0 && <WindMillLoading style={{ position: 'relative', marginTop: 50, marginLeft: 50,}} color='rgb(39, 169, 68)' speed={1.2} size='large' />}
@@ -317,6 +319,12 @@ export default function QuestionResult (props) {
 }
 
 const useStyles = makeStyles(() => createStyles({
+  mayLike: {
+    marginBottom: 40,
+    fontFamily: 'lust-script, sans-serif',
+    fontStyle: 'normal',
+    fontWeight: 700,
+  },
   similarPostsPos: {
     width: '70%',
   },
@@ -324,7 +332,7 @@ const useStyles = makeStyles(() => createStyles({
     filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
     borderRadius: 15,
     marginTop: 20,
-    marginBottom: 15,
+    marginBottom: 25,
     backgroundColor: 'white',
     width: '100%',
   },
@@ -367,26 +375,42 @@ const useStyles = makeStyles(() => createStyles({
   },
 
   '@media (max-width: 500px)': {
+    mayLike: {
+      margin: '30px 0px 5px 10px',
+      fontSize: 25,
+    },
+    buttonsPos: {
+      marginLeft: 5,
+      height: 20,
+    },
+    h3: {
+      fontSize: 10,
+    },
     forSmallerVer: {
       padding: '0px 8px',
     },
-    // graphs: {
-    //   display: 'block',
-    // },
+    table: {
+      filter: 'drop-shadow(5px 0px 4px rgba(160, 160, 160, 0.7))',
+      marginTop: 10,
+      marginBottom: 4,
+    },
     pieGraph: {
-      // width: '100%',
+      filter: 'drop-shadow(0px 2px 2px rgba(160, 160, 160, 0.7))',
       height: 150,
       marginBottom: 7,
-      borderRadius: 0,
+      borderRadius: 4,
       padding: 4,
       marginRight: 3,
     },
     barGraph: {
-      // width: '100%',
+      filter: 'drop-shadow(0px 2px 2px rgba(160, 160, 160, 0.7))',
       height: 150,
       marginBottom: 4,
-      borderRadius: 0,
+      borderRadius: 4,
       padding: 4,
-    }
+    },
+    similarPostsPos: {
+      width: '100%',
+    },
   },
 }));

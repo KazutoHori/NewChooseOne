@@ -199,10 +199,10 @@ export default function QuestionCreate (props) {
   return (
     <Fragment>
       <div style={styles.add}>
-        <h3 className='cali'>Let's Add A New Question!</h3>
+        <h3 style={styles.title}>Let's Add A New Question!</h3>
         
         {/* タイトル */}
-        <h4 className='cali2'>Title</h4>
+        <h4 style={styles.labels}>Title</h4>
         <Input
           id="standard-adornment-weight"
           style={styles.titleInput}
@@ -218,7 +218,7 @@ export default function QuestionCreate (props) {
 
 
         {/* 選択肢 */}
-        <h4 className='cali2'>Choices</h4>
+        <h4 style={styles.labels}>Choices</h4>
         <div>
           {howManyChoice !== 0 && (
             [added]
@@ -235,7 +235,7 @@ export default function QuestionCreate (props) {
         </div>
 
         {/* カテゴリー */}
-        <h4 style={styles.cateTitle} className='cali2'>Category</h4>
+        <h4 style={Object.assign({}, styles.cateTitle, styles.labels)}>Category</h4>
         <div>
           <div>
             {allCategories.map((cate, idx) => {
@@ -244,7 +244,7 @@ export default function QuestionCreate (props) {
               else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
               return (
                 <Fragment>
-                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({borderColor: tabColors[idx], outline: 'none' }, styles.label, changer)}  >{cate}</button>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({borderColor: tabColors[idx], outline: 'none' }, styles.cate, changer)}  >{cate}</button>
                 </Fragment>
               )
             })}
@@ -256,7 +256,7 @@ export default function QuestionCreate (props) {
               else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
               return (
                 <Fragment>
-                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none' }, styles.label, changer)} >{cate}</button>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none' }, styles.cate, changer)} >{cate}</button>
                 </Fragment>
               )
             })}
@@ -268,7 +268,7 @@ export default function QuestionCreate (props) {
               else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
               return (
                 <Fragment>
-                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, styles.label, changer)}  >{cate}</button>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, styles.cate, changer)}  >{cate}</button>
                 </Fragment>
               )
             })}
@@ -284,6 +284,16 @@ export default function QuestionCreate (props) {
 }
 
 const styles = {
+  labels: {
+    fontFamily: 'latienne-pro, serif',
+    fontStyle: 'normal',
+    fontWeight: 400,
+  },
+  title: {
+    fontFamily: 'lust-script, sans-serif',
+    fontStyle: 'normal',
+    fontWeight: 700,
+  },
   cateTitle: {
     marginTop: 25,
     marginBottom: 20,
@@ -305,7 +315,7 @@ const styles = {
     paddingBottom: 30,
     borderRadius: 15,
   },
-  label: {
+  cate: {
     fontSize: 5,
     marginBottom: 10,
     marginRight: 10,
@@ -340,7 +350,8 @@ const StyledButton = withStyles({
     outline: 'none',
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
   },
-  label: {
+  cate: {
     textTransform: 'capitalize',
   },
 })(Button);
+

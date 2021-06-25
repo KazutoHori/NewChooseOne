@@ -45,7 +45,7 @@ export default function QuestionAnswered (props) {
   
   return (
     <Fragment>
-      <h3 className='cali'>Questions You Answered</h3>
+      <h3 style={styles.title}>Questions You Answered</h3>
         {questions === [] && (
           <pre>        You have not answered any questions yet.</pre>
         )}
@@ -57,8 +57,9 @@ export default function QuestionAnswered (props) {
 }
 
 const styles = {
-  main_list: {
-    width: 630,
-    height: 'auto',
-  },
+  title: {
+    fontFamily: 'lust-script, sans-serif',
+    fontStyle: 'normal',
+    fontWeight: 700,
+  }
 }

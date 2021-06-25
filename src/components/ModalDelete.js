@@ -6,8 +6,9 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { makeStyles, createStyles } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import blue from '@material-ui/core/colors/blue';
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -22,11 +23,13 @@ const theme = createMuiTheme({
 export default function ModalDelete (props) {
 
   const { onDelete, onClose } = props;
+  const styles = useStyles();
+
   const body = (
-    <div style={styles.modal}>
-      <div style={styles.addForm} id="addForm">
-        <h4 style={styles.h4}>Delete this question?</h4>
-        <div style={styles.whichone}>
+    <div className={styles.modal}>
+      <div className={styles.addForm} id="addForm">
+        <h4 className={styles.h4}>Delete this question?</h4>
+        <div className={styles.whichone}>
           <ThemeProvider theme={theme}>
             <ButtonGroup variant="contained" >
               <Button onClick={onClose} startIcon={<CancelIcon/>} color='primary' >no</Button>
@@ -52,7 +55,7 @@ export default function ModalDelete (props) {
   )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   modal: {
     position: 'absolute',
     top: '20%',
@@ -86,7 +89,6 @@ const styles = {
     fontSize: 20,
   },
   whichone: {
-    marginTop: 5,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -107,5 +109,13 @@ const styles = {
     paddingLeft: 8,
     paddingBottom: 10,
     borderRadius: 30,
+  },
+
+  '@media (max-width: 500px)': {
+    modal: {
+      top: '30%',
+      left: '10%',
+      right: '10%',
+    }
   }
-}
+}));
