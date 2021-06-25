@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Header from './components/Header';
@@ -32,6 +33,8 @@ var db = firebase.firestore();
 export default function Routing () {
 
   const [uid, setUid] = useState(null);
+  const styles = useStyles();
+  const smallDisplay = useMediaQuery('(max-width:500px)');
 
   useEffect(() => {
     if(uid !== null) return null;
@@ -93,17 +96,19 @@ export default function Routing () {
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
         </div>
-        <div style={styles.background}>
+        <div className={styles.background}>
           <Header />
-          <div style={styles.wrapper}>
-            <div style={styles.container} className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
-              <div style={styles.homePos}>
-                <Switch>
-                  <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
-                  <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
-                  <Route path="/" render={ () => <App uid={uid}/> } />
-                </Switch>
-                <Footer/>
+          <div className={styles.wrapper}>
+            <div className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
+              <div className={styles.container}>
+                <div className={styles.homePos}>
+                  <Switch>
+                    <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
+                    <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
+                    <Route path="/" render={ () => <App uid={uid}/> } />
+                  </Switch>
+                  <Footer/>
+                </div>
               </div>
             </div>
           </div>
@@ -113,7 +118,7 @@ export default function Routing () {
   );
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   wrapper: {
     minHeight: window.innerHeight-30,
     position: 'relative',/*←相対位置*/
@@ -130,7 +135,14 @@ const styles = {
     paddingTop: 15,
     paddingBottom: 30,
   },
-}
+
+  '@media (max-width: 500px)': {
+    container: {
+      paddingTop: 5,
+      paddingBottom: 10,
+    }
+  }
+}));
 
 ReactDOM.render(
   <React.StrictMode>

@@ -6,7 +6,9 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import { makeStyles, createStyles } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import ModalDelete from '../components/ModalDelete';
 import '../App.scss';
@@ -57,14 +59,17 @@ export default function QuestionDetail (props) {
   for(var i=0; i<5; i++){
     choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15}/></SkeletonTheme></div>)
   }
+  const styles = useStyles();
+  const smallDisplay = useMediaQuery('(max-width:500px)');
+
 
   useEffect(() => {
-    if(uid === null) return null;
+    if(uid === null || user !== null) return null;
 
     db.collection('users').doc(uid).get().then((doc) => {
       var the_user = doc.data();
-      if(the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
-      else{
+      // if(the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
+      // else{
         setUser(the_user);
 
         if (the_user.question_liked.includes(the_slug)){
@@ -86,19 +91,19 @@ export default function QuestionDetail (props) {
             window.location.href = '/';
           }
         })
-      }
+      // }
     })
   });
   
 
   const onVote = async () => {
-
+    console.log('HELLO');
     if(the_choice === null){
-      setWarning({ warning: 'You have not chosen yet'});
+      setWarning('You have not chosen yet');
       setTimeout(() => setWarning(''),2500);
       return null;
     }
-
+    console.log('why');
     var the_slug = the_question.slug;
     var your_vote = the_question.choices[the_choice].choice_text;
     var copy=Array.from(the_question.choices);
@@ -111,13 +116,13 @@ export default function QuestionDetail (props) {
     copy[the_choice].votes=parseInt(copy[the_choice].votes, 10)+1;
     the_question.choices=copy;
 
-    db.collection('questions').doc(the_slug).update({
+    await db.collection('questions').doc(the_slug).update({
       choices: firebase.firestore.FieldValue.arrayRemove(remove_data)
     });
-    db.collection('questions').doc(the_slug).update({
+    await db.collection('questions').doc(the_slug).update({
       choices: firebase.firestore.FieldValue.arrayUnion(add_data)
     });
-    db.collection('questions').doc(the_slug).update({
+    await db.collection('questions').doc(the_slug).update({
       all_votes: firebase.firestore.FieldValue.increment(1)
     })
 
@@ -170,59 +175,61 @@ export default function QuestionDetail (props) {
     setModalVisible(false);
   }
 
-
   return (
     <Fragment>
-      <div style={styles.detailPos}>
-        {/* カテゴリー */}
-        <p style={styles.category}><span className="text-primary fa fa-tag" />
-          Category:
-          {the_question && (
-            <Fragment>
-              {the_question.category.map((cate, idx) => {
-                if ( idx === 0){
-                  return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
-                }else{
-                  return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
-                }
-              })}
-            </Fragment>
-          )}
-          {!the_question && <Skeleton style={{ marginLeft: 10 }} width={60} />}
-        </p>
+      <div className={styles.detailPos}>
+
+        <div className={styles.forSmallerVer}>
+          {/* カテゴリー */}
+          <p className={styles.category}><span className="text-primary fa fa-tag" />
+            Category:
+            {the_question && (
+              <Fragment>
+                {the_question.category.map((cate, idx) => {
+                  if ( idx === 0){
+                    return (<a className='text-primary' href={'/category/'+cate}> {cate}</a>)
+                  }else{
+                    return (<a className='text-primary' href={'/category/'+cate}>, {cate}</a>)
+                  }
+                })}
+              </Fragment>
+            )}
+            {!the_question && <Skeleton style={{ marginLeft: 10 }} width={60} />}
+          </p>
+
+          {/* タイトル */}
+          <h3 className={styles.title}>{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
+          <p className={styles.date}>
+            {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={50} height={7}/></SkeletonTheme> }
+          </p>
+        </div>
 
         {/* モーダル */}
         {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
-
-        {/* タイトル */}
-        <h3 style={styles.title}>{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
-        <p style={styles.date}>
-          {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={50} height={7}/></SkeletonTheme> }
-        </p>
 
         {/* 選択肢 */}
         <Fragment>
           {the_question && (
             <Fragment>
               {the_question.choices.map((choice, idx) => (
-                <div style={styles.choiceBtnPos}>
-                  {idx !== the_choice && <button onClick={() => setTheChoice(idx)} style={styles.roundBtn} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
-                  {idx === the_choice && <button onClick={() => setTheChoice(idx)} style={styles.roundBtn} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
+                <div className={styles.choiceBtnPos}>
+                  {idx !== the_choice && <button onClick={() => setTheChoice(idx)} style={{ borderRadius: 15 }} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
+                  {idx === the_choice && <button onClick={() => setTheChoice(idx)} style={{ borderRadius: 15 }} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
                 </div>
               ))}
             </Fragment>
           )}
           {!the_question && [choiceSkeleton]}
-          {warning && (<p>{warning}</p>)}
-          <div style={styles.voteBtnPos}>
-            <Button startIcon={<ThumbUpAltIcon />}  onClick={onVote} style={styles.roundBtn} className='btn btn-success'>Vote</Button>
+          {warning !== null && (<p className={styles.warning}>{warning}</p>)}
+          <div className={styles.voteBtnPos}>
+            <Button startIcon={<ThumbUpAltIcon />}  onClick={onVote} style={{ borderRadius: 10 }} className='btn btn-success'>Vote</Button>
           </div>
         </Fragment>
 
-        {/* 削除ボタン */}
-        <div style={styles.buttonsPos}>
+        {/* ボタン系 */}
+        <div className={styles.buttonsPos}>
           <ThemeProvider theme={theme}>
-            <ButtonGroup variant="contained" >
+            <ButtonGroup size={smallDisplay ? 'small' : 'default'} variant="contained" >
               {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
               {likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
               {madeIt && <Button onClick={() => setModalVisible(true)} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
@@ -234,7 +241,7 @@ export default function QuestionDetail (props) {
   )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   category: {
     fontFamily: 'latienne-pro, serif',
     fontStyle: 'normal',
@@ -246,20 +253,18 @@ const styles = {
     fontWeight: 400,
   },
   buttonsPos: {
-    position: 'absolute',
-    bottom: 210,
+    // position: 'absolute',
+    // bottom: 210,
+    marginTop: 100,
   },
   date: {
     marginLeft: 20,
     fontFamily: 'georgia, serif',
-    fontSize: 12,
+    fontSize: 10,
     color: '#457AFB',
   },
   the_choice: {
     marginLeft: 0,
-  },
-  roundBtn: {
-    borderRadius: 15,
   },
   choiceBtnPos: {
     marginLeft: 25,
@@ -278,4 +283,24 @@ const styles = {
   buttons: {
     borderRadius: 30,
   },
-}
+
+  warning: {
+    color: 'red',
+    fontSize: 10,
+  },
+
+  '@media (max-width: 500px)': {
+    forSmallerVer: {
+      paddingLeft: 10,
+    },
+    category: {
+      fontSize: 10,
+    },
+    title: {
+      fontSize: 23,
+    },
+    buttonsPos: {
+      marginLeft: 10,
+    },
+  }
+}));

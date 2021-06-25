@@ -193,7 +193,7 @@ export default function QuestionResult (props) {
 
         <div className={styles.forSmallerVer}>
           {/* カテゴリー */}
-          <div className='category'>
+          <div>
             <p className={styles.category}><span className="text-primary fa fa-tag" />
               Category:
               {notUseSkeleton && (
@@ -397,7 +397,6 @@ const useStyles = makeStyles(() => createStyles({
     },
     buttonsPos: {
       marginLeft: 10,
-      height: 20,
     },
     forSmallerVer: {
       paddingLeft: 10,
