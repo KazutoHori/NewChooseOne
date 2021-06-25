@@ -3,7 +3,7 @@ import { Pie } from 'react-chartjs-2';
 
 export default function PieChart (props) {
 
-  const { skeleton, labels, values, colors } = this.props;
+  const { skeleton, labels, values, colors } = props;
   const duration = skeleton ? 0 : 5000;
 
   const data = {

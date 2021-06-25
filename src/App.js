@@ -17,7 +17,7 @@ import RightBar from './components/RightBar';
 
 export default function App (props) {
   
-  const { uid } = this.props;
+  const { uid } = props;
 
   return (
     <Fragment>

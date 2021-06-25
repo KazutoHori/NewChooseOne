@@ -21,7 +21,7 @@ const theme = createMuiTheme({
 
 export default function ModalDelete (props) {
 
-  const { onDelete, onClose } = this.props;
+  const { onDelete, onClose } = props;
   const body = (
     <div style={styles.modal}>
       <div style={styles.addForm} id="addForm">
