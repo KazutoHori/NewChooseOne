@@ -194,7 +194,7 @@ export default function QuestionResult (props) {
         <div className={styles.forSmallerVer}>
           {/* カテゴリー */}
           <div className='category'>
-            <p className='cali2'><span className="text-primary fa fa-tag" />
+            <p className={styles.title}><span className="text-primary fa fa-tag" />
               Category:
               {notUseSkeleton && (
                 <Fragment>
@@ -319,6 +319,11 @@ export default function QuestionResult (props) {
 }
 
 const useStyles = makeStyles(() => createStyles({
+  title: {
+    fontFamily: 'latienne-pro, serif',
+    fontStyle: 'normal',
+    fontWeight: 400,
+  },
   mayLike: {
     marginBottom: 40,
     fontFamily: 'lust-script, sans-serif',
