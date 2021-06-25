@@ -63,12 +63,13 @@ export default class QuestionDetail extends Component {
   async componentDidMount() {
     const { uid } = this.props;
     const { the_slug } = this.props.match.params;
-    if(uid === null || this.state.the_question !== null) return null;
+    if(uid === null || this.state.user !== null) return null;
 
     var user = {}
     await db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
         user = doc.data()
+        if(user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
         this.setState({ user: doc.data() })
       }
     })
@@ -89,7 +90,7 @@ export default class QuestionDetail extends Component {
       if(doc.exists){
         this.setState({ the_question: doc.data() })
       }else{
-        //TODO  ホームに戻る
+        window.location.href = '/';
       }
     })
   }
@@ -163,7 +164,7 @@ export default class QuestionDetail extends Component {
   }
 
   onDelete = async () => {
-    const { the_choice, user, the_question } = this.state;
+    const { user, the_question } = this.state;
     await db.collection("questions").doc(the_question.slug).delete();
     await db.collection("users").doc(user.uid).update({
       question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
@@ -239,7 +240,7 @@ export default class QuestionDetail extends Component {
               <ButtonGroup variant="contained" >
                 {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
                 {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{the_question ? the_question.likes : 'Like'}</Button>}
-                <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>
+                {madeIt && <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
               </ButtonGroup>
             </ThemeProvider>
           </div>
@@ -257,6 +258,7 @@ export default class QuestionDetail extends Component {
     await db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
         user = doc.data()
+        if(user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
         this.setState({ user: doc.data() })
       }
     })
@@ -277,7 +279,7 @@ export default class QuestionDetail extends Component {
       if(doc.exists){
         this.setState({ the_question: doc.data() })
       }else{
-        //TODO  ホームに戻る
+        window.location.href = '/';
       }
     })
   }

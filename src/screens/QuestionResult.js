@@ -81,6 +81,7 @@ export default class QuestionResult extends Component {
     await db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
         user = doc.data()
+        if(!user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/detail/'+the_slug;
         this.setState({ user: doc.data() })
       }
     })
@@ -174,7 +175,7 @@ export default class QuestionResult extends Component {
   }
 
   onDelete = () => {
-    const { the_choice, user, the_question } = this.state;
+    const { user, the_question } = this.state;
 
     db.collection("questions").doc(the_question.slug).delete();
     db.collection("users").doc(user.uid).update({
@@ -301,7 +302,7 @@ export default class QuestionResult extends Component {
               <ButtonGroup variant="contained" >
                 {!likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
                 {likeIt && <Button onClick={this.onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{notUseSkeleton ? the_question.likes : 'Like'}</Button>}
-                <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>
+                {madeIt && <Button onClick={() => this.setState({ modalVisible: true })} startIcon={<DeleteIcon />} color='secondary' >Delete</Button>}
               </ButtonGroup>
             </ThemeProvider>
           </div>
@@ -329,6 +330,7 @@ export default class QuestionResult extends Component {
     await db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
         user = doc.data()
+        if(!user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/detail/'+the_slug;
         this.setState({ user: doc.data() })
       }
     })
