@@ -174,17 +174,16 @@ export default class QuestionResult extends Component {
     }
   }
 
-  onDelete = () => {
+  onDelete = async () => {
     const { user, the_question } = this.state;
-
-    db.collection("questions").doc(the_question.slug).delete();
-    db.collection("users").doc(user.uid).update({
+    await db.collection("questions").doc(the_question.slug).delete();
+    await db.collection("users").doc(user.uid).update({
       question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
     })
 
     window.location.href = "/";
   }
-
+  
   onClose = () => {
     this.setState({ modalVisible: false });
   }
