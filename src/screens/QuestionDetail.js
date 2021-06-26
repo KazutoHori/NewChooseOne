@@ -9,6 +9,7 @@ import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { WindMillLoading } from 'react-loadingg';
 
 import ModalDelete from '../components/ModalDelete';
 import '../App.scss';
@@ -55,6 +56,7 @@ export default function QuestionDetail (props) {
   const [madeIt, setMadeIt] = useState(null);
   const [the_question, setTheQuestion] = useState(null);
   const [likeIt, setLikeIt] = useState(false);
+  const [pushed, setPushed] = useState(false);
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
   var choiceSkeleton = [];
@@ -102,6 +104,8 @@ export default function QuestionDetail (props) {
       setTimeout(() => setWarning(''),2500);
       return null;
     }
+    if(pushed) return null;
+    setPushed(true);
     var the_slug = the_question.slug;
     var your_vote = the_question.choices[the_choice].choice_text;
     var copy=Array.from(the_question.choices);
@@ -219,9 +223,15 @@ export default function QuestionDetail (props) {
           )}
           {!the_question && [choiceSkeleton]}
           {warning !== null && (<p className={styles.warning}>{warning}</p>)}
-          <div className={styles.voteBtnPos}>
-            <Button startIcon={<ThumbUpAltIcon />}  onClick={onVote} style={{ borderRadius: 10 }} className='btn btn-success'>Vote</Button>
-          </div>
+          {!pushed ?
+            <div className={styles.voteBtnPos}>
+              <Button startIcon={<ThumbUpAltIcon />}  onClick={onVote} style={{ borderRadius: 10 }} className='btn btn-success'>Vote</Button>
+            </div>
+            :
+            <div>
+              <WindMillLoading style={{ position: 'relative', marginTop: 50, marginLeft: 50,}} color='rgb(39, 169, 68)' speed={1.2} size='large' />
+            </div>
+          }
         </Fragment>
 
         {/* ボタン系 */}
