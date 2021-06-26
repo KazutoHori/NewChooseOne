@@ -11,6 +11,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
+import { makeStyles, createStyles } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -42,6 +44,8 @@ export default function QuestionCreate (props) {
   const [title, setTitle] = useState('');
   const [choices, setChoices] = useState([]);
   var added=[];
+  const styles = useStyles();
+  const smallDisplay = useMediaQuery('(max-width:500px)');
   const theme = createMuiTheme({
     palette: {
       primary: {
@@ -176,11 +180,11 @@ export default function QuestionCreate (props) {
 
   for (let i=0; i<howManyChoice; i++){
     added.push(
-      <div style={styles.choicePos}>
+      <div className={styles.choicePos}>
         <Input
           id="standard-adornment-weight"
           value={choices[i]}
-          style={styles.choiceInput}
+          className={styles.choiceInput}
           onChange={(event) => choiceChangeText(event, i)}
           startAdornment={<InputAdornment position="start">{i+1}. </InputAdornment>}
           endAdornment={i > 1 && <InputAdornment position="end"><Tooltip title='Delete'><IconButton aria-label="delete" style={{ outline: 'none', }} onClick={() => setHowManyChoice(howManyChoice-1)} color='secondary'><DeleteIcon /></IconButton></Tooltip></InputAdornment>}
@@ -198,19 +202,19 @@ export default function QuestionCreate (props) {
 
   return (
     <Fragment>
-      <div style={styles.add}>
-        <h3 style={styles.title}>Let's Add A New Question!</h3>
+      <div className={styles.add}>
+        <h3 className={styles.title}>Let's Add A New Question!</h3>
         
         {/* タイトル */}
-        <h4 style={styles.labels}>Title</h4>
+        <h4 className={styles.labels}>Title</h4>
         <Input
           id="standard-adornment-weight"
-          style={styles.titleInput}
+          className={styles.titleInput}
           onChange={(event) => titleChangeText(event)}
           value={title}
           aria-describedby="standard-weight-helper-text"
           // placeholder='Question'
-          startAdornment={<InputAdornment position="start">Question：  </InputAdornment>}
+          startAdornment={<InputAdornment position="start">Q. </InputAdornment>}
           inputProps={{
             'aria-label': 'weight',
           }}
@@ -218,7 +222,7 @@ export default function QuestionCreate (props) {
 
 
         {/* 選択肢 */}
-        <h4 style={styles.labels}>Choices</h4>
+        <h4 className={styles.labels}>Choices</h4>
         <div>
           {howManyChoice !== 0 && (
             [added]
@@ -228,14 +232,16 @@ export default function QuestionCreate (props) {
         {/* ボタン */}
         <div>
           <ThemeProvider theme={theme}>
-            <ButtonGroup disableElevation variant="contained" >
+            <ButtonGroup size={smallDisplay ? 'small' : 'default'} disableElevation variant="contained" >
               {howManyChoice < 9 && <StyledButton startIcon={<AddIcon /> } color='primary' onClick={() => setHowManyChoice(howManyChoice+1) } >Add</StyledButton>}
             </ButtonGroup>
           </ThemeProvider>
         </div>
 
         {/* カテゴリー */}
-        <h4 style={Object.assign({}, styles.cateTitle, styles.labels)}>Category</h4>
+        <div className={styles.cateTitle}>
+          <h4 className={styles.labels}>Category</h4>
+        </div>
         <div>
           <div>
             {allCategories.map((cate, idx) => {
@@ -244,7 +250,7 @@ export default function QuestionCreate (props) {
               else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
               return (
                 <Fragment>
-                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({borderColor: tabColors[idx], outline: 'none' }, styles.cate, changer)}  >{cate}</button>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, changer)} className={styles.cate}  >{cate}</button>
                 </Fragment>
               )
             })}
@@ -256,7 +262,7 @@ export default function QuestionCreate (props) {
               else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
               return (
                 <Fragment>
-                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none' }, styles.cate, changer)} >{cate}</button>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, changer)} className={styles.cate} >{cate}</button>
                 </Fragment>
               )
             })}
@@ -268,22 +274,22 @@ export default function QuestionCreate (props) {
               else { var changer = { backgroundColor: 'white', color: tabColors[idx] } }
               return (
                 <Fragment>
-                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, styles.cate, changer)}  >{cate}</button>
+                  <button onClick={() => onCategory(idx) } type='button' data-id={idx} style={Object.assign({ borderColor: tabColors[idx], outline: 'none'}, changer)} className={styles.cate}  >{cate}</button>
                 </Fragment>
               )
             })}
           </div>
         </div>
         {/* 最後 */}
-        {warning && <p style={Object.assign({ color: 'red' }, styles.warning)} >{warning}</p>}
-        {!warning && <p style={styles.warning}>You can delete but cannot edit after you make one.</p>}
-        <Button startIcon={<PostAddIcon /> } onClick={onSubmit} className="btn btn-success"  >Add Question</Button>
+        {warning && <p style={{color: 'red' }} className={styles.warning} >{warning}</p>}
+        {!warning && <p className={styles.warning}>You can delete but cannot edit after you make one.</p>}
+        <Button style={{ fontSize: 11 }} size='small' startIcon={<PostAddIcon /> } onClick={onSubmit} className="btn btn-success"  >Add Question</Button>
       </div>
     </Fragment>
   )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   labels: {
     fontFamily: 'latienne-pro, serif',
     fontStyle: 'normal',
@@ -305,6 +311,8 @@ const styles = {
   titleInput: {
     width: '70%',
     marginBottom: 20,
+    borderColor: '#617',
+    borderWidth: 1,
   },
   add: {
     backgroundColor: 'white',
@@ -335,7 +343,32 @@ const styles = {
   choiceInput: {
     width: '50%',
   },
-}
+  '@media (max-width: 500px)': {
+    title: {
+      fontSize: 20,
+    },
+    cate: {
+      marginBottom: 3,
+      marginRight: 3,
+      width: 60,
+      height: 22,
+    },
+    labels: {
+      fontSize: 20,
+      margin: 0,
+    },
+    titleInput: {
+      width: '90%',
+    },
+    choiceInput: {
+      width: '80%',
+    },
+    cateTitle: {
+      marginTop: 10,
+      marginBottom: 5,
+    },
+  }
+}));
 
 
 
