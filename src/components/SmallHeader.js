@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    marginLeft: -7,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -57,14 +58,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing(2),
-    margin: '2px 0px 2px 15px',
+    margin: '2px 5px 2px 8px',
     width: '100%',
     height: 30,
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),

@@ -39,7 +39,7 @@ export default function QuestionCategory (props) {
 
   return (
     <Fragment>
-      <h3 stylee={styles.title}>Questions Categorized As {category}</h3>
+      <h3 className={styles.title}>Questions Categorized As {category}</h3>
       <QuestionList questions={questions} />
     </Fragment>
   )
@@ -55,6 +55,8 @@ const useStyles = makeStyles(() => createStyles({
   '@media (max-width: 500px)': {
     title: {
       fontSize: 22,
+      marginLeft: 15,
+      marginTop: 7,
     }
   }
 }));

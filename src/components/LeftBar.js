@@ -29,7 +29,7 @@ export default function Home (props) {
   const doNotDisplay = useMediaQuery('(max-width:777px)');
 
   useEffect(() => {
-    if(todaysRanking !== []) return null;
+    if(todaysRanking.length !== 0) return null;
     let current=new Date();
     current=current.toJSON();
     var today = timeToDay(current.slice(0, 10));
