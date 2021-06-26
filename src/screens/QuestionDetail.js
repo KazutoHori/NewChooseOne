@@ -68,8 +68,8 @@ export default function QuestionDetail (props) {
 
     db.collection('users').doc(uid).get().then((doc) => {
       var the_user = doc.data();
-      // if(the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
-      // else{
+      if(the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
+      else{
         setUser(the_user);
 
         if (the_user.question_liked.includes(the_slug)){
@@ -91,7 +91,7 @@ export default function QuestionDetail (props) {
             window.location.href = '/';
           }
         })
-      // }
+      }
     })
   });
   
