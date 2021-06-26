@@ -47,7 +47,7 @@ export default function QuestionAsked (props) {
 
   return (
     <Fragment>
-      <h3 style={styles.title}>Questions You Made</h3>
+      <h3 className={styles.title}>Questions You Made</h3>
       {questions === [] && (
         <pre>        You have not asked any questions yet.</pre>
       )}
