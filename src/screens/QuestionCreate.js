@@ -143,7 +143,7 @@ export default function QuestionCreate (props) {
       created_at: current.slice(0, 10)+current.slice(11, 19),
       choices: new_choices,
       comments: [],
-      users_answered: [],
+      users_voted: [],
       all_votes: 0,
       active: true,
       likes: 0,

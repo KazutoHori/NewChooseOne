@@ -68,7 +68,7 @@ export default function QuestionDetail (props) {
 
     db.collection('users').doc(uid).get().then((doc) => {
       var the_user = doc.data();
-      if(the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
+      if(the_user.question_voted.some((q) => q.question === the_slug)) window.location.href = '/result/'+the_slug;
       else{
         setUser(the_user);
 
@@ -125,12 +125,12 @@ export default function QuestionDetail (props) {
     })
 
     await db.collection('users').doc(user.uid).set({
-      question_answered: firebase.firestore.FieldValue.arrayUnion({ question: the_slug, answer: your_vote}) },
+      question_voted: firebase.firestore.FieldValue.arrayUnion({ question: the_slug, answer: your_vote}) },
       { merge: true}
     );
 
     await db.collection('questions').doc(the_slug).set({
-      users_answered: firebase.firestore.FieldValue.arrayUnion(user.uid) },
+      users_voted: firebase.firestore.FieldValue.arrayUnion(user.uid) },
       { merge: true }
     );
 
@@ -281,8 +281,14 @@ const useStyles = makeStyles(() => createStyles({
   },
 
   '@media (max-width: 500px)': {
+    voteBtnPos: {
+      marginLeft: 15,
+    },
+    choiceBtnPos: {
+      marginLeft: 35,
+    },
     forSmallerVer: {
-      paddingLeft: 10,
+      paddingLeft: 15,
     },
     category: {
       fontSize: 10,
@@ -291,7 +297,7 @@ const useStyles = makeStyles(() => createStyles({
       fontSize: 23,
     },
     buttonsPos: {
-      marginLeft: 10,
+      marginLeft: 15,
     },
   }
 }));

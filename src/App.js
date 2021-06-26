@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Home from './screens/Home';
@@ -8,7 +8,7 @@ import Contact from './screens/Contact';
 import QuestionCreate from './screens/QuestionCreate';
 import QuestionLiked from './screens/QuestionLiked';
 import QuestionAsked from './screens/QuestionAsked';
-import QuestionAnswered from './screens/QuestionAnswered';
+import QuestionVoted from './screens/QuestionVoted';
 import QuestionCategory from './screens/QuestionCategory';
 import QuestionSearch from './screens/QuestionSearch';
 
@@ -29,7 +29,7 @@ export default function App (props) {
               <Route exact path="/contact" component={Contact} />
               <Route exact path="/create" render={ () => <QuestionCreate uid={uid}/> } />
               <Route exact path="/asked" render={ () => <QuestionAsked uid={uid}/> } />
-              <Route exact path="/answered" render={ () => <QuestionAnswered uid={uid}/> } />
+              <Route exact path="/voted" render={ () => <QuestionVoted uid={uid}/> } />
               <Route exact path="/liked" render={ () => <QuestionLiked uid={uid}/> } />
               <Route path="/category/:category" render={ (props) => <QuestionCategory uid={uid} {...props} /> } />
               <Route path='/search/:query' render={ (props) => <QuestionSearch uid={uid} {...props} /> } />

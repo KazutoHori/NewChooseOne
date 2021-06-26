@@ -9,6 +9,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
+import BottomBar from './components/BottomBar';
 import QuestionDetail from './screens/QuestionDetail';
 import QuestionResult from './screens/QuestionResult';
 
@@ -56,7 +57,7 @@ export default function Routing () {
                   email: '',
                   uid: uid,
                   created_at: datetime,
-                  question_answered: [],
+                  question_voted: [],
                   question_created: [],
                   question_liked: [],
                   username: '',
@@ -107,10 +108,17 @@ export default function Routing () {
                     <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
                     <Route path="/" render={ () => <App uid={uid}/> } />
                   </Switch>
-                  <Footer/>
+                  
                 </div>
+                
               </div>
             </div>
+            {smallDisplay && (
+              <div className={styles.bottomBar}>
+                <BottomBar />
+              </div>
+            )}
+            <Footer/>
           </div>
         </div>
       </Router>
@@ -119,6 +127,16 @@ export default function Routing () {
 }
 
 const useStyles = makeStyles(() => createStyles({
+  bottomBar: {
+    position: 'sticky',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#f1efef',
+    height: 50,
+    filter: 'drop-shadow(0px 0px 2px rgba(160, 160, 160, 0.7))',
+    marginBottom: 15,
+    paddingTop: 5,
+  },
   wrapper: {
     minHeight: window.innerHeight-30,
     position: 'relative',/*←相対位置*/
@@ -140,6 +158,9 @@ const useStyles = makeStyles(() => createStyles({
     container: {
       paddingTop: 5,
       paddingBottom: 10,
+    },
+    wrapper: {
+      paddingBottom: 125,
     }
   }
 }));

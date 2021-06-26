@@ -10,17 +10,15 @@ export default function Footer () {
   const styles = useStyles();
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.footer}>
-        <div className='container' >
-          <div className={styles.footer_logo}><a href="/"><img src={smallDisplay ? logoSmall : logo} alt="ChooseOne" /></a></div>
-            <div className={styles.footer_list}>
-              <ul>
-                <li className={styles.li}><a className={styles.a} href="/about">About ChooseOne</a></li>
-                <li className={styles.li}><a className={styles.a} href="/contact">Contact Us</a></li>
-              </ul>
-            </div>
-        </div>
+    <div className={styles.footer}>
+      <div className='container' >
+        <div className={styles.footer_logo}><a href="/"><img src={smallDisplay ? logoSmall : logo} alt="ChooseOne" /></a></div>
+          <div className={styles.footer_list}>
+            <ul>
+              <li className={styles.li}><a className={styles.a} href="/about">About ChooseOne</a></li>
+              <li className={styles.li}><a className={styles.a} href="/contact">Contact Us</a></li>
+            </ul>
+          </div>
       </div>
     </div>
   )

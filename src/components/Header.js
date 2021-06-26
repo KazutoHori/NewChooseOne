@@ -62,10 +62,10 @@ export default function Header (props) {
                 <a style={Object.assign({},styles.btn, styles.pic_only, styles.btnPrimary)} href="/asked" className="btn pic_only my_que btn-primary text-light"><img src="https://img.icons8.com/officel/25/000000/box.png" /></a>
               </li>
               <li className="nav-item mr-1">
-                <a style={Object.assign({}, styles.btn, styles.answered)} href="/answered" className="btn normal answered btn-warning text-light"><img src="https://img.icons8.com/dusk/20/000000/checked--v1.png" /> Answered</a>
+                <a style={Object.assign({}, styles.btn, styles.voted)} href="/voted" className="btn normal voted btn-warning text-light"><img src="https://img.icons8.com/dusk/20/000000/checked--v1.png" /> Voted</a>
               </li>
               <li className="nav-item mr-1">
-                <a style={Object.assign({}, styles.btn, styles.pic_only)} href="/answered" className="btn pic_only answered btn-warning text-light"><img src="https://img.icons8.com/dusk/25/000000/checked--v1.png" /></a>
+                <a style={Object.assign({}, styles.btn, styles.pic_only)} href="/voted" className="btn pic_only voted btn-warning text-light"><img src="https://img.icons8.com/dusk/25/000000/checked--v1.png" /></a>
               </li>
               <li className="nav-item">
                 <a style={Object.assign({}, styles.btn )} className="btn liked btn-primary text-light" href="/liked"><img src="https://img.icons8.com/fluent/20/000000/filled-like.png" /> Liked</a>

@@ -20,7 +20,7 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default function QuestionAnswered (props) {
+export default function Questionvoted (props) {
 
   const [questions, setQuestions] = useState(null);
   const uid = props.uid;
@@ -32,7 +32,7 @@ export default function QuestionAnswered (props) {
     var ques = [];
     db.collection("users").doc(uid).onSnapshot((doc) => {
       ques = [];
-      var qs = doc.data().question_answered;
+      var qs = doc.data().question_voted;
       for(let i=0; i<qs.length; i++){
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i].question).get().then((doc) => {
@@ -47,7 +47,7 @@ export default function QuestionAnswered (props) {
   
   return (
     <Fragment>
-      <h3 className={styles.title}>Questions You Answered</h3>
+      <h3 className={styles.title}>Questions You voted</h3>
         {questions === [] && (
           <pre>        You have not answered any questions yet.</pre>
         )}

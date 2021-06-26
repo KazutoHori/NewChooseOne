@@ -78,7 +78,7 @@ export default function QuestionResult (props) {
     db.collection('users').doc(uid).get().then((doc) => {
       if(doc.exists){
         var the_user = doc.data()
-        if(!the_user.question_answered.some((q) => q.question === the_slug)) window.location.href = '/detail/'+the_slug;
+        if(!the_user.question_voted.some((q) => q.question === the_slug)) window.location.href = '/detail/'+the_slug;
         else{
           setUser(the_user)
 
@@ -94,8 +94,8 @@ export default function QuestionResult (props) {
             setMadeIt(false);
           }
 
-          for(var i=0; i<the_user.question_answered.length; i++){
-            if(the_user.question_answered[i].question === the_slug) setYourVote(the_user.question_answered[i].answer)
+          for(var i=0; i<the_user.question_voted.length; i++){
+            if(the_user.question_voted[i].question === the_slug) setYourVote(the_user.question_voted[i].answer)
           }
         }
       }
@@ -403,10 +403,10 @@ const useStyles = makeStyles(() => createStyles({
       fontSize: 20,
     },
     buttonsPos: {
-      marginLeft: 10,
+      marginLeft: 15,
     },
     forSmallerVer: {
-      paddingLeft: 10,
+      paddingLeft: 15,
     },
     table: {
       filter: 'drop-shadow(5px 0px 4px rgba(160, 160, 160, 0.7))',
