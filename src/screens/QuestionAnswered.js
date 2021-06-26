@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
+import { makeStyles, createStyles } from '@material-ui/core';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -23,6 +24,7 @@ export default function QuestionAnswered (props) {
 
   const [questions, setQuestions] = useState(null);
   const uid = props.uid;
+  const styles = useStyles();
 
   useEffect(() => {
     if (uid === null || questions !== null) return null;
@@ -56,10 +58,16 @@ export default function QuestionAnswered (props) {
   )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   title: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
+  },
+
+  '@media (max-width: 500px)': {
+    title: {
+      fontSize: 22,
+    }
   }
-}
+}));

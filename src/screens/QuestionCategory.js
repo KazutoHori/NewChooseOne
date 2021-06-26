@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 
 import QuestionList from '../components/QuestionList.js';
+import { makeStyles, createStyles } from '@material-ui/core';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -24,6 +25,7 @@ export default function QuestionCategory (props) {
 
   const [questions, setQuestions] = useState(null);
   const category = props.match.params.category;
+  const styles = useStyles();
 
   useEffect(() => {
     db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').onSnapshot((querySnapshot) => {
@@ -43,11 +45,17 @@ export default function QuestionCategory (props) {
   )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   title: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
+  },
+
+  '@media (max-width: 500px)': {
+    title: {
+      fontSize: 22,
+    }
   }
-}
+}));
 

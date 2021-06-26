@@ -1,6 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import QuestionList from '../components/QuestionList.js';
 import { WindMillLoading } from 'react-loadingg';
+import { makeStyles, createStyles } from '@material-ui/core';
+
+import QuestionList from '../components/QuestionList.js';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -25,6 +27,7 @@ export default function QuestionSearch (props) {
   const [results, setResults] = useState(null);
   const query = props.match.params.query;
   const q = query.toLowerCase();
+  const styles = useStyles();
 
   useEffect(() => {
     if(results !== null) return null;
@@ -76,7 +79,7 @@ export default function QuestionSearch (props) {
   }
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   title: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
@@ -86,5 +89,11 @@ const styles = {
     marginTop: 50,
     marginLeft: 50,
     position: 'relative',
+  },
+
+  '@media (max-width: 500px)': {
+    title: {
+      fontSize: 22,
+    }
   }
-}
+}));
