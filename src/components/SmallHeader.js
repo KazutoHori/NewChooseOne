@@ -177,7 +177,6 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
     </Menu>
   );
-  console.log(query);
 
   return (
     <div>
