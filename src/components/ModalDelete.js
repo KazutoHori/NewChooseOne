@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 
 import Modal from '@material-ui/core/Modal';
 
@@ -8,6 +8,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { WindMillLoading } from 'react-loadingg';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -23,19 +26,31 @@ const theme = createMuiTheme({
 export default function ModalDelete (props) {
 
   const { onDelete, onClose } = props;
+  const [deleting, setDeleting] = useState(false);
   const styles = useStyles();
+  const smallDisplay = useMediaQuery('(max-width:500px)');
+
+  const handleDelete = () => {
+    setDeleting(true);
+    onDelete()
+  }
 
   const body = (
     <div className={styles.modal}>
       <div className={styles.addForm} id="addForm">
         <h4 className={styles.h4}>Delete this question?</h4>
         <div className={styles.whichone}>
-          <ThemeProvider theme={theme}>
-            <ButtonGroup variant="contained" >
-              <Button onClick={onClose} startIcon={<CancelIcon/>} color='primary' >no</Button>
-              <Button onClick={onDelete} startIcon={<DeleteIcon />} color='secondary' >yes</Button>
-            </ButtonGroup>
-          </ThemeProvider>
+          {!deleting 
+            ?
+            <ThemeProvider theme={theme}>
+              <ButtonGroup variant="contained" >
+                <Button onClick={onClose} startIcon={<CancelIcon/>} color='primary' >no</Button>
+                <Button onClick={handleDelete} startIcon={<DeleteIcon />} color='secondary' >yes</Button>
+              </ButtonGroup>
+            </ThemeProvider>
+            :
+            <WindMillLoading speed={1} style={{ marginTop: 0 }} size={smallDisplay ? 'small' : 'large'} />
+          }
         </div>
       </div>
     </div>

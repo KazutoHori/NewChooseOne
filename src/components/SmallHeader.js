@@ -94,6 +94,7 @@ export default function PrimarySearchAppBar() {
   const [query, setQuery] = useState('');
 
   const onSubmitSearch = (event) => {
+    if(query.length === 0) return null;
     window.location.href = '/search/' + query;
   }
 

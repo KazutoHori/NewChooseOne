@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { WindMillLoading } from 'react-loadingg';
 import { makeStyles, createStyles } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import QuestionList from '../components/QuestionList.js';
 
@@ -28,6 +29,7 @@ export default function QuestionSearch (props) {
   const query = props.match.params.query;
   const q = query.toLowerCase();
   const styles = useStyles();
+  const smallDisplay = useMediaQuery('(max-width:500px)');
 
   useEffect(() => {
     if(results !== null) return null;
@@ -59,7 +61,7 @@ export default function QuestionSearch (props) {
         <h3 className={styles.title}>Search Results</h3>
         <div><pre>      Searching...</pre></div>
         <div className={styles.loadingPos}>
-          <WindMillLoading className={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />
+          <WindMillLoading className={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size={smallDisplay ? 'small' : 'large'} />
         </div>
       </Fragment>
     )
