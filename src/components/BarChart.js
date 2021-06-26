@@ -3,15 +3,24 @@ import { Bar } from 'react-chartjs-2';
 
 export default function BarChart (props) {
 
-  const { small, skeleton, labels, values, colors } = props;
-  var duration = skeleton ? 0 : 5000;
-  if(small) duration = 2000;
+  var { small, skeleton, labels, values, colors } = props;
+  var duration = skeleton ? 0 : 5000 - small*3000;
+
+  if(skeleton){
+    labels = ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'];
+    values = [40, 20, 10, 10 ];
+    colors = ['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)'];
+    if(small){
+      labels.pop();
+      values.pop();
+      colors.pop();
+    }
+  }
 
   const data = {
     labels: labels,
     datasets: [
       {
-        label: '# of Votes',
         data: values,
         backgroundColor: colors,
         borderColor: colors,

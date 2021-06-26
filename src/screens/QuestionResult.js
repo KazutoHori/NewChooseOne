@@ -137,6 +137,7 @@ export default function QuestionResult (props) {
         setLabels(l);
         setValues(v);
         setColors(c);
+        console.log(c);
         
         db.collection('questions').where('category', 'array-contains-any', now_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
           var questionSimilar = [];
@@ -215,7 +216,7 @@ export default function QuestionResult (props) {
           {modalVisible &&  <ModalDelete onClose={onClose} onDelete={onDelete} />}
 
           {/* タイトル */}
-          <h3 className={styles.title}>{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000} height={20}  /></SkeletonTheme>}</h3>
+          <h3 className={styles.title}>{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={1000 - smallDisplay*720} height={20}  /></SkeletonTheme>}</h3>
           <p className={styles.date}>
             {notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={7}/></SkeletonTheme> }
           </p>
@@ -276,11 +277,12 @@ export default function QuestionResult (props) {
                   <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                   <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme></td>
                 </tr>
-                <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
-                  <th scope="row">&nbsp;&nbsp;{4}</th>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
-                  <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
-                </tr>
+                {!smallDisplay &&  <tr style={{ backgroundColor: 'rgb(239, 144, 175)' }} >
+                    <th scope="row">&nbsp;&nbsp;{4}</th>
+                    <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+                    <td><SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2} width={60} height={10}/></SkeletonTheme> </td>
+                  </tr>
+                }
               </tbody>
             </table>
           )}
@@ -288,10 +290,8 @@ export default function QuestionResult (props) {
 
         {/* グラフ */}
         <div className={styles.graphs}>
-          {notUseSkeleton && <div className={styles.pieGraph}><PieChart skeleton={false} small={smallDisplay} labels={labels} values={values} colors={colors} /></div>}
-          {!notUseSkeleton && <div className={styles.pieGraph}><PieChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
-          {notUseSkeleton && <div className={styles.barGraph}><BarChart skeleton={false} small={smallDisplay} labels={labels} values={values} colors={colors} /></div>}
-          {!notUseSkeleton && <div className={styles.barGraph}><BarChart skeleton={true} duration={2} labels={['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4']} values={[40, 20, 10, 10 ]} colors={['rgb(238, 238, 143)', 'rgb(143, 240, 159)', 'rgb(143, 207, 239)', 'rgb(239, 144, 175)' ]} /></div>}
+          <div className={styles.pieGraph}><PieChart skeleton={!notUseSkeleton} small={smallDisplay} labels={labels} values={values} colors={colors} /></div>
+          <div className={styles.barGraph}><BarChart skeleton={!notUseSkeleton} small={smallDisplay} labels={labels} values={values} colors={colors} /></div>
         </div>
 
         {/* ボタン系 */}
