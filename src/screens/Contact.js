@@ -1,19 +1,23 @@
 import React, { Fragment } from 'react';
+import { makeStyles, createStyles } from '@material-ui/core';
 
 export default function Contact() {
+
+  const styles = useStyles();
+
   return (
     <Fragment>
-      <div style={styles.contact}>
-        <h2 style={styles.title}>Contact Us</h2>
-        <p style={styles.p}>If you have any questions or thoughts on this site,<br />
-          <span style={styles.span}>please e-mail us!!</span></p>
-        <p style={styles.p}>Our email address is </p><address><u><strong><a style={{color: 'blue'}} href="mailto:admin@chooseone.app">admin@chooseone.app</a></strong></u></address><p />
+      <div className={styles.contact}>
+        <h2 className={styles.title}>Contact Us</h2>
+        <p className={styles.p}>If you have any questions or thoughts on this site,<br />
+          <span className={styles.span}>please e-mail us!!</span></p>
+        <p className={styles.p}>Our email address is </p><address><u><strong><a style={{color: 'blue'}} href="mailto:admin@chooseone.app">admin@chooseone.app</a></strong></u></address><p />
       </div>
     </Fragment>
   )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   title: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
@@ -38,4 +42,13 @@ const styles = {
   span: {
     color: 'red',
   },
-}
+
+  '@media (max-width: 500px)': {
+    title: {
+      fontSize: 22,
+    },
+    p: {
+      fontSize: 12,
+    },
+  }
+}));

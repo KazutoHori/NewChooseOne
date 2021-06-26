@@ -1,13 +1,15 @@
 import React, { Fragment } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export default function QuestionList (props) {
 
   const the_question = props.the_question;
   const notUseSkeleton = the_question !== 'skeleton';
+  const smallDisplay = useMediaQuery('(max-width:500px)');
   var choiceSkeleton = [];
 
-  for(var i=0; i<5; i++){
+  for(var i=0; i<(5-smallDisplay*2); i++){
     choiceSkeleton.push(
       <div>
         <label for="choice{idx}">

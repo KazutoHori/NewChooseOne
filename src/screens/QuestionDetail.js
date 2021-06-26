@@ -55,12 +55,12 @@ export default function QuestionDetail (props) {
   const [madeIt, setMadeIt] = useState(null);
   const [the_question, setTheQuestion] = useState(null);
   const [likeIt, setLikeIt] = useState(false);
-  var choiceSkeleton = [];
-  for(var i=0; i<5; i++){
-    choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15}/></SkeletonTheme></div>)
-  }
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
+  var choiceSkeleton = [];
+  for(var i=0; i<(5-smallDisplay*2); i++){
+    choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15 - smallDisplay*5}/></SkeletonTheme></div>)
+  }
 
 
   useEffect(() => {
@@ -97,13 +97,11 @@ export default function QuestionDetail (props) {
   
 
   const onVote = async () => {
-    console.log('HELLO');
     if(the_choice === null){
       setWarning('You have not chosen yet');
       setTimeout(() => setWarning(''),2500);
       return null;
     }
-    console.log('why');
     var the_slug = the_question.slug;
     var your_vote = the_question.choices[the_choice].choice_text;
     var copy=Array.from(the_question.choices);
@@ -198,7 +196,7 @@ export default function QuestionDetail (props) {
           </p>
 
           {/* タイトル */}
-          <h3 className={styles.title}>{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000} height={20}  /></SkeletonTheme>}</h3>
+          <h3 className={styles.title}>{the_question ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2}  width={1000 - smallDisplay*720} height={20}  /></SkeletonTheme>}</h3>
           <p className={styles.date}>
             {the_question ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton color='white' duration={2}  width={50} height={7}/></SkeletonTheme> }
           </p>
@@ -253,8 +251,6 @@ const useStyles = makeStyles(() => createStyles({
     fontWeight: 400,
   },
   buttonsPos: {
-    // position: 'absolute',
-    // bottom: 210,
     marginTop: 100,
   },
   date: {
