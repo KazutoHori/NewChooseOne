@@ -248,7 +248,7 @@ const useStyles = makeStyles(() => createStyles({
   title: {
     fontFamily: 'latienne-pro, serif',
     fontStyle: 'normal',
-    fontWeight: 400,
+    fontWeight: 600,
   },
   buttonsPos: {
     marginTop: 100,

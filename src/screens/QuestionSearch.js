@@ -57,7 +57,7 @@ export default function QuestionSearch (props) {
     return (
       <Fragment>
         <h3 className={styles.title}>Search Results</h3>
-        <div style={{ position: 'relative' }}><pre>      Searching ... </pre></div>
+        <div><pre>      Searching...</pre></div>
         <div className={styles.loadingPos}>
           <WindMillLoading className={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size='large' />
         </div>
@@ -67,7 +67,7 @@ export default function QuestionSearch (props) {
     return (
       <Fragment>
         <h3 className={styles.title}>Search Results</h3>
-        {results.length === 0 && <pre>      Your search - {query} - did not match any questions.</pre>}
+        {results.length === 0 && <pre className={styles.forSmallNoMatch}>      Your search - {query} - did not match any questions.</pre>}
         {results.length !== 0 && (
           <Fragment>
             <pre>      - {query} -</pre>
@@ -94,6 +94,17 @@ const useStyles = makeStyles(() => createStyles({
   '@media (max-width: 500px)': {
     title: {
       fontSize: 22,
+      marginLeft: 13,
+      marginTop: 7,
+    },
+    forSmallNoMatch: {
+      fontSize: 3,
+    },
+    loadingPos: {
+      position: 'relative',
+      fontSize: 10,
+      marginTop: 70,
+      marginLeft: -150,
     }
   }
 }));
