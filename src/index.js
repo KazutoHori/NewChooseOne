@@ -8,6 +8,7 @@ import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Header from './components/Header';
+import SmallHeader from './components/SmallHeader';
 import Footer from './components/Footer';
 import BottomBar from './components/BottomBar';
 import QuestionDetail from './screens/QuestionDetail';
@@ -98,7 +99,13 @@ export default function Routing () {
           <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
         </div>
         <div className={styles.background}>
-          <Header />
+          {smallDisplay 
+            ?
+            <SmallHeader />
+            :
+            <Header />
+          }
+          
           <div className={styles.wrapper}>
             <div className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
               <div className={styles.container}>
