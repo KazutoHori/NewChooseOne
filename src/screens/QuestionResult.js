@@ -385,6 +385,13 @@ const useStyles = makeStyles(() => createStyles({
   },
 
   '@media (max-width: 500px)': {
+    date: {
+      marginBottom: 10,
+    },
+    your_vote: {
+      fontSize: 10,
+      marginBottom: 10,
+    },
     category: {
       fontSize: 10,
     },

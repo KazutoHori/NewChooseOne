@@ -267,11 +267,6 @@ const useStyles = makeStyles(() => createStyles({
     marginBottom: 8,
     fontSize: 12,
   },
-  your_vote: {
-    fontSize: 13,
-    marginLeft: 5,
-    color: 'yellowgreen',
-  },
   voteBtnPos: {
     marginTop: 20,
     marginLeft: 25,
