@@ -29,7 +29,7 @@ export default function BottomBar (props) {
       <div>
         <div className={styles.buttons}>
           <div className={styles.button}>
-            <a href='#'> 
+            <a href={'/create'}> 
               <div>
                   <AddCircleIcon style={{ color: 'red' }} />
               </div>
@@ -37,7 +37,7 @@ export default function BottomBar (props) {
             </a>
           </div>
           <div className={styles.button}>
-            <a>
+            <a href={'/voted'}>
               <div>
                   <CheckCircleIcon style={{ color: 'rgb(40, 168, 69)' }} />
               </div>
@@ -45,7 +45,7 @@ export default function BottomBar (props) {
             </a>
           </div>
           <div className={styles.button}>
-            <a>
+            <a href={'/made'}>
               <div>
                   <BuildIcon style={{ color: 'rgb(3, 122, 255)' }} />
               </div>
@@ -53,7 +53,7 @@ export default function BottomBar (props) {
             </a>
           </div>
           <div className={styles.button}>
-            <a>
+            <a href={'/liked'}>
               <div>
                   <FavoriteIcon style={{ color: 'red' }} />
               </div>

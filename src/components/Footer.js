@@ -23,11 +23,12 @@ export default function Footer () {
     </div>
   )
 }
+
 const useStyles =  makeStyles(() => createStyles({
   footer: {
     float: 'clear',
     backgroundColor: 'red',
-    height: 170,
+    height: 220,
     alignSelf: 'stretch',
     paddingTop: 20,
     position: 'absolute',
@@ -52,7 +53,7 @@ const useStyles =  makeStyles(() => createStyles({
 
   '@media (max-width: 500px)': {
     footer: {
-      height: 125,
+      height: 175,
     },
     a: {
       fontSize: 10,

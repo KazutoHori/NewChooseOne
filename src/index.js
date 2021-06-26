@@ -102,15 +102,11 @@ export default function Routing () {
           <div className={styles.wrapper}>
             <div className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
               <div className={styles.container}>
-                <div className={styles.homePos}>
-                  <Switch>
-                    <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
-                    <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
-                    <Route path="/" render={ () => <App uid={uid}/> } />
-                  </Switch>
-                  
-                </div>
-                
+                <Switch>
+                  <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
+                  <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
+                  <Route path="/" render={ () => <App uid={uid}/> } />
+                </Switch>
               </div>
             </div>
             {smallDisplay && (
@@ -128,26 +124,23 @@ export default function Routing () {
 
 const useStyles = makeStyles(() => createStyles({
   bottomBar: {
-    position: 'sticky',
+    position: 'fixed',
     bottom: 0,
     width: '100%',
     backgroundColor: '#f1efef',
     height: 50,
     filter: 'drop-shadow(0px 0px 2px rgba(160, 160, 160, 0.7))',
-    marginBottom: 15,
     paddingTop: 5,
+    zIndex: 2,
   },
   wrapper: {
     minHeight: window.innerHeight-30,
     position: 'relative',/*←相対位置*/
-    paddingBottom: 170,/*←footerの高さ*/
+    paddingBottom: 220,/*←footerの高さ*/
     boxSizing: 'border-box',/*←全て含めてmin-height:100vhに*/
   },
   background: {
     backgroundColor: '#f1efef',
-  },
-  homePos: {
-    display: 'flex',
   },
   container: {
     paddingTop: 15,
@@ -160,7 +153,7 @@ const useStyles = makeStyles(() => createStyles({
       paddingBottom: 10,
     },
     wrapper: {
-      paddingBottom: 125,
+      paddingBottom: 175,
     }
   }
 }));

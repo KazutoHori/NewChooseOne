@@ -68,6 +68,8 @@ const useStyles = makeStyles(() => createStyles({
   '@media (max-width: 500px)': {
     title: {
       fontSize: 22,
+      marginLeft: 15,
+      marginTop: 7,
     }
   }
 }));

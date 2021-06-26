@@ -56,7 +56,7 @@ export default function Header (props) {
                   <a style={Object.assign({}, styles.btn, styles.pic_only)} href="/create" id="add-question" className="btn pic_only add_que btn-warning text-light mr-1"><img src="https://img.icons8.com/flat-round/25/000000/question-mark.png" /> </a>
               </li>
               <li className="nav-item mr-1">
-                  <a style={Object.assign({},styles.btn, styles.btnPrimary)} href="/asked" className="btn normal my_que btn-primary text-light"><img src="https://img.icons8.com/officel/18/000000/box.png" /> Your Content</a>
+                  <a style={Object.assign({},styles.btn, styles.btnPrimary)} href="/made" className="btn normal my_que btn-primary text-light"><img src="https://img.icons8.com/officel/18/000000/box.png" /> Your Content</a>
               </li>
               <li className="nav-item mr-1">
                 <a style={Object.assign({},styles.btn, styles.pic_only, styles.btnPrimary)} href="/asked" className="btn pic_only my_que btn-primary text-light"><img src="https://img.icons8.com/officel/25/000000/box.png" /></a>
