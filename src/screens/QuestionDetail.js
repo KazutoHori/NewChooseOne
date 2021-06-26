@@ -229,7 +229,7 @@ export default function QuestionDetail (props) {
             </div>
             :
             <div>
-              <WindMillLoading style={{ position: 'relative', marginTop: 50, marginLeft: 50,}} color='rgb(39, 169, 68)' speed={1.2} size='large' />
+              <WindMillLoading style={{ position: 'relative', marginTop: 50-smallDisplay*30, marginLeft: 50,}} size={smallDisplay ? 'small' : 'large'} speed={1} />
             </div>
           }
         </Fragment>
@@ -288,6 +288,8 @@ const useStyles = makeStyles(() => createStyles({
   warning: {
     color: 'red',
     fontSize: 10,
+    margin: '0px 0px 0px 25px',
+    padding: 0,
   },
 
   '@media (max-width: 500px)': {
