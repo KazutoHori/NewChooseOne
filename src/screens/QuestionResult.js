@@ -137,7 +137,6 @@ export default function QuestionResult (props) {
         setLabels(l);
         setValues(v);
         setColors(c);
-        console.log(c);
         
         db.collection('questions').where('category', 'array-contains-any', now_question.category).orderBy('created_at', 'desc').limit(50).get().then(docs => {
           var questionSimilar = [];

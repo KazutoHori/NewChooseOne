@@ -15,7 +15,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { BsFillAwardFill } from 'react-icons/bs';
 
-import logoSmall from '../ChooseOne80.png';
+import logoSmall from '../ChooseOne60.png';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -180,31 +180,31 @@ export default function SmallHeader (props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => window.location.href = '/'} style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
-        <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
-          <HomeIcon />
+      <MenuItem onClick={() => window.location.href = '/'} className={classes.menuItemPos}>
+        <IconButton style={{ outline: 'none', }}  aria-label="Home" color="inherit">
+          <HomeIcon color='#1775' />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Home</p></div>
       </MenuItem>
-      <MenuItem onClick={(event) => setRankingAnchorEl(event.currentTarget)}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={(event) => setRankingAnchorEl(event.currentTarget)} className={classes.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="Ranking" color="inherit">
           <BsFillAwardFill />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Ranking</p></div>
       </MenuItem>
-      <MenuItem onClick={(event) => setCategoryAnchorEl(event.currentTarget)}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={(event) => setCategoryAnchorEl(event.currentTarget)} className={classes.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
           <LocalOfferIcon />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Category</p></div>
       </MenuItem>
-      <MenuItem onClick={() => window.location.href = '/about'}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={() => window.location.href = '/about'}  className={classes.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="About ChooseOne" color="inherit">
           <InfoIcon />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>About</p></div>
       </MenuItem>
-      <MenuItem onClick={() => window.location.href = '/contact'}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={() => window.location.href = '/contact'}  className={classes.menuItemPos}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -262,6 +262,10 @@ export default function SmallHeader (props) {
 }
 
 const useStyles = makeStyles((theme) => ({
+  menuItemPos: {
+    margin: 0, 
+    padding: '0px 15px 0px 10px',
+  },
   grow: {
     height: 40,
     backgroundColor: 'red',

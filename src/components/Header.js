@@ -24,8 +24,11 @@ import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import BuildIcon from '@material-ui/icons/Build';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { BsFillAwardFill } from 'react-icons/bs';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import logo from '../ChooseOne1.png';
+import logoSmall from '../ChooseOne60.png';
+import logoMedium from '../ChooseOne80.png';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -51,6 +54,9 @@ export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const smallDisplay = useMediaQuery('(max-width:500px)');
+  const smallerThan1200 = useMediaQuery('(max-width:1200px)');
+  const smallerThan900 = useMediaQuery('(max-width:990px)');
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -132,15 +138,17 @@ export default function PrimarySearchAppBar() {
   return (
     <div>
       <AppBar className={classes.grow} position="static">
-        <div className='container'>
+        <div className={!smallDisplay && 'container'}>
           <Toolbar style={{ padding: 0 }}>
-            <a href="/" className={classes.logo}><img src={logo} alt="ChooseOne" /></a>
+            {smallerThan900 && <a href="/" className={classes.logo}><img src={logoSmall} alt="ChooseOne" /></a>}
+            {!smallerThan900 &&  smallerThan1200 && <a href="/" className={classes.logo}><img src={logoMedium} alt="ChooseOne" /></a>}
+            {!smallerThan1200 && <a href="/" className={classes.logo}><img src={logo} alt="ChooseOne" /></a>}
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Search…"
+                placeholder="Search"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
@@ -148,34 +156,44 @@ export default function PrimarySearchAppBar() {
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
-            <div className={classes.sectionDesktop} style={{ marginLeft: 'auto' }}>
-              <div className={classes.button} style={{ backgroundColor: 'rgb(40, 168, 69)'}}>
-                <StyledButton onClick={() => window.location.href = '/'} startIcon={<HomeIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Home</StyledButton>
+            {!smallerThan900
+              ?
+              <div className={classes.sectionDesktop} style={{ marginLeft: 'auto' }}>
+                <div className={classes.button} style={{ backgroundColor: 'rgb(40, 168, 69)'}}>
+                  <StyledButton onClick={() => window.location.href = '/'} startIcon={<HomeIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Home</StyledButton>
+                </div>
+                <div className={classes.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
+                  <StyledButton onClick={() => window.location.href = '/create'} startIcon={<IoIosAddCircle />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Add</StyledButton>
+                </div>
+                <div className={classes.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
+                  <StyledButton onClick={() => window.location.href = '/made'} startIcon={<BuildIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Made</StyledButton>
+                </div>
+                <div className={classes.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
+                  <StyledButton onClick={() => window.location.href = '/voted'} startIcon={<ThumbUpAltIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Voted</StyledButton>
+                </div>
+                <div className={classes.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
+                  <StyledButton onClick={() => window.location.href = '/liked'} startIcon={<FavoriteIcon color='red' />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Liked</StyledButton>
+                </div>
               </div>
-              <div className={classes.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
-                <StyledButton onClick={() => window.location.href = '/'} startIcon={<IoIosAddCircle />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Add</StyledButton>
+              :
+              <div className={classes.sectionDesktop} style={{ marginLeft: 'auto', fontSize:15 }}>
+                <IconButton style={{backgroundColor: 'rgb(40, 168, 69)'}} onClick={() => window.location.href = '/'} className={classes.iconButton}>
+                  <HomeIcon />
+                </IconButton>
+                <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/create'} className={classes.iconButton}>
+                  <IoIosAddCircle />
+                </IconButton>
+                <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/made'} className={classes.iconButton}>
+                  <BuildIcon />
+                </IconButton>
+                <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/voted'} className={classes.iconButton}>
+                  <ThumbUpAltIcon />
+                </IconButton>
+                <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/liked'} className={classes.iconButton}>
+                  <FavoriteIcon />
+                </IconButton>
               </div>
-              <div className={classes.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
-                <StyledButton onClick={() => window.location.href = '/'} startIcon={<BuildIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Made</StyledButton>
-              </div>
-              <div className={classes.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
-                <StyledButton onClick={() => window.location.href = '/'} startIcon={<ThumbUpAltIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Voted</StyledButton>
-              </div>
-              <div className={classes.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
-                <StyledButton onClick={() => window.location.href = '/'} startIcon={<FavoriteIcon color='red' />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Liked</StyledButton>
-              </div>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-            </div>
+            }
           </Toolbar>
         </div>
       </AppBar>
@@ -186,6 +204,19 @@ export default function PrimarySearchAppBar() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  iconButton: {
+    padding: 6, 
+    marginLeft: 15, 
+    outline: 'none', 
+    color: 'white',
+  },
+  button: {
+    display: 'flex', 
+    alignItems: 'center', 
+    height: 35, 
+    borderRadius: 5,
+    marginLeft: 5,
+  },
   grow: {
     height: 50,
     backgroundColor: 'red',
@@ -210,10 +241,12 @@ const useStyles = makeStyles((theme) => ({
     },
     marginRight: theme.spacing(2),
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    marginLeft: 10,
+    [theme.breakpoints.up(777)]: {
       marginLeft: 36,
-      width: 'auto',
+      width: '100%',
     },
+    marginRight: 0,
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -241,6 +274,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    width: 'auto',
   },
   sectionMobile: {
     display: 'flex',
@@ -248,13 +282,6 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
-  button: {
-    display: 'flex', 
-    alignItems: 'center', 
-    height: 35, 
-    borderRadius: 5,
-    marginRight: 5,
-  }
 }));
 
 const StyledButton = withStyles({
@@ -266,238 +293,6 @@ const StyledButton = withStyles({
     height: 30,
     padding: '0 15px',
     outline: 'none',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    textTransform: 'capitalize',
-  },
-  cate: {
     textTransform: 'capitalize',
   },
 })(Button);
-
-// function ElevationScroll(props) {
-//   const { children, window } = props;
-//   const trigger = useScrollTrigger({
-//     disableHysteresis: true,
-//     threshold: 0,
-//     target: window ? window() : undefined,
-//   });
-
-//   return React.cloneElement(children, {
-//     elevation: trigger ? 4 : 0,
-//   });
-// }
-
-
-// export default function SmallHeader (props) {
-//   const [query, setQuery] = useState('');
-
-//   const classes = useStyles();
-//   const [questions, setQuestions] = useState([]);
-//   const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
-//   const [anchorEl, setAnchorEl] = React.useState(null);
-//   const [rankingAnchorEl, setRankingAnchorEl] = useState(null);
-
-//   const isCategoryMenuOpen = Boolean(categoryAnchorEl);
-//   const isMenuOpen = Boolean(anchorEl);
-//   const isRankingMenuOpen = Boolean(rankingAnchorEl)
-
-//   useEffect(() => {
-//     if(questions.length !== 0) return null;
-
-//     var quesRef = db.collection('questions');
-
-//     quesRef.orderBy('all_votes', 'desc').limit(3).get().then((docs) => {
-//       var ques = [];
-//       docs.forEach(q => {
-//         ques.push(q.data());
-//       });
-//       setQuestions(ques);
-//     });
-//   });
-
-//   const onSubmitSearch = (event) => {
-//     if(query.length === 0) return null;
-//     window.location.href = '/search/' + query;
-//   }
-
-//   const handleMenuClose = () => {
-//     setAnchorEl(null);
-//   };
-
-//   const handleCategoryMenuClose = () => {
-//     setCategoryAnchorEl(null);
-//     handleMenuClose();
-//   };
-
-//   const handleRankingMenuClose = () => {
-//     setRankingAnchorEl(null);
-//     handleMenuClose();
-//   };
-
-//   const handleMenuOpen = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
-
-//   const menuId = 'primary-search-account-menu';
-//   const renderCategoryMenu = (
-//     <Menu
-//       anchorEl={categoryAnchorEl}
-//       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-//       id={menuId}
-//       keepMounted
-//       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-//       open={isCategoryMenuOpen}
-//       onClose={handleCategoryMenuClose}
-//     >
-//       <MenuItem style={{color: tabColors[0] }} onClick={() => window.location.href = '/category/Love'}>Love</MenuItem>
-//       <MenuItem style={{color: tabColors[1] }} onClick={() => window.location.href = '/category/News'}>News</MenuItem>
-//       <MenuItem style={{color: tabColors[2] }} onClick={() => window.location.href = '/category/Sports'}>Sports</MenuItem>
-//       <MenuItem style={{color: tabColors[3] }} onClick={() => window.location.href = '/category/Pastime'}>Pastime</MenuItem>
-//       <MenuItem style={{color: tabColors[4] }} onClick={() => window.location.href = '/category/Health'}>Health</MenuItem>
-//       <MenuItem style={{color: tabColors[5] }} onClick={() => window.location.href = '/category/Living'}>Living</MenuItem>
-//       <MenuItem style={{color: tabColors[6] }} onClick={() => window.location.href = '/category/Career'}>Career</MenuItem>
-//       <MenuItem style={{color: tabColors[7] }} onClick={() => window.location.href = '/category/'}>Academics</MenuItem>
-//       <MenuItem style={{color: tabColors[8] }} onClick={() => window.location.href = '/category/IT'}>IT</MenuItem>
-//     </Menu>
-//   );
-
-//   const renderRankingMenu = (
-//     <Menu
-//       anchorEl={rankingAnchorEl}
-//       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-//       id={menuId}
-//       keepMounted
-//       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-//       open={isRankingMenuOpen}
-//       onClose={handleRankingMenuClose}
-//     >
-//       {questions.map((question, idx) => (
-//         <MenuItem>
-//           <div className="side_question">
-//             <div className="title">
-//               {idx === 0 && (
-//                 <Fragment>
-//                   🥇 
-//                   <a style={{ textDecoration: 'none' }} className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
-//                 </Fragment>
-//               )}
-//               {idx === 1 && (
-//                 <Fragment>
-//                   🥈 
-//                   <a style={{ textDecoration: 'none' }} className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
-//                 </Fragment>
-//               )}
-//               {idx === 2 && (
-//                 <Fragment>
-//                   🥉 
-//                   <a style={{ textDecoration: 'none' }} className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
-//                 </Fragment>
-//               )}
-//             </div>
-//             <ul>
-//               {question.choices.map(choice => (
-//                 <div>
-//                   <label>○ {choice.choice_text}</label>
-//                   <br />
-//                 </div>
-//               ))}
-//             </ul>
-//           </div>
-//         </MenuItem>
-//       ))}
-//      </Menu>
-//   );
-
-//   const mobileMenuId = 'primary-search-account-menu-mobile';
-//   const renderMenu = (
-//     <Menu
-//       anchorEl={anchorEl}
-//       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-//       id={mobileMenuId}
-//       keepMounted
-//       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-//       open={isMenuOpen}
-//       onClose={handleMenuClose}
-//     >
-//       <MenuItem onClick={() => window.location.href = '/'} style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
-//         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
-//           <HomeIcon />
-//         </IconButton>
-//         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Home</p></div>
-//       </MenuItem>
-//       <MenuItem onClick={(event) => setRankingAnchorEl(event.currentTarget)}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
-//         <IconButton style={{ outline: 'none' }}  aria-label="Ranking" color="inherit">
-//           <BsFillAwardFill />
-//         </IconButton>
-//         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Ranking</p></div>
-//       </MenuItem>
-//       <MenuItem onClick={(event) => setCategoryAnchorEl(event.currentTarget)}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
-//         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
-//           <LocalOfferIcon />
-//         </IconButton>
-//         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Category</p></div>
-//       </MenuItem>
-//       <MenuItem onClick={() => window.location.href = '/about'}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
-//         <IconButton style={{ outline: 'none' }}  aria-label="About ChooseOne" color="inherit">
-//           <InfoIcon />
-//         </IconButton>
-//         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>About</p></div>
-//       </MenuItem>
-//       <MenuItem onClick={() => window.location.href = '/contact'}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
-//         <IconButton
-//           aria-label="account of current user"
-//           aria-controls="primary-search-account-menu"
-//           aria-haspopup="true"
-//           color="inherit"
-//           style={{ outline: 'none' }} 
-//         >
-//           <ContactSupportIcon />
-//         </IconButton>
-//         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Contact</p></div>
-//       </MenuItem>
-//     </Menu>
-//   );
-
-//   return (
-//     <div>
-//       <AppBar className={classes.grow} position="static">
-//         <div className='container'>
-//           <Toolbar style={{paddingLeft: 10, paddingRight:  10}}>
-//             <a href="/" className={classes.logo}><img src={logo} alt="ChooseOne" /></a>
-//             <div className={classes.search}>
-//               <div className={classes.searchIcon}>
-//                 <SearchIcon size='small' />
-//               </div>
-//               <InputBase
-//                 placeholder="Search"
-//                 classes={{
-//                   root: classes.inputRoot,
-//                   input: classes.inputInput,
-//                 }}
-//                 inputProps={{ 'aria-label': 'search' }}
-//                 value={query}
-//                 onChange={(event) => setQuery(event.target.value)}
-//                 onKeyDown={(e) => {if(e.key === 'Enter'){e.preventDefault(); onSubmitSearch(); }}}
-//               />
-//             </div>
-//             <div className={classes.sectionMobile}>
-//               <IconButton
-//                 aria-label="show more"
-//                 aria-controls={mobileMenuId}
-//                 aria-haspopup="true"
-//                 onClick={handleMenuOpen}
-//                 color="inherit"
-//                 style={{ outline: 'none' }} 
-//               >
-//                 <MenuIcon size='small'  />
-//               </IconButton>
-//             </div>
-//           </Toolbar>
-//         </div>
-//       </AppBar>
-//       {renderMenu}
-//       {renderCategoryMenu}
-//       {renderRankingMenu}
-//     </div>
-//   );
-// }

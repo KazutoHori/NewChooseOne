@@ -2,7 +2,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles, createStyles } from '@material-ui/core';
 
 import logo from '../ChooseOne1.png';
-import logoSmall from '../ChooseOne80.png';
+import logoSmall from '../ChooseOne60.png';
 
 export default function Footer () {
 
