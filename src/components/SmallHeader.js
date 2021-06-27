@@ -181,8 +181,8 @@ export default function SmallHeader (props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => window.location.href = '/'} className={classes.menuItemPos}>
-        <IconButton style={{ outline: 'none', }}  aria-label="Home" color="inherit">
-          <HomeIcon color='#1775' />
+        <IconButton style={{ outline: 'none', }}  aria-label="Home" color="">
+          <HomeIcon />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Home</p></div>
       </MenuItem>
