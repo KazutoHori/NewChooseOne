@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { GiTargetPrize, GiPodiumSecond, GiPodiumThird } from 'react-icons/gi';
 
 import { timeToDay } from '../utils/Funcs.js';
 
@@ -60,19 +61,19 @@ export default function Home (props) {
             <div className="title">
               {idx === 0 && (
                 <Fragment>
-                  <img src="https://img.icons8.com/color/25/000000/first-place-ribbon.png" />
+                  <GiTargetPrize size='small' color='rgb(223, 176, 0)'/>
                   <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
               {idx === 1 && (
                 <Fragment>
-                  <img src="https://img.icons8.com/color/25/000000/second-place-ribbon.png" />
+                  <GiPodiumSecond size='small' color='rgb(174, 179, 181)' />
                   <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
               {idx === 2 && (
                 <Fragment>
-                  <img src="https://img.icons8.com/color/25/000000/third-place-ribbon.png" />
+                  <GiPodiumThird size='small' color='rgba(184, 115, 51, 0.692)' />
                   <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}

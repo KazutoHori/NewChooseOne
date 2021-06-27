@@ -3,20 +3,21 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import InfoIcon from '@material-ui/icons/Info';
+import ContactSupportIcon from '@material-ui/icons/ContactSupport';
+import HomeIcon from '@material-ui/icons/Home';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 
 import logoSmall from '../ChooseOne80.png';
+
+var tabColors = ['#ff69b4']
+for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
 function ElevationScroll(props) {
   const { children, window } = props;
@@ -40,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: -7,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -129,8 +129,15 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem style={{color: tabColors[0] }} onClick={() => window.location.href = '/category/Love'}>Love</MenuItem>
+      <MenuItem style={{color: tabColors[1] }} onClick={() => window.location.href = '/category/News'}>News</MenuItem>
+      <MenuItem style={{color: tabColors[2] }} onClick={() => window.location.href = '/category/Sports'}>Sports</MenuItem>
+      <MenuItem style={{color: tabColors[3] }} onClick={() => window.location.href = '/category/Pastime'}>Pastime</MenuItem>
+      <MenuItem style={{color: tabColors[4] }} onClick={() => window.location.href = '/category/Health'}>Health</MenuItem>
+      <MenuItem style={{color: tabColors[5] }} onClick={() => window.location.href = '/category/Living'}>Living</MenuItem>
+      <MenuItem style={{color: tabColors[6] }} onClick={() => window.location.href = '/category/Career'}>Career</MenuItem>
+      <MenuItem style={{color: tabColors[7] }} onClick={() => window.location.href = '/category/'}>Academics</MenuItem>
+      <MenuItem style={{color: tabColors[8] }} onClick={() => window.location.href = '/category/IT'}>IT</MenuItem>
     </Menu>
   );
 
@@ -145,32 +152,35 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
+      <MenuItem style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+        <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
+          <HomeIcon />
         </IconButton>
-        <p>Messages</p>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Home</p></div>
       </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
+      <MenuItem onClick={handleProfileMenuOpen}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+        <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
+          <LocalOfferIcon />
         </IconButton>
-        <p>Notifications</p>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Category</p></div>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+        <IconButton style={{ outline: 'none' }}  aria-label="About ChooseOne" color="inherit">
+          <InfoIcon />
+        </IconButton>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>About</p></div>
+      </MenuItem>
+      <MenuItem style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
+          style={{ outline: 'none' }} 
         >
-          <AccountCircle />
+          <ContactSupportIcon />
         </IconButton>
-        <p>Profile</p>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Contact Us</p></div>
       </MenuItem>
     </Menu>
   );
@@ -178,15 +188,7 @@ export default function PrimarySearchAppBar() {
   return (
     <div>
       <AppBar className={classes.grow} position="static">
-        <Toolbar>
-          {/* <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton> */}
+        <Toolbar style={{paddingLeft: 10, paddingRight:  10}}>
           <a href="/" className={classes.logo}><img src={logoSmall} alt="ChooseOne" /></a>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -211,8 +213,9 @@ export default function PrimarySearchAppBar() {
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
               color="inherit"
+              style={{ outline: 'none' }} 
             >
-              <MoreIcon size='small' style={{ outline: 'none', border: 'none'}} />
+              <MenuIcon size='small'  />
             </IconButton>
           </div>
         </Toolbar>
