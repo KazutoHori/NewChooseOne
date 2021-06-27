@@ -1,8 +1,4 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { GiTargetPrize, GiPodiumSecond, GiPodiumThird } from 'react-icons/gi';
-
-import { timeToDay } from '../utils/Funcs.js';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -23,7 +19,6 @@ var db = firebase.firestore();
 export default function RightBar (props) {
 
   const [questionPopular, setQuestionPopular] = useState([]);
-  const doNotDisplay = useMediaQuery('(max-width:777px)');
 
   useEffect(() => {
     if(questionPopular.length !== 0) return null;
@@ -39,7 +34,6 @@ export default function RightBar (props) {
     });
   });
 
-  if(doNotDisplay) return null;
   return (
     <Fragment>
       {/* 右バー */}

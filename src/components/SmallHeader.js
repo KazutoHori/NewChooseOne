@@ -13,6 +13,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 import HomeIcon from '@material-ui/icons/Home';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import { BsFillAwardFill } from 'react-icons/bs';
 
 import logoSmall from '../ChooseOne80.png';
 
@@ -95,39 +96,42 @@ export default function PrimarySearchAppBar() {
   }
 
   const classes = useStyles();
+  const [categoryAnchorEl, setCategoryAnchorEl] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [rankingAnchorEl, setRankingAnchorEl] = React.useState(null);
 
+  const isCategoryMenuOpen = Boolean(categoryAnchorEl);
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+  const isRankingMenuOpen = Boolean(rankingAnchorEl)
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+  const handleCategoryMenuClose = () => {
+    setCategoryAnchorEl(null);
+    handleMenuClose();
+  };
+
+  const handleRankingMenuClose = () => {
+    setRankingAnchorEl(null);
+    handleMenuClose();
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
+  const renderCategoryMenu = (
     <Menu
-      anchorEl={anchorEl}
+      anchorEl={categoryAnchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={menuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
+      open={isCategoryMenuOpen}
+      onClose={handleCategoryMenuClose}
     >
       <MenuItem style={{color: tabColors[0] }} onClick={() => window.location.href = '/category/Love'}>Love</MenuItem>
       <MenuItem style={{color: tabColors[1] }} onClick={() => window.location.href = '/category/News'}>News</MenuItem>
@@ -141,16 +145,32 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
+  const renderRankingMenu = (
     <Menu
-      anchorEl={mobileMoreAnchorEl}
+      anchorEl={rankingAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isRankingMenuOpen}
+      onClose={handleRankingMenuClose}
+    >
+      <MenuItem style={{color: tabColors[0] }} onClick={() => window.location.href = '/category/Love'}>Love</MenuItem>
+      <MenuItem style={{color: tabColors[1] }} onClick={() => window.location.href = '/category/News'}>News</MenuItem>
+      <MenuItem style={{color: tabColors[2] }} onClick={() => window.location.href = '/category/Sports'}>Sports</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={mobileMenuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
     >
       <MenuItem style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
@@ -158,7 +178,13 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Home</p></div>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={(event) => setRankingAnchorEl(event.currentTarget)}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+        <IconButton style={{ outline: 'none' }}  aria-label="Ranking" color="inherit">
+          <BsFillAwardFill />
+        </IconButton>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Ranking</p></div>
+      </MenuItem>
+      <MenuItem onClick={(event) => setCategoryAnchorEl(event.currentTarget)}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
           <LocalOfferIcon />
         </IconButton>
@@ -211,7 +237,7 @@ export default function PrimarySearchAppBar() {
               aria-label="show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
+              onClick={handleMenuOpen}
               color="inherit"
               style={{ outline: 'none' }} 
             >
@@ -220,8 +246,9 @@ export default function PrimarySearchAppBar() {
           </div>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
       {renderMenu}
+      {renderCategoryMenu}
+      {renderRankingMenu}
     </div>
   );
 }

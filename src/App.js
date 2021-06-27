@@ -26,7 +26,7 @@ export default function App (props) {
     <Fragment>
       <div style={{ display: 'flex' }}>
         <Router>
-          <LeftBar />
+          {!smallDisplay && <LeftBar />}
           <div className={styles.main_list}>
               <Switch>
                 <Route exact path='/about' component={About}/>
@@ -40,7 +40,7 @@ export default function App (props) {
                 <Route path='/' render={ () => <Home uid={uid}/> } />
               </Switch>
           </div>
-          <RightBar />
+          {!smallDisplay && <RightBar />}
         </Router>
       </div>
     </Fragment>

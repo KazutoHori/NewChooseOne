@@ -1,6 +1,4 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { GiTargetPrize, GiPodiumSecond, GiPodiumThird } from 'react-icons/gi';
 
 import { timeToDay } from '../utils/Funcs.js';
 
@@ -27,7 +25,6 @@ for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 export default function Home (props) {
 
   const [todaysRanking, setTodaysRanking] = useState([]);
-  const doNotDisplay = useMediaQuery('(max-width:777px)');
 
   useEffect(() => {
     if(todaysRanking.length !== 0) return null;
@@ -45,7 +42,6 @@ export default function Home (props) {
     });
   });
   
-  if(doNotDisplay) return null;
   return (
     <Fragment>
       <div style={styles.left_side}>
@@ -61,19 +57,19 @@ export default function Home (props) {
             <div className="title">
               {idx === 0 && (
                 <Fragment>
-                  <GiTargetPrize size='small' color='rgb(223, 176, 0)'/>
+                  🥇 
                   <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
               {idx === 1 && (
                 <Fragment>
-                  <GiPodiumSecond size='small' color='rgb(174, 179, 181)' />
+                  🥈 
                   <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
               {idx === 2 && (
                 <Fragment>
-                  <GiPodiumThird size='small' color='rgba(184, 115, 51, 0.692)' />
+                  🥉 
                   <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
