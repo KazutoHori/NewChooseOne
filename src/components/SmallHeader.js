@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,6 +16,22 @@ import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { BsFillAwardFill } from 'react-icons/bs';
 
 import logoSmall from '../ChooseOne80.png';
+
+// Firebase
+import firebase from 'firebase/app';
+import "firebase/firestore";
+const firebaseConfig = {
+  apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
+  authDomain: "chooseone-105a9.firebaseapp.com",
+  databaseURL: "https://chooseone-default-rtdb.firebaseio.com",
+  projectId: "chooseone",
+  storageBucket: "chooseone.appspot.com",
+  messagingSenderId: "722704825746",
+  appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
+  measurementId: "G-YJ97DZH6V5"
+};
+if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
+var db = firebase.firestore();
 
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
@@ -87,22 +103,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function SmallHeader (props) {
   const [query, setQuery] = useState('');
+
+  const classes = useStyles();
+  const [questions, setQuestions] = useState([]);
+  const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [rankingAnchorEl, setRankingAnchorEl] = useState(null);
+
+  const isCategoryMenuOpen = Boolean(categoryAnchorEl);
+  const isMenuOpen = Boolean(anchorEl);
+  const isRankingMenuOpen = Boolean(rankingAnchorEl)
+
+  useEffect(() => {
+    if(questions.length !== 0) return null;
+
+    var quesRef = db.collection('questions');
+
+    quesRef.orderBy('all_votes', 'desc').limit(3).get().then((docs) => {
+      var ques = [];
+      docs.forEach(q => {
+        ques.push(q.data());
+      });
+      setQuestions(ques);
+    });
+  });
 
   const onSubmitSearch = (event) => {
     if(query.length === 0) return null;
     window.location.href = '/search/' + query;
   }
-
-  const classes = useStyles();
-  const [categoryAnchorEl, setCategoryAnchorEl] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [rankingAnchorEl, setRankingAnchorEl] = React.useState(null);
-
-  const isCategoryMenuOpen = Boolean(categoryAnchorEl);
-  const isMenuOpen = Boolean(anchorEl);
-  const isRankingMenuOpen = Boolean(rankingAnchorEl)
 
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -155,10 +186,41 @@ export default function PrimarySearchAppBar() {
       open={isRankingMenuOpen}
       onClose={handleRankingMenuClose}
     >
-      <MenuItem style={{color: tabColors[0] }} onClick={() => window.location.href = '/category/Love'}>Love</MenuItem>
-      <MenuItem style={{color: tabColors[1] }} onClick={() => window.location.href = '/category/News'}>News</MenuItem>
-      <MenuItem style={{color: tabColors[2] }} onClick={() => window.location.href = '/category/Sports'}>Sports</MenuItem>
-    </Menu>
+      {questions.map((question, idx) => (
+        <MenuItem>
+          <div className="side_question">
+            <div className="title">
+              {idx === 0 && (
+                <Fragment>
+                  🥇 
+                  <a style={{ textDecoration: 'none' }} className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
+                </Fragment>
+              )}
+              {idx === 1 && (
+                <Fragment>
+                  🥈 
+                  <a style={{ textDecoration: 'none' }} className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
+                </Fragment>
+              )}
+              {idx === 2 && (
+                <Fragment>
+                  🥉 
+                  <a style={{ textDecoration: 'none' }} className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
+                </Fragment>
+              )}
+            </div>
+            <ul>
+              {question.choices.map(choice => (
+                <div>
+                  <label>○ {choice.choice_text}</label>
+                  <br />
+                </div>
+              ))}
+            </ul>
+          </div>
+        </MenuItem>
+      ))}
+     </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -172,7 +234,7 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={() => window.location.href = '/'} style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
           <HomeIcon />
         </IconButton>
@@ -190,13 +252,13 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Category</p></div>
       </MenuItem>
-      <MenuItem style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={() => window.location.href = '/about'}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
         <IconButton style={{ outline: 'none' }}  aria-label="About ChooseOne" color="inherit">
           <InfoIcon />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>About</p></div>
       </MenuItem>
-      <MenuItem style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
+      <MenuItem onClick={() => window.location.href = '/contact'}  style={{ margin: 0, paddingBottom: 0, paddingTop: 0 }}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -206,7 +268,7 @@ export default function PrimarySearchAppBar() {
         >
           <ContactSupportIcon />
         </IconButton>
-        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Contact Us</p></div>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Contact</p></div>
       </MenuItem>
     </Menu>
   );
