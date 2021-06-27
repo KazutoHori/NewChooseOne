@@ -1,4 +1,4 @@
-firebase===8.6.2
+firebase
 node-sass
 react-loading
 react-paginate
