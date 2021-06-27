@@ -20,7 +20,7 @@ export default function App (props) {
   
   const { uid } = props;
   const styles = useStyles();
-  const smallDisplay = useMediaQuery('(max-width:500px)');
+  const smallDisplay = useMediaQuery('(max-width:777px)');
 
   return (
     <Fragment>
