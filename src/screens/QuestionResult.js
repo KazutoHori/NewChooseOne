@@ -329,7 +329,8 @@ const useStyles = makeStyles(() => createStyles({
     fontWeight: 600,
   },
   mayLike: {
-    marginBottom: 40,
+    marginTop: 40,
+    marginBottom: 20,
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
