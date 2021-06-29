@@ -9,4 +9,4 @@ WORKDIR /usr/src/app
 # ファイルを全部作業用ディレクトリにコピー
 COPY . .
 # コンテナを起動する際に実行されるコマンド
-ENTRYPOINT [ "yarn", "start" ]
+# ENTRYPOINT [ "yarn", "start" ]
