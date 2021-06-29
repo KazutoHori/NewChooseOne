@@ -31,7 +31,7 @@ export default function BottomBar (props) {
           <div className={styles.button}>
             <a href={'/create'}> 
               <div>
-                  <AddCircleIcon style={{ color: 'red' }} />
+                  <AddCircleIcon style={{ color: 'rgb(255, 192, 8)' }} />
               </div>
               <p className={styles.name}>Add</p>
             </a>
