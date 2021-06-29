@@ -34,8 +34,7 @@ var db = firebase.firestore();
 
 export default function Routing () {
 
-  // const [uid, setUid] = useState(null);
-  const [uid, setUid] = useState('KazutoHori');
+  const [uid, setUid] = useState(null);
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
 
