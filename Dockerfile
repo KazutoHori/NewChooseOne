@@ -16,12 +16,12 @@ FROM node:14.5.0-alpine
 RUN mkdir /app
 WORKDIR /app
 
-RUN yarn install 
+RUN npm install 
 
 COPY package.json package.json
 COPY yarn.lock yarn.lock
-RUN yarn install && mv node_modules /node_modules
+RUN npm install && mv node_modules /node_modules
 
 COPY . .
 
-CMD yarn start
+CMD npm start
