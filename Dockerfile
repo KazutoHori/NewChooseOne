@@ -1,12 +1,27 @@
 # # ベースイメージの作成
-FROM node:14.5.0-alpine
+# FROM node:14.5.0-alpine
 # コンテナ内で作業するディレクトリを指定
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/app
 # package.jsonとyarn.lockを/usr/src/appにコピー
 # COPY ["package.json", "yarn.lock", "./"]
 # パッケージをインストール
-RUN yarn install
+# RUN yarn install
 # ファイルを全部作業用ディレクトリにコピー
-COPY . .
+# COPY . .
 # コンテナを起動する際に実行されるコマンド
 # ENTRYPOINT [ "yarn", "start" ]
+
+FROM node:14.5.0-alpine
+
+RUN mkdir /app
+WORKDIR /app
+
+RUN yarn install 
+
+COPY package.json package.json
+COPY yarn.lock yarn.lock
+RUN yarn install && mv node_modules /node_modules
+
+COPY . .
+
+CMD yarn start
