@@ -29,31 +29,25 @@ export default function QuestionMade (props) {
   useEffect(() => {
     if (uid === null || questions !== null) return null;
 
-    
-    var getQues = new Promise(function (resolve) {
-      var ques = [];
-      db.collection("users").doc(uid).get().then((doc) => {
-        var qs = doc.data().question_created;
-        for(let i=0; i<qs.length; i++){
-          // eslint-disable-next-line no-loop-func
-          db.collection('questions').doc(qs[i]).get().then((doc) => {
-            if(doc.exists){
-              ques.unshift(doc.data())
-            }
-          });
-        }
-      })
-      resolve(ques)
+    var ques = [];
+    db.collection("users").doc(uid).onSnapshot((doc) => {
+      var qs = doc.data().question_created;
+      for(var i=0; i<qs.length; i++){
+        // eslint-disable-next-line no-loop-func
+        db.collection('questions').doc(qs[i]).get().then((doc) => {
+          if(doc.exists){
+            ques.unshift(doc.data())
+            setQuestions(ques)
+          }
+        });
+      }
     })
-    getQues.then((ques) => {
-      setQuestions(ques)
-    });
   });
 
   return (
     <Fragment>
       <h3 className={styles.title}>Questions You Made</h3>
-      {questions !== null && questions.length === 0 
+      {questions !== null && questions.length === 0
         ?
         <pre>   You haven't made any questions.</pre>
         :

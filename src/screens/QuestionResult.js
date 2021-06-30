@@ -393,7 +393,7 @@ const useStyles = makeStyles(() => createStyles({
       marginBottom: 10,
     },
     category: {
-      fontSize: 10,
+      fontSize: 12,
     },
     title: {
       fontSize: 24,

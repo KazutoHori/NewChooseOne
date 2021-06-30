@@ -17,21 +17,23 @@ export function slugify (str) {
 }
 
 export function timeToDay (current) {
-  if(current.slice(5, 7) === '01') var month = 'Jan';
-  else if(current.slice(5, 7) === '02') var month = 'Feb';
-  else if(current.slice(5, 7) === '03') var month = 'Mar';
-  else if(current.slice(5, 7) === '04') var month = 'Apr';
-  else if(current.slice(5, 7) === '05') var month = 'Mar';
-  else if(current.slice(5, 7) === '06') var month = 'Jun';
-  else if(current.slice(5, 7) === '07') var month = 'Jul';
-  else if(current.slice(5, 7) === '08') var month = 'Aug';
-  else if(current.slice(5, 7) === '09') var month = 'Sep';
-  else if(current.slice(5, 7) === '10') var month = 'Oct';
-  else if(current.slice(5, 7) === '11') var month = 'Nov';
-  else if(current.slice(5, 7) === '12') var month = 'Dec';
+  var month = '';
+  if(current.slice(5, 7) === '01') month = 'Jan';
+  else if(current.slice(5, 7) === '02') month = 'Feb';
+  else if(current.slice(5, 7) === '03') month = 'Mar';
+  else if(current.slice(5, 7) === '04') month = 'Apr';
+  else if(current.slice(5, 7) === '05') month = 'Mar';
+  else if(current.slice(5, 7) === '06') month = 'Jun';
+  else if(current.slice(5, 7) === '07') month = 'Jul';
+  else if(current.slice(5, 7) === '08') month = 'Aug';
+  else if(current.slice(5, 7) === '09') month = 'Sep';
+  else if(current.slice(5, 7) === '10') month = 'Oct';
+  else if(current.slice(5, 7) === '11') month = 'Nov';
+  else if(current.slice(5, 7) === '12') month = 'Dec';
 
-  if(current[8] === '0') var day = current[9];
-  else var day = current.slice(8, 10);
+  var day = '';
+  if(current[8] === '0') day = current[9];
+  else day = current.slice(8, 10);
   var year = current.slice(0, 4)
 
   var ret = month + ' ' + day + ', ' + year;
