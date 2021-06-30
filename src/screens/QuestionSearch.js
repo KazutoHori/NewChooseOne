@@ -61,7 +61,7 @@ export default function QuestionSearch (props) {
         <h3 className={styles.title}>Search Results</h3>
         <div><pre>      Searching...</pre></div>
         <div className={styles.loadingPos}>
-          <WindMillLoading className={styles.loadingPos} color='rgb(39, 169, 68)' speed={1.2} size={smallDisplay ? 'small' : 'large'} />
+          <WindMillLoading className={styles.loadingPos} speed={1.2} size={smallDisplay ? 'small' : 'large'} />
         </div>
       </Fragment>
     )

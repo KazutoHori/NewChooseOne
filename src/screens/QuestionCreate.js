@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { WindMillLoading } from 'react-loadingg';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -43,6 +44,7 @@ export default function QuestionCreate (props) {
   const [warning, setWarning] = useState('');
   const [title, setTitle] = useState('');
   const [choices, setChoices] = useState([]);
+  const [voting, setVoting] = useState(false);
   var added=[];
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
@@ -105,6 +107,8 @@ export default function QuestionCreate (props) {
       return null;
     }
 
+    setVoting(true);
+
     var how_many=0;
     await db.collection('questions').get().then(snap => {
       how_many = snap.size
@@ -147,6 +151,7 @@ export default function QuestionCreate (props) {
       all_votes: 0,
       active: true,
       likes: 0,
+      SUQ: ifSuperUser,
     }
 
     db.collection('questions').doc(slug).set(new_question);
@@ -282,13 +287,25 @@ export default function QuestionCreate (props) {
         {/* 最後 */}
         {warning && <p style={{color: 'red' }} className={styles.warning} >{warning}</p>}
         {!warning && <p className={styles.warning}>You can delete but cannot edit after you make one.</p>}
-        <Button style={{ fontSize: 11 }} size='small' startIcon={<PostAddIcon /> } onClick={onSubmit} className="btn btn-success"  >Add Question</Button>
+        {!voting
+          ?
+          <Button style={{ fontSize: 11 }} size='small' startIcon={<PostAddIcon /> } onClick={onSubmit} className="btn btn-success"  >Add Question</Button>
+          :
+          <div className={styles.loadingPos}>
+            <WindMillLoading speed={1.2}  />
+          </div>
+        }
       </div>
     </Fragment>
   )
 }
 
 const useStyles = makeStyles(() => createStyles({
+  loadingPos: {
+    marginTop: 50,
+    // marginLeft: 50,
+    position: 'relative',
+  },
   labels: {
     fontFamily: 'latienne-pro, serif',
     fontStyle: 'normal',
@@ -319,7 +336,7 @@ const useStyles = makeStyles(() => createStyles({
     textAlign: 'center',
     filter: 'drop-shadow(0px 0px 5px rgba(160, 160, 160, 0.7))',
     padding: 10,
-    paddingBottom: 30,
+    paddingBottom: 50,
     borderRadius: 15,
   },
   cate: {
