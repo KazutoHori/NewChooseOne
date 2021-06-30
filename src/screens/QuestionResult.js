@@ -326,7 +326,7 @@ const useStyles = makeStyles(() => createStyles({
   title: {
     fontFamily: 'latienne-pro, serif',
     fontStyle: 'normal',
-    fontWeight: 600,
+    fontWeight: 500,
   },
   mayLike: {
     marginTop: 40,
@@ -396,7 +396,7 @@ const useStyles = makeStyles(() => createStyles({
       fontSize: 10,
     },
     title: {
-      fontSize: 23,
+      fontSize: 24,
     },
     mayLike: {
       margin: '40px 0px 5px 10px',

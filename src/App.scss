@@ -31,7 +31,6 @@
   }
 
   a:hover{
-    color: black;
     background:linear-gradient(transparent 70%, #45cafb 0%);
     text-decoration: none;
   }
@@ -58,6 +57,9 @@
     padding-bottom: 1px;
     filter: none;
 
+    a:hover{
+      background: none;
+    }
   }
 }
 

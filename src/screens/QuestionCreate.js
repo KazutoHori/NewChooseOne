@@ -213,7 +213,6 @@ export default function QuestionCreate (props) {
           onChange={(event) => titleChangeText(event)}
           value={title}
           aria-describedby="standard-weight-helper-text"
-          // placeholder='Question'
           startAdornment={<InputAdornment position="start">Q. </InputAdornment>}
           inputProps={{
             'aria-label': 'weight',
@@ -344,18 +343,12 @@ const useStyles = makeStyles(() => createStyles({
     width: '50%',
   },
   '@media (max-width: 500px)': {
-    title: {
-      fontSize: 20,
-    },
     cate: {
-      marginBottom: 3,
-      marginRight: 3,
-      width: 60,
-      height: 22,
+      fontSize: 12,
     },
     labels: {
       fontSize: 20,
-      margin: 0,
+      marginTop: 20,
     },
     titleInput: {
       width: '90%',
@@ -364,8 +357,8 @@ const useStyles = makeStyles(() => createStyles({
       width: '80%',
     },
     cateTitle: {
-      marginTop: 10,
-      marginBottom: 5,
+      marginTop: 20,
+      marginBottom: 10,
     },
   }
 }));
