@@ -264,7 +264,7 @@ export default function SmallHeader (props) {
 const useStyles = makeStyles((theme) => ({
   menuItemPos: {
     margin: 0, 
-    padding: '0px 15px 0px 10px',
+    // padding: '0px 15px 0px 10px',
   },
   grow: {
     height: 40,

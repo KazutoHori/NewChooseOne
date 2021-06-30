@@ -72,13 +72,11 @@ const useStyles = makeStyles(() => createStyles({
     justifyContent: 'space-evenly',
   },
   button: {
-    // backgroundColor: 'blue',
     padding: '0 7px',
     textAlign: 'center',
   },
   name: {
-    fontSize: 4,
-    paddingLeft: 3,
+    fontSize: 12,
     color: 'black',
   }
 }));
