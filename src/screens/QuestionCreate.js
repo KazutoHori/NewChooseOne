@@ -80,6 +80,7 @@ export default function QuestionCreate (props) {
       return null;
     }
 
+    var totalVotes = 0;
     let new_choices = [];
     for(var i=0; i<howManyChoice; i++){
       if(choices[i] === undefined || choices[i] === ''){
@@ -94,6 +95,7 @@ export default function QuestionCreate (props) {
           setTimeout(() => setWarning(''),5000);
           return null;
         }
+        totalVotes += parseInt(votes, 10);
         new_choices.push({
           choice_text: text,
           votes: votes,
@@ -148,7 +150,7 @@ export default function QuestionCreate (props) {
       choices: new_choices,
       comments: [],
       users_voted: [],
-      all_votes: 0,
+      all_votes: totalVotes,
       active: true,
       likes: 0,
       SUQ: ifSuperUser,

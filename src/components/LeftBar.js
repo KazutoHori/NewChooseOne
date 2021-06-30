@@ -75,7 +75,7 @@ export default function Home (props) {
               )}
               {idx !== 0 && idx !== 1 && idx !== 2 && (
                 <Fragment>
-                  <div style={styles.number}><p>(idx+1)</p></div>
+                  <div style={styles.number}><p>{idx+1}</p></div>
                   <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
