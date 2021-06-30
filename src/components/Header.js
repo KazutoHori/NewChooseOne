@@ -213,6 +213,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 15, 
     outline: 'none', 
     color: 'white',
+    border: 'none',
+    '&:focus': {
+      outline: 'none'
+    }
   },
   button: {
     display: 'flex', 

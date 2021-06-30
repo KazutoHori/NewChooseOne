@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
 import { makeStyles, createStyles } from '@material-ui/core';
 
@@ -19,15 +19,18 @@ const firebaseConfig = {
 if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
+export default class QuestionLiked extends React.Component {
 
-export default function QuestionLiked (props) {
+  constructor(props){
+    super(props);
+    this.state = {
+      questions: null,
+    }
+  }
 
-  const [questions, setQuestions] = useState(null);
-  const uid = props.uid;
-  const styles = useStyles();
-
-  useEffect(() => {
-    if (uid === null || questions !== null) return null;
+  componentDidMount() {
+    const { uid } = this.props;
+    if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
     db.collection("users").doc(uid).onSnapshot((doc) => {
@@ -38,38 +41,55 @@ export default function QuestionLiked (props) {
         db.collection('questions').doc(qs[i]).get().then((doc) => {
           if(doc.exists){
             ques.unshift(doc.data())
-            setQuestions(ques);
+            this.setState({ questions: ques});
+          }
+        })
+      }
+    });
+  }
+
+  render() {
+    const { questions } = this.state;
+    // const styles = useStyles();
+
+    return (
+      <Fragment>
+        <h3 className='headline'>Questions You Liked</h3>
+        {questions !== null && questions.length === 0
+          ?
+          <pre>   There are no questions you like.</pre>
+          :
+          <QuestionList questions={questions} />
+        }
+      </Fragment>
+    )
+  }
+
+  componentDidUpdate() {
+    const { uid } = this.props;
+    if (uid === null || this.state.questions !== null) return null;
+
+    var ques = [];
+    db.collection("users").doc(uid).onSnapshot((doc) => {
+      ques = [];
+      var qs = doc.data().question_voted;
+      for(let i=0; i<qs.length; i++){
+        // eslint-disable-next-line no-loop-func
+        db.collection('questions').doc(qs[i]).get().then((doc) => {
+          if(doc.exists){
+            ques.unshift(doc.data())
+            this.setState({ questions: ques});
           }
         });
       }
     });
-  });
-
-  return (
-    <Fragment>
-      <h3 className={styles.title}>Questions You Liked</h3>
-      {questions !== null && questions.length === 0
-        ?
-        <pre>   There are no questions you like.</pre>
-        :
-        <QuestionList questions={questions} />
-      }
-    </Fragment>
-  )
+  }
 }
 
-const useStyles = makeStyles(() => createStyles({
+const styles = {
   title: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
   },
-
-  '@media (max-width: 500px)': {
-    title: {
-      fontSize: 22,
-      marginLeft: 15,
-      marginTop: 7,
-    }
-  }
-}));
+};

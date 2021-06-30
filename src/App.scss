@@ -50,6 +50,12 @@
   }
 }
 
+.headline{
+  font-family: lust-script, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+}
+
 @media(max-width: 500px){
   .onepost{
     border-radius: 0px;
@@ -60,6 +66,11 @@
     a:hover{
       background: none;
     }
+  }
+  .headline{
+    font-size: 22;
+    margin-left: 15;
+    margin-top: 7;
   }
 }
 
@@ -100,7 +111,6 @@
     background-color: transparent;
   }
 }
-
 
 
 // ヘッダー

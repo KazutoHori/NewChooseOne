@@ -20,44 +20,74 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default function QuestionMade (props) {
+export default class QuestionMade extends React.Component {
 
-  const [questions, setQuestions] = useState(null);
-  const uid = props.uid;
-  const styles = useStyles();
+  constructor(props){
+    super(props);
+    this.state = {
+      questions: null,
+    }
+  }
 
-  useEffect(() => {
-    if (uid === null || questions !== null) return null;
+  componentDidMount() {
+    const { uid } = this.props;
+    if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
     db.collection("users").doc(uid).onSnapshot((doc) => {
+      ques = [];
       var qs = doc.data().question_created;
-      for(var i=0; i<qs.length; i++){
+      for(let i=0; i<qs.length; i++){
+        // eslint-disable-next-line no-loop-func
+        db.collection('questions').doc(qs[i]).get().then((doc) => {
+          if(doc.exists){
+            ques.unshift(doc.data());
+            this.setState({ questions: ques});
+          }
+        });
+      }
+    });
+  }
+
+  render() {
+    const { questions } = this.state;
+    // const styles = useStyles();
+
+    return (
+      <Fragment>
+        <h3 className='headline'>Questions You Made</h3>
+        {questions !== null && questions.length === 0
+          ?
+          <pre>   You haven't made any questions.</pre>
+          :
+          <QuestionList questions={questions} />
+        }
+      </Fragment>
+    )
+  }
+
+  componentDidUpdate() {
+    const { uid } = this.props;
+    if (uid === null || this.state.questions !== null) return null;
+
+    var ques = [];
+    db.collection("users").doc(uid).onSnapshot((doc) => {
+      ques = [];
+      var qs = doc.data().question_created;
+      for(let i=0; i<qs.length; i++){
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i]).get().then((doc) => {
           if(doc.exists){
             ques.unshift(doc.data())
-            setQuestions(ques)
+            this.setState({ questions: ques});
           }
         });
       }
-    })
-  });
-
-  return (
-    <Fragment>
-      <h3 className={styles.title}>Questions You Made</h3>
-      {questions !== null && questions.length === 0
-        ?
-        <pre>   You haven't made any questions.</pre>
-        :
-        <QuestionList questions={questions} />
-      }
-    </Fragment>
-  )
+    });
+  }
 }
 
-const useStyles = makeStyles(() => createStyles({
+const styles = {
   title: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
@@ -71,4 +101,4 @@ const useStyles = makeStyles(() => createStyles({
       marginTop: 7,
     }
   }
-}));
+};
