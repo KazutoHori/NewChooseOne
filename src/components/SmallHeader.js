@@ -50,8 +50,8 @@ function ElevationScroll(props) {
 }
 
 export default function SmallHeader (props) {
+  
   const [query, setQuery] = useState('');
-
   const classes = useStyles();
   const [questions, setQuestions] = useState([]);
   const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
@@ -317,90 +317,3 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-
-//   return (
-//     <Fragment>
-//       <CssBaseline />
-//       <ElevationScroll {...props}>
-//         <AppBar className={styles.header}>
-//           <Toolbar>
-//             <a href="/" className={styles.logo}><img src={smallDisplay ? logoSmall : logo} alt="ChooseOne" /></a>
-//             <div className={styles.search}>
-//               <div className={styles.searchIcon}>
-//                 <SearchIcon />
-//               </div>
-//               <InputBase
-//                 placeholder="Search…"
-//                 classes={{
-//                   root: styles.inputRoot,
-//                   input: styles.inputInput,
-//                 }}
-//                 inputProps={{ 'aria-label': 'search' }}
-//               />
-//             </div>
-//           </Toolbar>
-//         </AppBar>
-//         {/* <div >
-//           <a href="/" className={styles.logo}><img src={smallDisplay ? logoSmall : logo} alt="ChooseOne" /></a>
-//           <div>
-//             <SearchIcon className={styles.searchIcon} />
-//             <form onKeyDown={(e) => {if(e.key === 'Enter'){e.preventDefault(); onSubmitSearch(); }}} className={styles.search}>
-//               <input type='text' value={query} onChange={(event) => setQuery(event.target.value)} className="form-control" placeholder="Search"  />
-//             </form>
-//           </div>
-//         </div> */}
-//       </ElevationScroll>
-//       <div style={{ width: '100%', height: 40 }}></div>
-//     </Fragment>
-//   )
-// }
-
-// const useStyles = makeStyles((theme) => createStyles({
-//   scrollToTop: {
-//     position: 'fixed',
-//     bottom: theme.spacing(2),
-//     right: theme.spacing(2),
-//   },
-//   header: {
-//     position: 'fixed',
-//     top: 0,
-//     width: '100%',
-//     height: 40,
-//     zIndex: 2,
-//     backgroundColor: 'red',
-//     display: 'flex',
-//     flexDirection: 'row',
-//     textAlign: 'center',
-//     alignItems: 'center',
-//   },
-
-//   search: {
-//     position: 'relative',
-//     borderRadius: theme.shape.borderRadius,
-//     backgroundColor: fade(theme.palette.common.white, 0.15),
-//     '&:hover': {
-//       backgroundColor: fade(theme.palette.common.white, 0.25),
-//     },
-//     marginRight: theme.spacing(2),
-//     marginLeft: 0,
-//     width: '100%',
-//     [theme.breakpoints.up('sm')]: {
-//       marginLeft: theme.spacing(3),
-//       width: 'auto',
-//     },
-//   },
-//   inputRoot: {
-//     color: 'inherit',
-//   },
-//   inputInput: {
-//     padding: theme.spacing(1, 1, 1, 0),
-//     // vertical padding + font size from searchIcon
-//     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-//     transition: theme.transitions.create('width'),
-//     width: '100%',
-//     [theme.breakpoints.up('md')]: {
-//       width: '20ch',
-//     },
-//   },
-// }));

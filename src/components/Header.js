@@ -51,15 +51,22 @@ for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
 
 export default function PrimarySearchAppBar() {
+  
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [query, setQuery] = useState('');
   const smallDisplay = useMediaQuery('(max-width:500px)');
   const smallerThan1200 = useMediaQuery('(max-width:1200px)');
   const smallerThan900 = useMediaQuery('(max-width:990px)');
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const onSubmitSearch = (event) => {
+    if(query.length === 0) return null;
+    window.location.href = '/search/' + query;
+  }
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -150,13 +157,11 @@ export default function PrimarySearchAppBar() {
               <div style={{ width: '100%' }}>
                 <InputBase
                   placeholder="Search"
-                  // classes={{
-                  //   root: classes.inputRoot,
-                  //   input: classes.inputInput,
-                  // }}
-                  style={{ color: 'white' }}
                   className={classes.inputInput}
                   inputProps={{ 'aria-label': 'search' }}
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  onKeyDown={(e) => {if(e.key === 'Enter'){e.preventDefault(); onSubmitSearch(); }}}
                 />
               </div>
             </div>
@@ -267,6 +272,7 @@ const useStyles = makeStyles((theme) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
+    color: 'white',
     width: '100%',
   },
   sectionDesktop: {
