@@ -36,6 +36,7 @@ export default class QuestionVoted extends React.Component {
     db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
       var qs = doc.data().question_voted;
+      if(qs.length === 0) this.setState({ questions: [] })
       for(let i=0; i<qs.length; i++){
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i].question).get().then((doc) => {
@@ -73,6 +74,7 @@ export default class QuestionVoted extends React.Component {
     db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
       var qs = doc.data().question_voted;
+      if(qs.length === 0) this.setState({ questions: [] })
       for(let i=0; i<qs.length; i++){
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i].question).get().then((doc) => {

@@ -34,9 +34,10 @@ export default class QuestionMade extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).get().then((doc) => {
+    db.collection("users").doc(uid).get().then((user) => {
       ques = [];
-      var qs = doc.data().question_created;
+      var qs = user.data().question_created;
+      if(qs.length === 0) this.setState({ questions: [] })
       for(let i=0; i<qs.length; i++){
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i]).get().then((doc) => {
@@ -51,6 +52,7 @@ export default class QuestionMade extends React.Component {
 
   render() {
     const { questions } = this.state;
+    console.log(questions);
     // const styles = useStyles();
 
     return (
@@ -71,9 +73,10 @@ export default class QuestionMade extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).get().then((doc) => {
+    db.collection("users").doc(uid).get().then((user) => {
       ques = [];
-      var qs = doc.data().question_created;
+      var qs = user.data().question_created;
+      if(qs.length === 0) this.setState({ questions: [] })
       for(let i=0; i<qs.length; i++){
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i]).get().then((doc) => {
