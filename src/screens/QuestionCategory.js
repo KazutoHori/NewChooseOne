@@ -28,9 +28,9 @@ export default function QuestionCategory (props) {
   const styles = useStyles();
 
   useEffect(() => {
-    db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').onSnapshot((querySnapshot) => {
+    db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').get().then((docs) => {
       var ques = [];
-      querySnapshot.forEach((doc) => {
+      docs.forEach((doc) => {
           ques.push(doc.data());
       });
       setQuestions(ques);

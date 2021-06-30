@@ -33,7 +33,7 @@ export default class QuestionLiked extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).onSnapshot((doc) => {
+    db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
       var qs = doc.data().question_liked;
       for(let i=0; i<qs.length; i++){
@@ -70,9 +70,9 @@ export default class QuestionLiked extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).onSnapshot((doc) => {
+    db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
-      var qs = doc.data().question_voted;
+      var qs = doc.data().question_liked;
       for(let i=0; i<qs.length; i++){
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i]).get().then((doc) => {

@@ -33,7 +33,7 @@ export default class QuestionVoted extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).onSnapshot((doc) => {
+    db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
       var qs = doc.data().question_voted;
       for(let i=0; i<qs.length; i++){
@@ -70,7 +70,7 @@ export default class QuestionVoted extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).onSnapshot((doc) => {
+    db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
       var qs = doc.data().question_voted;
       for(let i=0; i<qs.length; i++){

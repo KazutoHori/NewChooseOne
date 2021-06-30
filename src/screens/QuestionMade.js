@@ -34,7 +34,7 @@ export default class QuestionMade extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).onSnapshot((doc) => {
+    db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
       var qs = doc.data().question_created;
       for(let i=0; i<qs.length; i++){
@@ -71,7 +71,7 @@ export default class QuestionMade extends React.Component {
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
-    db.collection("users").doc(uid).onSnapshot((doc) => {
+    db.collection("users").doc(uid).get().then((doc) => {
       ques = [];
       var qs = doc.data().question_created;
       for(let i=0; i<qs.length; i++){
