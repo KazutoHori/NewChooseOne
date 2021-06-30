@@ -20,7 +20,7 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default function QuestionAsked (props) {
+export default function QuestionMade (props) {
 
   const [questions, setQuestions] = useState(null);
   const uid = props.uid;
@@ -29,31 +29,36 @@ export default function QuestionAsked (props) {
   useEffect(() => {
     if (uid === null || questions !== null) return null;
 
-    var ques = [];
-    db.collection("users").doc(uid).onSnapshot((doc) => {
-      ques = [];
-      var qs = doc.data().question_created;
-      for(let i=0; i<qs.length; i++){
-        // eslint-disable-next-line no-loop-func
-        db.collection('questions').doc(qs[i]).get().then((doc) => {
-          if(doc.exists){
-            ques.unshift(doc.data())
-            setQuestions(ques);
-          }
-        });
-      }
+    
+    var getQues = new Promise(function (resolve) {
+      var ques = [];
+      db.collection("users").doc(uid).get().then((doc) => {
+        var qs = doc.data().question_created;
+        for(let i=0; i<qs.length; i++){
+          // eslint-disable-next-line no-loop-func
+          db.collection('questions').doc(qs[i]).get().then((doc) => {
+            if(doc.exists){
+              ques.unshift(doc.data())
+            }
+          });
+        }
+      })
+      resolve(ques)
+    })
+    getQues.then((ques) => {
+      setQuestions(ques)
     });
   });
 
   return (
     <Fragment>
       <h3 className={styles.title}>Questions You Made</h3>
-      {questions === [] && (
-        <pre>        You have not asked any questions yet.</pre>
-      )}
-      {questions !== [] && (
+      {questions !== null && questions.length === 0 
+        ?
+        <pre>   You haven't made any questions.</pre>
+        :
         <QuestionList questions={questions} />
-      )}
+      }
     </Fragment>
   )
 }

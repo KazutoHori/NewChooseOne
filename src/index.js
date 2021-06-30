@@ -38,39 +38,48 @@ export default function Routing () {
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
 
+  const makeNewUser = () => {
+    var ref = new Date();
+    var datetime = ref.toString().slice(4, 25);
+    firebase.auth().signInAnonymously().then(() => {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          var uid = user.uid;
+          setUid(uid);
+          localStorage.setItem('chooseoneUid', uid);
+
+          var new_user = {
+            email: '',
+            uid: uid,
+            created_at: datetime,
+            question_voted: [],
+            question_created: [],
+            question_liked: [],
+            username: '',
+          };
+          db.collection('users').doc(uid).set(new_user).then(() => {
+            setUid(new_user);
+          });
+        }
+      });          
+    })
+  }
+
   useEffect(() => {
     if(uid !== null) return null;
-    const lc = localStorage.getItem('chooseoneUid');
+    const ls = localStorage.getItem('chooseoneUid');
 
     if(uid === null) {
-      if (lc === null){
-        var ref = new Date();
-        var datetime = ref.toString().slice(4, 25);
-        firebase.auth().signInAnonymously()
-          .then(() => {
-            firebase.auth().onAuthStateChanged((user) => {
-              if (user) {
-                var uid = user.uid;
-                setUid(uid);
-                localStorage.setItem('chooseoneUid', uid);
-
-                var new_user = {
-                  email: '',
-                  uid: uid,
-                  created_at: datetime,
-                  question_voted: [],
-                  question_created: [],
-                  question_liked: [],
-                  username: '',
-                };
-                db.collection('users').doc(uid).set(new_user).then(() => {
-                  setUid(new_user);
-                });
-              }
-            });          
-          })
+      if (ls === null){
+        makeNewUser();
       }else{
-        setUid(lc);
+        db.collection('users').doc(ls).get().then((doc) => {
+          if(doc.exists) setUid(ls);
+          else{ 
+            localStorage.removeItem('chooseoneUid');
+            makeNewUser();
+          }
+        })
       }
     }
   }, [uid]);

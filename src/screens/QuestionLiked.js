@@ -48,12 +48,12 @@ export default function QuestionLiked (props) {
   return (
     <Fragment>
       <h3 className={styles.title}>Questions You Liked</h3>
-      {questions === [] && (
-        <pre>        There are no questions you like</pre>
-      )}
-      {questions !== [] && (
+      {questions !== null && questions.length === 0
+        ?
+        <pre>   There are no questions you like.</pre>
+        :
         <QuestionList questions={questions} />
-      )}
+      }
     </Fragment>
   )
 }

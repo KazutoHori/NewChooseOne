@@ -301,6 +301,7 @@ const useStyles = makeStyles(() => createStyles({
     },
     forSmallerVer: {
       paddingLeft: 15,
+      marginTop: 10,
     },
     category: {
       fontSize: 12,

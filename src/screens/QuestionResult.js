@@ -407,6 +407,7 @@ const useStyles = makeStyles(() => createStyles({
     },
     forSmallerVer: {
       paddingLeft: 15,
+      marginTop: 10,
     },
     table: {
       filter: 'drop-shadow(5px 0px 4px rgba(160, 160, 160, 0.7))',

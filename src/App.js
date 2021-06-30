@@ -8,7 +8,7 @@ import About from './screens/About';
 import Contact from './screens/Contact';
 import QuestionCreate from './screens/QuestionCreate';
 import QuestionLiked from './screens/QuestionLiked';
-import QuestionAsked from './screens/QuestionAsked';
+import QuestionMade from './screens/QuestionMade';
 import QuestionVoted from './screens/QuestionVoted';
 import QuestionCategory from './screens/QuestionCategory';
 import QuestionSearch from './screens/QuestionSearch';
@@ -32,7 +32,7 @@ export default function App (props) {
                 <Route exact path='/about' component={About}/>
                 <Route exact path="/contact" component={Contact} />
                 <Route exact path="/create" render={ () => <QuestionCreate uid={uid}/> } />
-                <Route exact path="/made" render={ () => <QuestionAsked uid={uid}/> } />
+                <Route exact path="/made" render={ () => <QuestionMade uid={uid}/> } />
                 <Route exact path="/voted" render={ () => <QuestionVoted uid={uid}/> } />
                 <Route exact path="/liked" render={ () => <QuestionLiked uid={uid}/> } />
                 <Route path="/category/:category" render={ (props) => <QuestionCategory uid={uid} {...props} /> } />

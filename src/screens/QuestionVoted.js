@@ -37,7 +37,7 @@ export default function Questionvoted (props) {
         // eslint-disable-next-line no-loop-func
         db.collection('questions').doc(qs[i].question).get().then((doc) => {
           if(doc.exists){
-            ques.unshift(doc.data())
+            ques.unshift(doc.data());
             setQuestions(ques);
           }
         });
@@ -47,13 +47,13 @@ export default function Questionvoted (props) {
   
   return (
     <Fragment>
-      <h3 className={styles.title}>Questions You voted</h3>
-        {questions === [] && (
-          <pre>        You have not answered any questions yet.</pre>
-        )}
-        {questions !== [] && (
+      <h3 className={styles.title}>Questions You Voted</h3>
+        {questions !== null && questions.length === 0
+          ?
+          <pre>   You haven't voted any questions.</pre>
+          :
           <QuestionList questions={questions} />
-        )}
+        }
     </Fragment>
   )
 }
