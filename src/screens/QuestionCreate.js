@@ -191,6 +191,7 @@ export default function QuestionCreate (props) {
       <div className={styles.choicePos}>
         <Input
           id="standard-adornment-weight"
+          autoComplete={false}
           value={choices[i]}
           className={styles.choiceInput}
           onChange={(event) => choiceChangeText(event, i)}
@@ -217,6 +218,7 @@ export default function QuestionCreate (props) {
         <h4 className={styles.labels}>Title</h4>
         <Input
           id="standard-adornment-weight"
+          autoComplete={false}
           className={styles.titleInput}
           onChange={(event) => titleChangeText(event)}
           value={title}
