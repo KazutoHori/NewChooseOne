@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import QuestionList from '../components/QuestionList';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -11,7 +10,9 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { WindMillLoading } from 'react-loadingg';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Helmet } from "react-helmet";
 
+import QuestionList from '../components/QuestionList';
 import ModalDelete from '../components/ModalDelete';
 import PieChart from '../components/PieChart';
 import BarChart from '../components/BarChart';
@@ -71,6 +72,13 @@ export default function QuestionResult (props) {
   const notUseSkeleton = relatedQues.length !== 0;
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
+  var content = '';
+  if(notUseSkeleton){
+    for(var i=0; i<the_question.choices.length; i++){
+      if(i) content += the_question.choices[i].choice_text;
+      else content += ' vs ' + the_question.choices[i].choice_text;
+    }
+  }
 
   useEffect(() => {
     if(uid === null || the_question !== null) return null;
@@ -189,6 +197,12 @@ export default function QuestionResult (props) {
 
   return (
     <Fragment>
+      <Helmet
+          title = {notUseSkeleton && the_question.title + ' - ChooseOne'}
+          meta={[
+            { name: 'description', content: { content } }
+          ]}
+      />
       <div className={styles.resultsPos}>
 
         <div className={styles.forSmallerVer}>

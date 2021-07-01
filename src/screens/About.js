@@ -53,9 +53,6 @@ const useStyles = makeStyles(() => createStyles({
     fontStyle: 'normal',
     fontWeight: 700,
     textAlign: 'center',
-    fontFamily: 'lust-script, sans-serif',
-    fontStyle: 'normal',
-    fontWeight: 700,
   },
   p: {
     lineHeight: 3,

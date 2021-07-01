@@ -52,7 +52,6 @@ export default class QuestionMade extends React.Component {
 
   render() {
     const { questions } = this.state;
-    console.log(questions);
     // const styles = useStyles();
 
     return (

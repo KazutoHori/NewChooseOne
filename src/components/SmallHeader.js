@@ -181,26 +181,26 @@ export default function SmallHeader (props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => window.location.href = '/'} className={classes.menuItemPos}>
-        <IconButton style={{ outline: 'none', }}  aria-label="Home" color="">
-          <HomeIcon />
+        <IconButton style={{ outline: 'none', }}  aria-label="Home" color="inherit">
+          <HomeIcon style={{ color: 'rgb(40, 168, 69)'}}/>
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Home</p></div>
       </MenuItem>
       <MenuItem onClick={(event) => setRankingAnchorEl(event.currentTarget)} className={classes.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="Ranking" color="inherit">
-          <BsFillAwardFill />
+          <BsFillAwardFill color='rgb(255, 192, 8)' />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Ranking</p></div>
       </MenuItem>
       <MenuItem onClick={(event) => setCategoryAnchorEl(event.currentTarget)} className={classes.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
-          <LocalOfferIcon />
+          <LocalOfferIcon style={{ color: 'rgb(3, 122, 255)' }} />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Category</p></div>
       </MenuItem>
       <MenuItem onClick={() => window.location.href = '/about'}  className={classes.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="About ChooseOne" color="inherit">
-          <InfoIcon />
+          <InfoIcon style={{ color: 'red' }} />
         </IconButton>
         <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>About</p></div>
       </MenuItem>

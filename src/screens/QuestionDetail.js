@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import { Helmet } from "react-helmet";
 
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -62,6 +63,13 @@ export default function QuestionDetail (props) {
   var choiceSkeleton = [];
   for(var i=0; i<(5-smallDisplay*2); i++){
     choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15 - smallDisplay*5}/></SkeletonTheme></div>)
+  }
+  var content = '';
+  if(the_question){
+    for(var i=0; i<the_question.choices.length; i++){
+      if(i) content += the_question.choices[i].choice_text;
+      else content += ' vs ' + the_question.choices[i].choice_text;
+    }
   }
 
 
@@ -179,6 +187,12 @@ export default function QuestionDetail (props) {
 
   return (
     <Fragment>
+      <Helmet
+          title = {the_question && the_question.title + ' - ChooseOne'}
+          meta={[
+            { name: 'description', content: { content } }
+          ]}
+      />
       <div className={styles.detailPos}>
 
         <div className={styles.forSmallerVer}>
