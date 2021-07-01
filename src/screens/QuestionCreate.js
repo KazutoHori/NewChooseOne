@@ -1,5 +1,5 @@
 /* eslint-disable no-redeclare */
-import React, { useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { slugify, timeToDay } from '../utils/Funcs.js';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -156,7 +156,7 @@ export default function QuestionCreate (props) {
       likes: 0,
       SUQ: ifSuperUser,
     }
-
+    
     db.collection('questions').doc(slug).set(new_question);
     await db.collection('users').doc(uid).update({
       question_created: firebase.firestore.FieldValue.arrayUnion(slug)
@@ -188,19 +188,19 @@ export default function QuestionCreate (props) {
 
   const onChoiceDelete = (i) => {
     var copy = choices.slice();
-    copy.splice(i, 1)
-    added.splice(i, 1)
+    copy.splice(i, 1);
     setChoices(copy);
     setHowManyChoice(howManyChoice-1);
   }
 
+  var added = [];
   for (let i=0; i<howManyChoice; i++){
     added.push(
       <div className={styles.choicePos}>
         <Input
           id="standard-adornment-weight"
           autoComplete={false}
-          value={choices[i]}
+          value={choices[i] ? choices[i] : ''}
           className={styles.choiceInput}
           onChange={(event) => choiceChangeText(event, i)}
           startAdornment={<InputAdornment position="start">{i+1}. </InputAdornment>}
