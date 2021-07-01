@@ -90,11 +90,12 @@ export default function QuestionCreate (props) {
       }else{
         var text = ifSuperUser ? choices[i].slice(0, -3) : choices[i];
         var votes = ifSuperUser ? choices[i].slice(-3) : 0;
-        if(ifSuperUser && !'123456789'.includes(votes[0])){
+        if(ifSuperUser && !'0123456789'.includes(votes[0])){
           setWarning('選択肢の最後の数字忘れてる');
           setTimeout(() => setWarning(''),5000);
           return null;
         }
+        if(votes[0] === '0') votes = votes[1] + votes[2];
         totalVotes += parseInt(votes, 10);
         new_choices.push({
           choice_text: text,
