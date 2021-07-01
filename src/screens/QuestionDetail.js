@@ -116,34 +116,24 @@ export default function QuestionDetail (props) {
     setPushed(true);
     var the_slug = the_question.slug;
     var your_vote = the_question.choices[the_choice].choice_text;
-    var copy=Array.from(the_question.choices);
-    var remove_data = Object.assign({}, copy[the_choice]);
-    var add_data = {
-      choice_text: copy[the_choice].choice_text,
-      votes: parseInt(copy[the_choice].votes, 10)+1,
-    };
+    var copy = the_question.choices.slice();
 
     copy[the_choice].votes=parseInt(copy[the_choice].votes, 10)+1;
-    the_question.choices=copy;
 
     await db.collection('questions').doc(the_slug).update({
-      choices: firebase.firestore.FieldValue.arrayRemove(remove_data)
+      choices: copy
     });
-    await db.collection('questions').doc(the_slug).update({
-      choices: firebase.firestore.FieldValue.arrayUnion(add_data)
-    });
+
     await db.collection('questions').doc(the_slug).update({
       all_votes: firebase.firestore.FieldValue.increment(1)
     })
 
-    await db.collection('users').doc(user.uid).set({
+    await db.collection('users').doc(user.uid).update({
       question_voted: firebase.firestore.FieldValue.arrayUnion({ question: the_slug, answer: your_vote}) },
-      { merge: true}
     );
 
-    await db.collection('questions').doc(the_slug).set({
+    await db.collection('questions').doc(the_slug).update({
       users_voted: firebase.firestore.FieldValue.arrayUnion(user.uid) },
-      { merge: true }
     );
 
     window.location.href = "/result/" + the_slug;
