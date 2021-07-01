@@ -186,6 +186,14 @@ export default function QuestionCreate (props) {
     setCategories(copy);
   }
 
+  const onChoiceDelete = (i) => {
+    var copy = choices.slice();
+    copy.splice(i, 1)
+    added.splice(i, 1)
+    setChoices(copy);
+    setHowManyChoice(howManyChoice-1);
+  }
+
   for (let i=0; i<howManyChoice; i++){
     added.push(
       <div className={styles.choicePos}>
@@ -196,7 +204,7 @@ export default function QuestionCreate (props) {
           className={styles.choiceInput}
           onChange={(event) => choiceChangeText(event, i)}
           startAdornment={<InputAdornment position="start">{i+1}. </InputAdornment>}
-          endAdornment={i > 1 && <InputAdornment position="end"><Tooltip title='Delete'><IconButton aria-label="delete" style={{ outline: 'none', }} onClick={() => setHowManyChoice(howManyChoice-1)} color='secondary'><DeleteIcon /></IconButton></Tooltip></InputAdornment>}
+          endAdornment={i > 1 && <InputAdornment position="end"><Tooltip title='Delete'><IconButton aria-label="delete" style={{ outline: 'none', }} onClick={() => onChoiceDelete(i)} color='secondary'><DeleteIcon /></IconButton></Tooltip></InputAdornment>}
           aria-describedby="standard-weight-helper-text"
           inputProps={{
             'aria-label': 'weight',
@@ -204,9 +212,6 @@ export default function QuestionCreate (props) {
         />
       </div>
     );
-  }
-  if(added.length > howManyChoice) {
-    added.pop();
   }
 
   return (
