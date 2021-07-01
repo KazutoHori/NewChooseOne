@@ -99,7 +99,7 @@ export default function QuestionCreate (props) {
         totalVotes += parseInt(votes, 10);
         new_choices.push({
           choice_text: text,
-          votes: votes,
+          votes: parseInt(votes, 10),
         });
       }
     }
