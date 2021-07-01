@@ -37,7 +37,7 @@ export default function QuestionList (props) {
           )}
           {!notUseSkeleton && <Skeleton style={{ marginLeft: 10 }} width={60} />}
         </p>
-        <h4 className='cali2'><a className='link' href={'/detail/'+the_question.slug}>{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={'80%'} height={20}  /></SkeletonTheme> }</a></h4>
+        <h4 className='cali2'><a className='link' href={'/q/'+the_question.slug}>{notUseSkeleton ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={'80%'} height={20}  /></SkeletonTheme> }</a></h4>
         <p className="date">&ensp;&ensp;&ensp;{notUseSkeleton ? the_question.created_on : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={100} height={7}  /></SkeletonTheme> } </p>
         <ul>
           {notUseSkeleton && (

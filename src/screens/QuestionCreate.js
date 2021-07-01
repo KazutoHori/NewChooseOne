@@ -156,13 +156,13 @@ export default function QuestionCreate (props) {
       likes: 0,
       SUQ: ifSuperUser,
     }
-    
+
     db.collection('questions').doc(slug).set(new_question);
     await db.collection('users').doc(uid).update({
       question_created: firebase.firestore.FieldValue.arrayUnion(slug)
     });
 
-    window.location.href = "/detail/" + slug;
+    window.location.href = "/q/" + slug;
   };
 
   const titleChangeText = (event) => {

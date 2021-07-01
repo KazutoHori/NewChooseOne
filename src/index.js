@@ -12,7 +12,6 @@ import SmallHeader from './components/SmallHeader';
 import Footer from './components/Footer';
 import BottomBar from './components/BottomBar';
 import QuestionDetail from './screens/QuestionDetail';
-import QuestionResult from './screens/QuestionResult';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -119,8 +118,7 @@ export default function Routing () {
             <div className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
               <div className={styles.container}>
                 <Switch>
-                  <Route path="/detail/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
-                  <Route path="/result/:the_slug" render={ (props) => <QuestionResult uid={uid} {...props} /> } />
+                  <Route path="/q/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
                   <Route path="/" render={ () => <App uid={uid}/> } />
                 </Switch>
               </div>

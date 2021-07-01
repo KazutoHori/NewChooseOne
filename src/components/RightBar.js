@@ -45,25 +45,25 @@ export default function RightBar (props) {
               {idx === 0 && (
                 <Fragment>
                   🥇 
-                  <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
+                  <a className="link" href={'/q/' + question.slug}><h6 style={{color: 'rgb(223, 176, 0)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
               {idx === 1 && (
                 <Fragment>
                   🥈 
-                  <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
+                  <a className="link" href={'/q/' + question.slug}><h6 style={{color: 'rgb(174, 179, 181)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
               {idx === 2 && (
                 <Fragment>
                   🥉 
-                  <a className="link" href={'/detail/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
+                  <a className="link" href={'/q/' + question.slug}><h6 style={{color: 'rgba(184, 115, 51, 0.692)'}}><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
               {idx !== 0 && idx !== 1 && idx !== 2 && (
                 <Fragment>
                   <div style={styles.number}><p>{idx+1}</p></div>
-                  <a className="link" href={'/detail/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
+                  <a className="link" href={'/q/' + question.slug}><h6><strong>{question.title}</strong></h6></a>
                 </Fragment>
               )}
             </div>
