@@ -70,8 +70,16 @@ export default function QuestionCreate (props) {
       return null;
     }
     var ifSuperUser = title.slice(0, 5) === 'SUQ__';
-    if(ifSuperUser) var finalTitle = title.slice(5);
-    else var finalTitle = title;
+    var likes = 0;
+    if(ifSuperUser){
+      if(!'0123456789'.includes(title[title.length-2])){
+        setWarning('Likesの入力を忘れてるよ');
+        setTimeout(() => setWarning(''),5000);
+        return null;
+      }
+      likes = parseInt(title.slice(-2), 10);
+      var finalTitle = title.slice(5).slice(0, -2);
+    } else var finalTitle = title;
     
     var S = new Set(choices);
     if(choices.length !== S.size) {
@@ -153,7 +161,7 @@ export default function QuestionCreate (props) {
       users_voted: [],
       all_votes: totalVotes,
       active: true,
-      likes: 0,
+      likes: likes,
       SUQ: ifSuperUser,
     }
 
