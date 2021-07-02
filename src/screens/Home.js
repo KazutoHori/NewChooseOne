@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
+import { Helmet } from "react-helmet";
 
 // Firebase
 import firebase from 'firebase/app';
@@ -36,6 +37,12 @@ export default function Home () {
 
   return (
     <Fragment>
+      <Helmet
+        title = 'ChooseOne'
+        meta={[
+          { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+        ]}
+      />
       <QuestionList questions={questions} />
     </Fragment>
   )

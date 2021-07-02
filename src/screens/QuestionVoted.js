@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
 import { makeStyles, createStyles } from '@material-ui/core';
+import { Helmet } from "react-helmet";
 
 // Firebase
 import firebase from 'firebase/app';
@@ -19,6 +20,7 @@ const firebaseConfig = {
 if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
+// export default function QuestionVoted (props) {
 export default class QuestionVoted extends React.Component {
 
   constructor(props){
@@ -27,6 +29,28 @@ export default class QuestionVoted extends React.Component {
       questions: null,
     }
   }
+
+  // const [questions, setQuestions] = useState(null);
+  // const uid = props.uid;
+
+  // useEffect(() => {
+  //   if (uid === null || questions !== null) return null;
+  //   var ques = [];
+  //   db.collection("users").doc(uid).get().then((doc) => {
+  //     ques = [];
+  //     var qs = doc.data().question_voted;
+  //     if(qs.length === 0) setQuestions([]);
+  //     for(let i=0; i<qs.length; i++){
+  //       // eslint-disable-next-line no-loop-func
+  //       db.collection('questions').doc(qs[i].question).get().then((doc) => {
+  //         if(doc.exists){
+  //           ques.unshift(doc.data())
+  //           setQuestions(ques);
+  //         }
+  //       })
+  //     }
+  //   });
+  // }, [uid, questions]);
 
   componentDidMount() {
     const { uid } = this.props;
@@ -55,6 +79,12 @@ export default class QuestionVoted extends React.Component {
 
     return (
       <Fragment>
+        <Helmet
+          title = 'Questions You Voted - ChooseOne'
+          meta={[
+            { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+          ]}
+        />
         <h3 className='headline'>Questions You Voted</h3>
         {questions !== null && questions.length === 0
           ?

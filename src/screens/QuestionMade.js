@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
 import { makeStyles, createStyles } from '@material-ui/core';
+import { Helmet } from "react-helmet";
 
 // Firebase
 import firebase from 'firebase/app';
@@ -56,6 +57,12 @@ export default class QuestionMade extends React.Component {
 
     return (
       <Fragment>
+        <Helmet
+          title = 'Questions You Made - ChooseOne'
+          meta={[
+            { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+          ]}
+        />
         <h3 className='headline'>Questions You Made</h3>
         {questions !== null && questions.length === 0
           ?
@@ -95,12 +102,4 @@ const styles = {
     fontStyle: 'normal',
     fontWeight: 700,
   },
-
-  '@media (max-width: 500px)': {
-    title: {
-      fontSize: 22,
-      marginLeft: 15,
-      marginTop: 7,
-    }
-  }
 };

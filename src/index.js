@@ -12,6 +12,7 @@ import SmallHeader from './components/SmallHeader';
 import Footer from './components/Footer';
 import BottomBar from './components/BottomBar';
 import QuestionDetail from './screens/QuestionDetail';
+import './App.scss';
 
 // Firebase
 import firebase from 'firebase/app';

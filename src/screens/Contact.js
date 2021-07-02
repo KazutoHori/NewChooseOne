@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core';
+import { Helmet } from "react-helmet";
 
 export default function Contact() {
 
@@ -7,6 +8,12 @@ export default function Contact() {
 
   return (
     <Fragment>
+      <Helmet
+        title = 'Contact Us - ChooseOne'
+        meta={[
+          { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+        ]}
+      />
       <div className={styles.contact}>
         <h2 className={styles.title}>Contact Us</h2>
         <p className={styles.p}>If you have any questions or thoughts on this site,<br />

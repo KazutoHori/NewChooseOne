@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { WindMillLoading } from 'react-loadingg';
 import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Helmet } from "react-helmet";
 
 import QuestionList from '../components/QuestionList.js';
 
@@ -68,6 +69,12 @@ export default function QuestionSearch (props) {
   }else{
     return (
       <Fragment>
+        <Helmet
+          title = 'Search Results - ChooseOne'
+          meta={[
+            { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+          ]}
+        />
         <h3 className={styles.title}>Search Results</h3>
         {results.length === 0 && <pre className={styles.forSmallNoMatch}>      Your search - {query} - did not match any questions.</pre>}
         {results.length !== 0 && (

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, Fragment } from 'react';
+import { Helmet } from "react-helmet";
 
 import QuestionList from '../components/QuestionList.js';
 import { makeStyles, createStyles } from '@material-ui/core';
@@ -39,7 +40,13 @@ export default function QuestionCategory (props) {
 
   return (
     <Fragment>
-      <h3 className={styles.title}>Questions Categorized As {category}</h3>
+      <Helmet
+        title = {'Questions Categorized as' + category + ' - ChooseOne'}
+        meta={[
+          { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+        ]}
+      />
+      <h3 className={styles.title}>Questions Categorized as {category}</h3>
       <QuestionList questions={questions} />
     </Fragment>
   )

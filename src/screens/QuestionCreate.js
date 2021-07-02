@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { WindMillLoading } from 'react-loadingg';
+import { Helmet } from "react-helmet";
 
 // Firebase
 import firebase from 'firebase/app';
@@ -224,8 +225,14 @@ export default function QuestionCreate (props) {
 
   return (
     <Fragment>
+      <Helmet
+        title = 'Add New Questions - ChooseOne'
+        meta={[
+          { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+        ]}
+      />
       <div className={styles.add}>
-        <h3 className={styles.title}>Let's Add A New Question!</h3>
+        <h3 className={styles.title}>Let's Add New Questions!</h3>
         
         {/* タイトル */}
         <h4 className={styles.labels}>Title</h4>

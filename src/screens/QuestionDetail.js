@@ -19,7 +19,6 @@ import QuestionList from '../components/QuestionList';
 import ModalDelete from '../components/ModalDelete';
 import PieChart from '../components/PieChart';
 import BarChart from '../components/BarChart';
-import '../App.scss';
 
 // Firebase
 import firebase from 'firebase/app';

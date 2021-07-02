@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import QuestionList from '../components/QuestionList.js';
 import { makeStyles, createStyles } from '@material-ui/core';
+import { Helmet } from "react-helmet";
 
 // Firebase
 import firebase from 'firebase/app';
@@ -55,7 +56,13 @@ export default class QuestionLiked extends React.Component {
 
     return (
       <Fragment>
-        <h3 className='headline'>Questions You Liked</h3>
+        <Helmet
+          title = 'Questions You Like - ChooseOne'
+          meta={[
+            { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+          ]}
+        />
+        <h3 className='headline'>Questions You Like</h3>
         {questions !== null && questions.length === 0
           ?
           <pre>   There are no questions you like.</pre>
