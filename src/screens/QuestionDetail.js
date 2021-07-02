@@ -87,7 +87,6 @@ export default function QuestionDetail (props) {
   // QuestionDetail
   const [warning, setWarning] = useState(null);
   const [the_choice, setTheChoice] = useState(null);
-  const [pushed, setPushed] = useState(false);
   var choiceSkeleton = [];
   for(var i=0; i<(5-smallDisplay*2); i++){
     choiceSkeleton.push(<div style={{ marginLeft: 30, marginTop: 15 }}><SkeletonTheme Primarycolor="white" highlightColor="#d3d3d3"><Skeleton duration={2} color='white' width={100} height={15 - smallDisplay*5}/></SkeletonTheme></div>)
@@ -147,8 +146,7 @@ export default function QuestionDetail (props) {
       setTimeout(() => setWarning(''),2500);
       return null;
     }
-    if(pushed) return null;
-    setPushed(true);
+
     var the_slug = the_question.slug;
     var your_vote = the_question.choices[the_choice].choice_text;
     setYourVote(your_vote);
@@ -158,7 +156,7 @@ export default function QuestionDetail (props) {
 
     copy.choices[the_choice].votes=parseInt(copy.choices[the_choice].votes, 10)+1;
     
-    setTheQuestion(copy);
+    setTheQuestion(copy.__proto__);
 
     await db.collection('questions').doc(the_slug).update({
       choices: copy.choices
@@ -188,7 +186,7 @@ export default function QuestionDetail (props) {
       });
       setTheQuestion({ ...the_question, likes: the_question.likes-1 });
     }else{
-      setLikeIt({ likeIt: true });
+      setLikeIt(true);
       db.collection("users").doc(user.uid).update({
         question_liked: firebase.firestore.FieldValue.arrayUnion(the_question.slug)
       });
