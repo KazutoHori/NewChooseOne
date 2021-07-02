@@ -178,7 +178,7 @@ export default function QuestionDetail (props) {
   return (
     <Fragment>
       <Helmet
-          title = {the_question && the_question.title + ' - ChooseOne'}
+          title = {the_question && the_question.title}
           meta={[
             { name: 'description', content: { content } }
           ]}
