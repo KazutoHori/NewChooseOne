@@ -16,7 +16,7 @@ export default function Footer () {
           <div className={styles.footer_list}>
             <ul>
               <li className={styles.li}><a className={styles.a} href="/about">About ChooseOne</a></li>
-              <li className={styles.li}><a className={styles.a} href="/contact">Contact</a></li>
+              <li className={styles.li}><a className={styles.a} href="/contact">Contact Us</a></li>
             </ul>
           </div>
       </div>

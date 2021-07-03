@@ -128,7 +128,8 @@ const useStyles = makeStyles(() => createStyles({
     zIndex: 2,
   },
   wrapper: {
-    minHeight: window.innerHeight-30,
+    // minHeight: window.innerHeight-30,
+    minHeight: '100vh',
     position: 'relative',/*←相対位置*/
     paddingBottom: 220,/*←footerの高さ*/
     boxSizing: 'border-box',/*←全て含めてmin-height:100vhに*/

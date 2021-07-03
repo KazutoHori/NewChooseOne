@@ -76,7 +76,7 @@ export default function QuestionSearch (props) {
           ]}
         />
         <h3 className={styles.title}>Search Results</h3>
-        {results.length === 0 && <pre className={styles.forSmallNoMatch}>      Your search - {query} - did not match any questions.</pre>}
+        {results.length === 0 && <pre className={styles.forSmallNoMatch}>      No search results for - {query} -</pre>}
         {results.length !== 0 && (
           <Fragment>
             <pre>      - {query} -</pre>
