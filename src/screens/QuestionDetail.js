@@ -11,6 +11,9 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { WindMillLoading } from 'react-loadingg';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Helmet } from "react-helmet";
+import { Wave } from "react-animated-text";
+import { userAtom } from "../index";
+import { useRecoilState } from 'recoil';
 
 // QuestionDetail
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
@@ -68,6 +71,7 @@ export default function QuestionDetail (props) {
   var choicesSorted = [];
   const [relatedQues, setRelatedQues] = useState([]);
   const [answered, setAnswered] = useState(false);
+  // const [user, setUser] = useRecoilState(userAtom);
 
   const loaded = relatedQues.length !== 0;
   const styles = useStyles();
@@ -139,12 +143,14 @@ export default function QuestionDetail (props) {
 
   });
 
-  const onVote = async () => {
-    if(the_choice === null){
-      setWarning('You have not chosen yet');
-      setTimeout(() => setWarning(''),2500);
-      return null;
-    }
+  const onChoice = async (idx) => {
+  // const onVote = async () => {
+  //   if(the_choice === null){
+  //     setWarning('You have not chosen yet');
+  //     setTimeout(() => setWarning(''),2500);
+  //     return null;
+  //   }
+    const the_choice = idx;
 
     var the_slug = the_question.slug;
     var your_vote = the_question.choices[the_choice].choice_text;
@@ -295,9 +301,13 @@ export default function QuestionDetail (props) {
             {loaded && (
               <Fragment>
                 {the_question.choices.map((choice, idx) => (
+                  // <div className={styles.choiceBtnPos}>
+                  //   {idx !== the_choice && <button onClick={() => setTheChoice(idx)} style={{ borderRadius: 15  }} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
+                  //   {idx === the_choice && <button onClick={() => setTheChoice(idx)} style={{ borderRadius: 15  }} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
+                  // </div>
                   <div className={styles.choiceBtnPos}>
-                    {idx !== the_choice && <button onClick={() => setTheChoice(idx)} style={{ borderRadius: 15 }} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
-                    {idx === the_choice && <button onClick={() => setTheChoice(idx)} style={{ borderRadius: 15 }} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
+                    {idx !== the_choice && <button onClick={() => onChoice(idx)} style={{ borderRadius: 15, width: Math.min(300, window.innerWidth*0.6)  }} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
+                    {idx === the_choice && <button onClick={() => onChoice(idx)} style={{ borderRadius: 15, width: Math.min(300, window.innerWidth*0.6) }} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
                   </div>
                 ))}
               </Fragment>
@@ -307,9 +317,20 @@ export default function QuestionDetail (props) {
 
             {loaded && (
               <div className={styles.voteBtnPos}>
-                <Button startIcon={<ThumbUpAltIcon />}  onClick={onVote} style={{ borderRadius: 10 }} className='btn btn-success'>Vote</Button>
+                {/* <Button startIcon={<ThumbUpAltIcon />}  onClick={onVote} style={{ borderRadius: 10 }} className='btn btn-success'>Vote</Button> */}
+                <div className={styles.messageTextPos} >
+                  <Wave
+                    delay={3}
+                    text=" TAP & GET SURPRISED"
+                    // effect='pop'
+                    // effect='jump'
+                    effect='verticalFadeIn'
+                    effectChange={5.0}
+                  />
+                </div>
               </div>
             )}
+
           </div>
         )}
 
@@ -369,13 +390,23 @@ export default function QuestionDetail (props) {
             )}
           </Fragment>
         )}
-        
       </div>
     </Fragment>
   )
 }
 
 const useStyles = makeStyles(() => createStyles({
+  messageTextPos: {
+    fontSize: 13,
+    marginTop: 40,
+    fontFamily: 'Impact, sans-serif',
+    fontStyle: 'italic',
+    fontWeight: 900,
+    letterSpacing: '0.3em',
+    color: 'rgb(40, 168, 69)',
+    textShadow: '0.2 0.5px 0.5px 0px #004',
+    // transform: 'rotate(-10deg)',
+  },
   category: {
     fontFamily: 'latienne-pro, serif',
     fontStyle: 'normal',
@@ -515,10 +546,11 @@ const useStyles = makeStyles(() => createStyles({
     similarPostsPos: {
       width: '100%',
     },
-
-
     voteBtnPos: {
-      marginLeft: 15,
+      marginLeft: 15,   //　元は15
+    },
+    messageTextPos: {
+      marginLeft: 30,
     },
     choiceBtnPos: {
       marginLeft: 35,

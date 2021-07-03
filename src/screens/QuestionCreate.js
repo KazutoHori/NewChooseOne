@@ -15,6 +15,8 @@ import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { WindMillLoading } from 'react-loadingg';
 import { Helmet } from "react-helmet";
+// import { userAtom } from "../index";
+// import { useRecoilState } from 'recoil';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -49,6 +51,7 @@ export default function QuestionCreate (props) {
   var added=[];
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
+  // const [user, setUser] = useRecoilState(userAtom);
   const theme = createMuiTheme({
     palette: {
       primary: {
@@ -167,6 +170,11 @@ export default function QuestionCreate (props) {
     }
 
     db.collection('questions').doc(slug).set(new_question);
+
+    // var copy = Object.create(user);
+    // copy.question_created.push(slug);
+    // setUser(copy.__proto__)
+
     await db.collection('users').doc(uid).update({
       question_created: firebase.firestore.FieldValue.arrayUnion(slug)
     });

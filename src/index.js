@@ -6,6 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import {
+//   RecoilRoot,
+//   atom,
+//   useRecoilState,
+// } from 'recoil';
 
 import Header from './components/Header';
 import SmallHeader from './components/SmallHeader';
@@ -31,12 +36,17 @@ const firebaseConfig = {
 if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
+// export const userAtom = atom({
+//   key: 'userState',
+//   default: null,
+// });
 
 export default function Routing () {
 
   const uid = localStorage.getItem('chooseoneUid');
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
+  // const [user, setUser] = useRecoilState(userAtom);
 
   const makeNewUser = () => {
     let current=new Date();
@@ -58,6 +68,9 @@ export default function Routing () {
             username: '',
           };
           db.collection('users').doc(userId).set(new_user);
+          // db.collection('users').doc(userId).set(new_user).then(() => {
+          //   setUser(new_user);
+          // });
         }
       });          
     })
@@ -66,8 +79,15 @@ export default function Routing () {
 
   useEffect(() => {
     if(uid) return null;
+    makeNewUser()
 
-    makeNewUser();
+    // if(!uid) makeNewUser();
+    // else if(!user){
+    //   db.collection('users').doc(uid).get().then((doc) => {
+    //     console.log(doc.data());
+    //     setUser(doc.data());
+    //   });
+    // }
   });
     
   return (
@@ -155,7 +175,9 @@ const useStyles = makeStyles(() => createStyles({
 
 ReactDOM.render(
   <React.StrictMode>
+    {/* <RecoilRoot> */}
     <Routing />
+    {/* </RecoilRoot> */}
   </React.StrictMode>,
   document.getElementById('root')
 );
