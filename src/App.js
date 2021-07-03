@@ -18,7 +18,6 @@ import RightBar from './components/RightBar';
 
 export default function App (props) {
   
-  const { uid } = props;
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:777px)');
 
@@ -31,13 +30,13 @@ export default function App (props) {
               <Switch>
                 <Route exact path='/about' component={About}/>
                 <Route exact path="/contact" component={Contact} />
-                <Route exact path="/create" render={ () => <QuestionCreate uid={uid}/> } />
-                <Route exact path="/made" render={ () => <QuestionMade uid={uid}/> } />
-                <Route exact path="/voted" render={ () => <QuestionVoted uid={uid}/> } />
-                <Route exact path="/liked" render={ () => <QuestionLiked uid={uid}/> } />
-                <Route path="/category/:category" render={ (props) => <QuestionCategory uid={uid} {...props} /> } />
-                <Route path='/search/:query' render={ (props) => <QuestionSearch uid={uid} {...props} /> } />
-                <Route path='/' render={ () => <Home uid={uid}/> } />
+                <Route exact path="/create" render={ () => <QuestionCreate /> } />
+                <Route exact path="/made" render={ () => <QuestionMade /> } />
+                <Route exact path="/voted" render={ () => <QuestionVoted /> } />
+                <Route exact path="/liked" render={ () => <QuestionLiked /> } />
+                <Route path="/category/:category" render={ (props) => <QuestionCategory  {...props} /> } />
+                <Route path='/search/:query' render={ (props) => <QuestionSearch  {...props} /> } />
+                <Route path='/' render={ () => <Home /> } />
               </Switch>
           </div>
           {!smallDisplay && <RightBar />}

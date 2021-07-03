@@ -29,7 +29,7 @@ export default function Home () {
     db.collection("questions").orderBy('created_at', 'desc').onSnapshot((querySnapshot) => {
       var ques = [];
       querySnapshot.forEach((doc) => {
-          ques.push(doc.data());
+        ques.push(doc.data());
       });
       setQuestions(ques);
     });

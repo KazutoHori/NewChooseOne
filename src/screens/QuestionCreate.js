@@ -39,7 +39,7 @@ for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
 export default function QuestionCreate (props) {
 
-  const uid = props.uid;
+  const uid = localStorage.getItem('chooseoneUid');
   const [categories, setCategories] = useState([]);
   const [howManyChoice, setHowManyChoice] = useState(2);
   const [warning, setWarning] = useState('');

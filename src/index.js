@@ -34,55 +34,41 @@ var db = firebase.firestore();
 
 export default function Routing () {
 
-  const [uid, setUid] = useState(null);
+  const uid = localStorage.getItem('chooseoneUid');
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
 
   const makeNewUser = () => {
-    var ref = new Date();
-    var datetime = ref.toString().slice(4, 25);
+    let current=new Date();
+    current=current.toJSON();
     firebase.auth().signInAnonymously().then(() => {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          var uid = user.uid;
-          setUid(uid);
-          localStorage.setItem('chooseoneUid', uid);
+          var userId = user.uid;
+          localStorage.setItem('chooseoneUid', userId);
+          var at = current.slice(0, 10)+ ' ' + current.slice(11, 19);
 
           var new_user = {
             email: '',
-            uid: uid,
-            created_at: datetime,
+            uid: userId,
+            created_at: at,
             question_voted: [],
             question_created: [],
             question_liked: [],
             username: '',
           };
-          db.collection('users').doc(uid).set(new_user).then(() => {
-            setUid(new_user);
-          });
+          db.collection('users').doc(userId).set(new_user);
         }
       });          
     })
+
   }
 
   useEffect(() => {
-    if(uid !== null) return null;
-    const ls = localStorage.getItem('chooseoneUid');
+    if(uid) return null;
 
-    if(uid === null) {
-      if (ls === null){
-        makeNewUser();
-      }else{
-        db.collection('users').doc(ls).get().then((doc) => {
-          if(doc.exists) setUid(ls);
-          else{ 
-            localStorage.removeItem('chooseoneUid');
-            makeNewUser();
-          }
-        })
-      }
-    }
-  }, [uid]);
+    makeNewUser();
+  });
     
   return (
     <Fragment>
@@ -117,8 +103,8 @@ export default function Routing () {
             <div className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
               <div className={styles.container}>
                 <Switch>
-                  <Route path="/q/:the_slug" render={ (props) => <QuestionDetail uid={uid} {...props} /> } />
-                  <Route path="/" render={ () => <App uid={uid}/> } />
+                  <Route path="/q/:the_slug" render={ (props) => <QuestionDetail {...props} /> } />
+                  <Route path="/" render={ () => <App /> } />
                 </Switch>
               </div>
             </div>

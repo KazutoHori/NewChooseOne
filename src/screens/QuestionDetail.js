@@ -56,7 +56,7 @@ const theme = createMuiTheme({
 
 export default function QuestionDetail (props) {
 
-  const uid = props.uid;
+  const uid = localStorage.getItem('chooseoneUid');
   const the_slug = props.match.params.the_slug;
 
   const [modalVisible, setModalVisible] = useState(false);

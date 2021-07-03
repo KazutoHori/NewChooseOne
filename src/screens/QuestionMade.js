@@ -31,7 +31,7 @@ export default class QuestionMade extends React.Component {
   }
 
   componentDidMount() {
-    const { uid } = this.props;
+    const uid = localStorage.getItem('chooseoneUid');
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];
@@ -75,7 +75,7 @@ export default class QuestionMade extends React.Component {
   }
 
   componentDidUpdate() {
-    const { uid } = this.props;
+    const uid = localStorage.getItem('chooseoneUid');
     if (uid === null || this.state.questions !== null) return null;
 
     var ques = [];

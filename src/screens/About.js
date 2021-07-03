@@ -47,6 +47,7 @@ const useStyles = makeStyles(() => createStyles({
     fontStyle: 'normal',
     fontWeight: 700,
     marginBottom: 15,
+    textAlign: 'center',
   },
   about: {
     backgroundColor: 'white',
