@@ -1,12 +1,14 @@
 import React, { useState, Fragment } from 'react';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { Pagination, PaginationItem } from '@material-ui/lab';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Question from './Question';
 
 export default function QuestionList (props) {
 
   const questions = props.questions;
+  const smallDisplay = useMediaQuery('(max-width:500px)');
 
   const [page, setPage] = useState(1);
 
@@ -46,7 +48,7 @@ export default function QuestionList (props) {
       ))}
       <div style={styles.paginationPos}>
         <ThemeProvider theme={theme}>
-          {Math.ceil(questions.length/10) !== 1 && <Pagination size={'medium'} style={styles.pagination} onChange={onPageChange} page={page} count={Math.ceil(questions.length/10)} color='primary' renderItem={(item) => <PaginationItem style={{ outline: 'none' }} {...item} />} />}
+          {Math.ceil(questions.length/10) !== 1 && <Pagination size={smallDisplay ? 'small' : 'medium'} style={styles.pagination} onChange={onPageChange} page={page} count={Math.ceil(questions.length/10)} color='primary' renderItem={(item) => <PaginationItem style={{ outline: 'none' }} {...item} />} />}
         </ThemeProvider>
       </div>
     </Fragment>

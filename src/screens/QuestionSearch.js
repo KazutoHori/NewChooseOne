@@ -107,7 +107,7 @@ const useStyles = makeStyles(() => createStyles({
       marginTop: 7,
     },
     forSmallNoMatch: {
-      fontSize: 3,
+      fontSize: 12,
     },
     loadingPos: {
       position: 'relative',
