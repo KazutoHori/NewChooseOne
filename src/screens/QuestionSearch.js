@@ -70,7 +70,7 @@ export default function QuestionSearch (props) {
     return (
       <Fragment>
         <Helmet
-          title = 'Search Results - ChooseOne'
+          title = 'Search Results'
           meta={[
             { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
           ]}

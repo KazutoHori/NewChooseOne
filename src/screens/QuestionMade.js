@@ -58,7 +58,7 @@ export default class QuestionMade extends React.Component {
     return (
       <Fragment>
         <Helmet
-          title = 'Questions You Made - ChooseOne'
+          title = 'Questions You Made'
           meta={[
             { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
           ]}
