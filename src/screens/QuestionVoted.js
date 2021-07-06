@@ -41,7 +41,7 @@ export default function QuestionVoted (props) {
           return db.collection('questions').doc(q.question).get();
         })
         Promise.all(promises).then((docs) => {
-          const data = docs.filter((doc) => doc.exists).map((doc) => doc.data())
+          const data = docs.reverse().filter((doc) => doc.exists).map((doc) => doc.data())
           setQuestions(data);
         })
       }
