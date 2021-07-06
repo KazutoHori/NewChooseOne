@@ -21,85 +21,57 @@ if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
 
-export default class QuestionMade extends React.Component {
+export default function QuestionMade (props) {
+  
+  const [questions, setQuestions] = useState(null);
+  const uid = localStorage.getItem('chooseoneUid');
+  const styles = useStyles();
 
-  constructor(props){
-    super(props);
-    this.state = {
-      questions: null,
-    }
-  }
-
-  componentDidMount() {
-    const uid = localStorage.getItem('chooseoneUid');
-    if (uid === null || this.state.questions !== null) return null;
-
-    var ques = [];
-    db.collection("users").doc(uid).get().then((user) => {
-      ques = [];
-      var qs = user.data().question_created;
-      if(qs.length === 0) this.setState({ questions: [] })
-      for(let i=0; i<qs.length; i++){
-        // eslint-disable-next-line no-loop-func
-        db.collection('questions').doc(qs[i]).get().then((doc) => {
-          if(doc.exists){
-            ques.unshift(doc.data());
-            this.setState({ questions: ques});
-          }
-        });
+  useEffect(() => {
+    db.collection("users").doc(uid).get().then((doc) => {
+      if(doc.exists){
+        var qs = doc.data().question_created || [];
+        const promises = qs.map((q) => {
+          return db.collection('questions').doc(q).get();
+        })
+        Promise.all(promises).then((docs) => {
+          const data = docs.filter((doc) => doc.exists).map((doc) => doc.data())
+          setQuestions(data);
+        })
       }
     });
-  }
+  });
 
-  render() {
-    const { questions } = this.state;
-    // const styles = useStyles();
-
-    return (
-      <Fragment>
-        <Helmet
-          title = 'Questions You Made'
-          meta={[
-            { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
-          ]}
-        />
-        <h3 className='headline'>Questions You Made</h3>
-        {questions !== null && questions.length === 0
-          ?
-          <pre>   You haven't made any questions.</pre>
-          :
-          <QuestionList questions={questions} />
-        }
-      </Fragment>
-    )
-  }
-
-  componentDidUpdate() {
-    const uid = localStorage.getItem('chooseoneUid');
-    if (uid === null || this.state.questions !== null) return null;
-
-    var ques = [];
-    db.collection("users").doc(uid).get().then((user) => {
-      ques = [];
-      var qs = user.data().question_created;
-      if(qs.length === 0) this.setState({ questions: [] })
-      for(let i=0; i<qs.length; i++){
-        // eslint-disable-next-line no-loop-func
-        db.collection('questions').doc(qs[i]).get().then((doc) => {
-          if(doc.exists){
-            ques.unshift(doc.data())
-            this.setState({ questions: ques});
-          }
-        });
+  return (
+    <Fragment>
+      <Helmet
+        title = 'Questions You Made'
+        meta={[
+          { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
+        ]}
+      />
+      <h3 className={styles.title}>Questions You Made</h3>
+      {questions !== null && questions.length === 0
+        ?
+        <pre>   You haven't made any questions.</pre>
+        :
+        <QuestionList questions={questions} />
       }
-    });
-  }
+    </Fragment>
+  )
 }
 
-const styles = {
+const useStyles = makeStyles(() => createStyles({
   title: {
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
   },
-};
+  '@media (max-width: 500px)': {
+    title: {
+      fontSize: 22,
+      marginLeft: 13,
+      marginTop: 7,
+    },
+  }
+}));
