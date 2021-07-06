@@ -28,6 +28,7 @@ export default function QuestionLiked (props) {
   const styles = useStyles();
 
   useEffect(() => {
+    if(uid === null || questions !== null) return null;
     db.collection("users").doc(uid).get().then((doc) => {
       if(doc.exists){
         var qs = doc.data().question_liked || [];
