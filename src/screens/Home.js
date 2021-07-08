@@ -26,9 +26,9 @@ export default function Home () {
 
   useEffect(() => {
     if(questions.length !== 0) return null;
-    db.collection("questions").orderBy('created_at', 'desc').onSnapshot((querySnapshot) => {
+    db.collection("questions").orderBy('created_at', 'desc').get().then((docs) => {
       var ques = [];
-      querySnapshot.forEach((doc) => {
+      docs.forEach((doc) => {
         ques.push(doc.data());
       });
       setQuestions(ques);
