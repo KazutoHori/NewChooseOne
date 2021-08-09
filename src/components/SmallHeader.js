@@ -221,8 +221,8 @@ export default function SmallHeader (props) {
 
   return (
     <div>
-      <AppBar className={classes.grow} position="static">
-        <Toolbar style={{paddingLeft: 10, paddingRight:  10}}>
+      <AppBar elevation={0} className={classes.grow} position="static">
+        <Toolbar style={{paddingLeft: 9, paddingRight: 9 }}>
           <a href="/" className={classes.logo}><img src={logoSmall} alt="ChooseOne" /></a>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -264,7 +264,6 @@ export default function SmallHeader (props) {
 const useStyles = makeStyles((theme) => ({
   menuItemPos: {
     margin: 0, 
-    // padding: '0px 15px 0px 10px',
   },
   grow: {
     height: 40,

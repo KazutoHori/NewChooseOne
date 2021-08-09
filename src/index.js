@@ -6,6 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import { makeStyles, createStyles } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import { IoIosAddCircle } from "react-icons/io";
+import { AiOutlinePlus } from "react-icons/ai";
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import BuildIcon from '@material-ui/icons/Build';
+import { Fab, Action } from 'react-tiny-fab';
+import 'react-tiny-fab/dist/styles.css';
 // import {
 //   RecoilRoot,
 //   atom,
@@ -15,7 +22,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Header from './components/Header';
 import SmallHeader from './components/SmallHeader';
 import Footer from './components/Footer';
-import BottomBar from './components/BottomBar';
 import QuestionDetail from './screens/QuestionDetail';
 import './App.scss';
 
@@ -120,7 +126,7 @@ export default function Routing () {
           }
           
           <div className={styles.wrapper}>
-            <div className={useMediaQuery('(min-width:500px)') ? 'container' : ''}>
+            <div className={!smallDisplay ? 'container' : ''}>
               <div className={styles.container}>
                 <Switch>
                   <Route path="/q/:the_slug" render={ (props) => <QuestionDetail {...props} /> } />
@@ -129,11 +135,45 @@ export default function Routing () {
               </div>
             </div>
             {smallDisplay && (
-              <div className={styles.bottomBar}>
-                <BottomBar />
-              </div>
+              <Fab
+                mainButtonStyles={{ backgroundColor: 'rgb(40, 168, 69)', outline: 'none',  }}
+                actionButtonStyles={{ width: 30, height: 30 }}
+                style={{ position: 'fixed', bottom: 40,  }}
+                icon={<AiOutlinePlus />}
+                event={'click'}
+                // alwaysShowTitle={true}
+              >
+                <Action
+                  text="Add"
+                  style={{backgroundColor: 'rgb(255, 192, 8)', outline: 'none' }} 
+                  onClick={() => window.location.href = '/create'}
+                >
+                  <IoIosAddCircle />
+                </Action>
+                <Action
+                  text="Voted"
+                  style={{backgroundColor: 'rgb(40, 168, 69)', outline: 'none' }} 
+                  onClick={() => window.location.href = '/voted'}
+                >
+                  <ThumbUpAltIcon />
+                </Action>
+                <Action
+                  text="Made"
+                  style={{backgroundColor: 'rgb(3, 122, 255)', outline: 'none' }} 
+                  onClick={() => window.location.href = '/made'}
+                >
+                  <BuildIcon />
+                </Action>
+                <Action
+                  text="Liked"
+                  style={{backgroundColor: 'red', outline: 'none' }} 
+                  onClick={() => window.location.href = '/liked'}
+                >
+                  <FavoriteIcon />
+                </Action>
+              </Fab>
             )}
-            <Footer/>
+            {!smallDisplay && <Footer/>}
           </div>
         </div>
       </Router>
@@ -142,6 +182,15 @@ export default function Routing () {
 }
 
 const useStyles = makeStyles(() => createStyles({
+  fabButton: {
+    // backgroundColor: 'rgb(40, 168, 69)',
+  },
+  // fabButtonPos: {
+
+  // },
+  actionButton: {
+
+  },
   bottomBar: {
     position: 'fixed',
     bottom: 0,
@@ -169,7 +218,7 @@ const useStyles = makeStyles(() => createStyles({
 
   '@media (max-width: 500px)': {
     container: {
-      paddingTop: 5,
+      paddingTop: 2,
       paddingBottom: 10,
     },
     wrapper: {
