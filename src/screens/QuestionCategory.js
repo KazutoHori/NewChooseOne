@@ -1,8 +1,10 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { Helmet } from "react-helmet";
+import InfiniteScroll  from "react-infinite-scroller"
+import Loader from "react-loader-spinner";
+import { makeStyles, createStyles } from '@material-ui/core';
 
 import QuestionList from '../components/QuestionList.js';
-import { makeStyles, createStyles } from '@material-ui/core';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -24,19 +26,57 @@ var db = firebase.firestore();
 
 export default function QuestionCategory (props) {
 
-  const [questions, setQuestions] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [end, setEnd] = useState(null);
+  const [last, setLast] = useState(null);
   const category = props.match.params.category;
   const styles = useStyles();
 
   useEffect(() => {
-    db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').get().then((docs) => {
+    if(questions.length !== 0) return null;
+    db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').limit(10).get().then((docs) => {
       var ques = [];
       docs.forEach((doc) => {
-          ques.push(doc.data());
+        ques.push(doc.data());
+        if(ques.length === 10) setLast(doc);
       });
       setQuestions(ques);
     });
+
+    if(end === null){
+      db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'asc').limit(1).get().then((doc) => {
+        setEnd(doc);
+      })
+    }
   });
+
+  const loadMore = async (page) => {
+    var more = true;
+    setHasMore(false);
+
+    await db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').startAfter(last).limit(10).get().then((docs) => {
+      
+      const promise = new Promise(function(resolve, reject) {
+        var ques = [];
+        docs.forEach((doc) => {
+          ques.push(doc.data());
+          if(doc === end || ques.length === 10) {
+            if(doc === end) more = false;
+            setLast(doc);
+            resolve(ques);
+          }
+        })
+      });
+
+      promise.then((next) => {
+        setQuestions(questions.concat(next));
+      });
+    });
+
+    if(more) setHasMore(true);
+    else setHasMore(false);
+  }
 
   return (
     <Fragment>
@@ -47,7 +87,14 @@ export default function QuestionCategory (props) {
         ]}
       />
       <h3 className={styles.title}>Questions Categorized as {category}</h3>
-      <QuestionList questions={questions} />
+      <InfiniteScroll
+        loadMore={loadMore}
+        hasMore={hasMore}
+        threshold={500}
+        loader={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Loader type="Circles" color="#00BFFF" height={50} width={50} /></div> }
+      >
+        <QuestionList questions={questions} />
+      </InfiniteScroll>
     </Fragment>
   )
 }

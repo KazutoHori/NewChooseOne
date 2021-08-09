@@ -1,6 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import QuestionList from '../components/QuestionList.js';
 import { Helmet } from "react-helmet";
+import InfiniteScroll  from "react-infinite-scroller"
+import Loader from "react-loader-spinner";
+
+import QuestionList from '../components/QuestionList.js';
 
 // Firebase
 import firebase from 'firebase/app';
@@ -23,17 +26,54 @@ var db = firebase.firestore();
 export default function Home () {
 
   const [questions, setQuestions] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [end, setEnd] = useState(null);
+  const [last, setLast] = useState(null);
 
   useEffect(() => {
     if(questions.length !== 0) return null;
-    db.collection("questions").orderBy('created_at', 'desc').get().then((docs) => {
+    db.collection("questions").orderBy('created_at', 'desc').limit(10).get().then((docs) => {
       var ques = [];
       docs.forEach((doc) => {
         ques.push(doc.data());
+        if(ques.length === 10) setLast(doc);
       });
       setQuestions(ques);
     });
+
+    if(end === null){
+      db.collection("questions").orderBy('created_at', 'asc').limit(1).get().then((doc) => {
+        setEnd(doc);
+      })
+    }
   });
+
+  const loadMore = async (page) => {
+    var more = true;
+    setHasMore(false);
+
+    await db.collection("questions").orderBy('created_at', 'desc').startAfter(last).limit(10).get().then((docs) => {
+      
+      const promise = new Promise(function(resolve, reject) {
+        var ques = [];
+        docs.forEach((doc) => {
+          ques.push(doc.data());
+          if(doc === end || ques.length === 10) {
+            if(doc === end) more = false;
+            setLast(doc);
+            resolve(ques);
+          }
+        })
+      });
+
+      promise.then((next) => {
+        setQuestions(questions.concat(next));
+      });
+    });
+
+    if(more) setHasMore(true);
+    else setHasMore(false);
+  }
 
   return (
     <Fragment>
@@ -43,7 +83,14 @@ export default function Home () {
           { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
         ]}
       />
-      <QuestionList questions={questions} />
+      <InfiniteScroll
+        loadMore={loadMore}
+        hasMore={hasMore}
+        threshold={500}
+        loader={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Loader type="Circles" color="#00BFFF" height={50} width={50} /></div> }
+      >
+        <QuestionList questions={questions} />
+      </InfiniteScroll>
     </Fragment>
   )
 }

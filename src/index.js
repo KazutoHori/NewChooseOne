@@ -138,7 +138,7 @@ export default function Routing () {
               <Fab
                 mainButtonStyles={{ backgroundColor: 'rgb(40, 168, 69)', outline: 'none',  }}
                 actionButtonStyles={{ width: 30, height: 30 }}
-                style={{ position: 'fixed', bottom: 40,  }}
+                style={{ position: 'fixed', bottom: 20,  }}
                 icon={<AiOutlinePlus />}
                 event={'click'}
                 // alwaysShowTitle={true}

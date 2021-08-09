@@ -26,11 +26,6 @@ export default function QuestionList (props) {
       },
     });
 
-  const onPageChange = (event, value) => {
-    setPage(value);
-    window.scrollTo(0, 0);
-  }
-
   if(questions === null || questions.length === 0){
     const skeletons = new Array(10).fill('skeleton');
     return (
@@ -43,14 +38,9 @@ export default function QuestionList (props) {
   }
   return (
     <Fragment>
-      {questions.slice(10*(page-1), 10*page).map(question => (
+      {questions.map(question => (
         <Question the_question={question} />
       ))}
-      <div style={styles.paginationPos}>
-        <ThemeProvider theme={theme}>
-          {Math.ceil(questions.length/10) !== 1 && <Pagination size={smallDisplay ? 'small' : 'medium'} style={styles.pagination} onChange={onPageChange} page={page} count={Math.ceil(questions.length/10)} color='primary' renderItem={(item) => <PaginationItem style={{ outline: 'none' }} {...item} />} />}
-        </ThemeProvider>
-      </div>
     </Fragment>
   );
 }
