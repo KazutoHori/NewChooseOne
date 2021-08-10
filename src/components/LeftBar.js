@@ -25,9 +25,11 @@ for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 export default function Home (props) {
 
   const [todaysRanking, setTodaysRanking] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if(todaysRanking.length !== 0) return null;
+    if(loaded) return null;
+    setLoaded(true);
     let current=new Date();
     current=current.toJSON();
     var today = timeToDay(current.slice(0, 10));
