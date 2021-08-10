@@ -1,5 +1,5 @@
 /* eslint-disable no-redeclare */
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import { slugify, timeToDay } from '../utils/Funcs.js';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';

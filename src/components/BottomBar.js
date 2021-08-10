@@ -1,8 +1,7 @@
 import React, { Fragment} from 'react';
 import { makeStyles, createStyles } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { IoIosAddCircle } from "react-icons/io";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';

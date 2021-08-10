@@ -12,11 +12,7 @@ import { WindMillLoading } from 'react-loadingg';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Helmet } from "react-helmet";
 import { Wave } from "react-animated-text";
-import { userAtom } from "../index";
-import { useRecoilState } from 'recoil';
 
-// QuestionDetail
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 
 import QuestionList from '../components/QuestionList';
 import ModalDelete from '../components/ModalDelete';

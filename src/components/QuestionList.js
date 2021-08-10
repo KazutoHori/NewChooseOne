@@ -1,6 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { Pagination, PaginationItem } from '@material-ui/lab';
+import { createMuiTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Question from './Question';
