@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect} from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -37,16 +37,13 @@ const firebaseConfig = {
 if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
 var db = firebase.firestore();
 
-// export const userAtom = atom({
-//   key: 'userState',
-//   default: null,
-// });
-
 export default function Routing () {
 
   const uid = localStorage.getItem('chooseoneUid');
   const styles = useStyles();
   const smallDisplay = useMediaQuery('(max-width:500px)');
+
+  const [firstTime, setFirstTime] = useState(true);
 
   const makeNewUser = () => {
     let current=new Date();
@@ -68,6 +65,7 @@ export default function Routing () {
             username: '',
           };
           db.collection('users').doc(userId).set(new_user);
+          setFirstTime(false);
         }
       });          
     })
@@ -75,8 +73,8 @@ export default function Routing () {
   }
 
   useEffect(() => {
-    if(uid) return null;
-    makeNewUser()
+    if(uid || !firstTime) return null;
+    makeNewUser();
   });
     
   return (
@@ -118,7 +116,6 @@ export default function Routing () {
                 style={{ position: 'fixed', bottom: 20,  }}
                 icon={<AiOutlinePlus />}
                 event={'click'}
-                // alwaysShowTitle={true}
               >
                 <Action
                   text="Add"
@@ -216,4 +213,4 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();
