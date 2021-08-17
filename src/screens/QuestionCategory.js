@@ -1,7 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { Helmet } from "react-helmet";
 import InfiniteScroll  from "react-infinite-scroller"
-import Loader from "react-loader-spinner";
 import { makeStyles, createStyles } from '@material-ui/core';
 
 import QuestionList from '../components/QuestionList.js';
@@ -91,7 +90,7 @@ export default function QuestionCategory (props) {
         loadMore={loadMore}
         hasMore={hasMore}
         threshold={500}
-        loader={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Loader type="Circles" color="#00BFFF" height={50} width={50} /></div> }
+        loader={<div></div> }
       >
         <QuestionList questions={questions} />
       </InfiniteScroll>

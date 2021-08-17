@@ -318,8 +318,6 @@ export default function QuestionDetail (props) {
                   <Wave
                     delay={3}
                     text=" TAP & GET SURPRISED"
-                    // effect='pop'
-                    // effect='jump'
                     effect='verticalFadeIn'
                     effectChange={5.0}
                   />
