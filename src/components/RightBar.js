@@ -23,9 +23,7 @@ export default function RightBar (props) {
   useEffect(() => {
     if(questionPopular.length !== 0) return null;
 
-    var quesRef = db.collection('questions');
-
-    quesRef.orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
+    db.collection('questions').orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
       var ques = [];
       docs.forEach(q => {
         ques.push(q.data());

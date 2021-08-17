@@ -34,8 +34,7 @@ export default function Home (props) {
     current=current.toJSON();
     var today = timeToDay(current.slice(0, 10));
 
-    var quesRef = db.collection('questions');
-    quesRef.where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
+    db.collection('questions').where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
       var ques = [];
       docs.forEach(q => {
         ques.push(q.data());
