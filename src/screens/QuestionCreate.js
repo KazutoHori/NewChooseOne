@@ -322,7 +322,11 @@ export default function QuestionCreate (props) {
         {!warning && <p className={styles.warning}>You can delete but cannot edit after you make one.</p>}
         {!voting
           ?
-          <Button style={{ fontSize: 11 }} size='small' startIcon={<PostAddIcon /> } onClick={onSubmit} className="btn btn-success"  >Add Question</Button>
+          <ThemeProvider theme={theme}>
+            <ButtonGroup disableElevation variant="contained" >
+              <StyledButton style={{ fontSize: 11, outline: 'none', backgroundColor: 'rgb(40, 168, 69)' }} size='small' startIcon={<PostAddIcon /> } onClick={onSubmit} >Add Question</StyledButton>
+            </ButtonGroup>
+          </ThemeProvider>
           :
           <div className={styles.loadingPos}>
             <WindMillLoading speed={1.2}  />
@@ -419,7 +423,6 @@ const StyledButton = withStyles({
   root: {
     // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     borderRadius: 4,
-    border: 0,
     color: 'white',
     height: 30,
     padding: '0 15px',

@@ -12,6 +12,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import BuildIcon from '@material-ui/icons/Build';
 import { Fab, Action } from 'react-tiny-fab';
+// import Container from '@material-ui/core/Container';
 
 import Header from './components/Header';
 import SmallHeader from './components/SmallHeader';
@@ -84,12 +85,9 @@ export default function Routing () {
         <title>ChooseOne</title>
         <meta name="description" content="ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results." />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://use.typekit.net/wjg1qds.css" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
         <meta name="google-site-verification" content="ZLvGG7OEMwGguqr5Nome2wbtPSHJZU16uVVaw5QkEGc" />
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <link rel="shortcut icon" href="%PUBLIC_URL%/logo48.png" />
         <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
@@ -113,6 +111,7 @@ export default function Routing () {
                 </Switch>
               </div>
             </div>
+
             {smallDisplay && (
               <Fab
                 mainButtonStyles={{ backgroundColor: 'rgb(40, 168, 69)', outline: 'none',  }}
