@@ -8,12 +8,13 @@ export default function About () {
 
   return (
     <Fragment>
-      <Helmet
-          title = 'About ChooeOne'
-          meta={[
-            { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
-          ]}
-      />
+      <Helmet>
+          <title>About ChooseOne</title>
+          <meta
+            name='description'
+            content='ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' 
+          />
+      </Helmet>
       <div className={styles.about}>
         <h1 className={styles.title}>About ChooseOne</h1>
         <br />

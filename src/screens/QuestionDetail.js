@@ -242,10 +242,10 @@ export default function QuestionDetail (props) {
   return (
     <Fragment>
       <Helmet
-          title = {loaded && the_question.title}
-          meta={[
-            { name: 'description', content: { content } }
-          ]}
+        title = {loaded && the_question.title}
+        meta={[
+          { name: 'description', content: { content } }
+        ]}
       />
       <div className={styles.resultsPos}>
 

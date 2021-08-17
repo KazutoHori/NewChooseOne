@@ -1,0 +1,107 @@
+[debug] [2021-08-17T10:17:45.567Z] ----------------------------------------------------------------------
+[debug] [2021-08-17T10:17:45.569Z] Command:       /Users/horikazuto/.nodebrew/node/v14.4.0/bin/node /Users/horikazuto/.nodebrew/current/bin/firebase deploy --only hosting
+[debug] [2021-08-17T10:17:45.569Z] CLI Version:   9.16.5
+[debug] [2021-08-17T10:17:45.569Z] Platform:      darwin
+[debug] [2021-08-17T10:17:45.569Z] Node Version:  v14.4.0
+[debug] [2021-08-17T10:17:45.570Z] Time:          Tue Aug 17 2021 19:17:45 GMT+0900 (日本標準時)
+[debug] [2021-08-17T10:17:45.571Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-08-17T10:17:45.624Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-08-17T10:17:45.624Z] > authorizing via signed-in user (horiktkth@gmail.com)
+[debug] [2021-08-17T10:17:45.624Z] [iam] checking project chooseone for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-08-17T10:17:45.626Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/chooseone:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-08-17T10:18:27.254Z] [iam] error while checking permissions, command may fail: FirebaseError: Server Error. read ETIMEDOUT
+[debug] [2021-08-17T10:18:27.257Z] > refreshing access token with scopes: []
+[debug] [2021-08-17T10:18:27.257Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-08-17T10:18:27.563Z] <<< HTTP RESPONSE 200 {"expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","date":"Tue, 17 Aug 2021 10:18:27 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-17T10:18:27.624Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/chooseone [none]
+[debug] [2021-08-17T10:18:28.236Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/chooseone 200
+[debug] [2021-08-17T10:18:28.237Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/chooseone {"projectId":"chooseone","projectNumber":"722704825746","displayName":"ChooseOne","name":"projects/chooseone","resources":{"hostingSite":"chooseone-105a9","realtimeDatabaseInstance":"chooseone-default-rtdb","storageBucket":"chooseone.appspot.com","locationId":"us-central"},"state":"ACTIVE"}
+[info] 
+[info] === Deploying to 'chooseone'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2021-08-17T10:18:28.242Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-08-17T10:18:28.243Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-08-17T10:18:28.570Z] <<< HTTP RESPONSE 200 {"expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Tue, 17 Aug 2021 10:18:28 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-17T10:18:28.624Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/chooseone-105a9/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2021-08-17T10:18:30.013Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 17 Aug 2021 10:18:29 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  hosting[chooseone-105a9]: beginning deploy... 
+[info] i  hosting[chooseone-105a9]: found 22 files in build 
+[debug] [2021-08-17T10:18:30.742Z] > refreshing access token with scopes: []
+[debug] [2021-08-17T10:18:30.742Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-08-17T10:18:30.743Z] [hosting] hash cache [YnVpbGQ] stored for 22 files
+[debug] [2021-08-17T10:18:30.743Z] [hosting][hash queue][FINAL] {"max":701,"min":10,"avg":46.18181818181818,"active":0,"complete":22,"success":22,"errored":0,"retried":0,"total":22,"elapsed":709}
+[debug] [2021-08-17T10:18:31.056Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","date":"Tue, 17 Aug 2021 10:18:31 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-17T10:18:31.111Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/sites/chooseone-105a9/versions/e49de5200e2450b2:populateFiles [none]
+[debug] [2021-08-17T10:18:31.112Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/sites/chooseone-105a9/versions/e49de5200e2450b2:populateFiles {"files":{"/asset-manifest.json":"61230f354d0d5a393dd3d5d4e9bf7332a714f29e363e2e916d9817ff43f98c51","/index.html":"e9edb9225e38bfa452c1c61d3342d94ae5dc747c1c938c1fd1982779ffeb01d8","/logo48.png":"dc678fceca63b30201c0d30097f2595a2ef70fe272fee9729dc36b51e8d019ed","/static/css/2.d1db0ea1.chunk.css":"01ea69520c15f9d7934391c0bb2e56bf7fb6a34869d364c781d40241805c618f","/static/css/2.d1db0ea1.chunk.css.map":"686f71698350d99307b56aeb576f969ed5d17095943648c5ec6dfc2eb5db0783","/static/css/main.3ce7bb8a.chunk.css":"a24f9c7877c5b2190061b5aa78f6f963ae4d0dd4fc57b41708b87d47e8cfa231","/static/css/main.3ce7bb8a.chunk.css.map":"c1ade2bb1644a6ff324c73e06f29ff6ff77ab25d2f061b147594488582cccbd3","/static/js/2.2ca62266.chunk.js.LICENSE.txt":"31918de4eb5547da692141190c69ce885ce115a1c2f1926cd84cfd3857c6b183","/robots.txt":"391d14b3c2f8c9143a27a28c7399585142228d4d1bdbe2c87ac946de411fa9a2","/faviconのコピー.ico":"3015f609ce1b90190fcac5667ff1b18cf519442fb88802c70e156390bd466f1b","/favicon.ico":"3015f609ce1b90190fcac5667ff1b18cf519442fb88802c70e156390bd466f1b","/manifest.json":"341d52628782f8ac9290bbfc43298afccb47b7cbfcee146ae30cf0f46bc30900","/static/js/runtime-main.0ce61def.js":"e2367d9cca0dd8b3721db1d8c661e5effee1cf14f9ed319e5936e173d310f380","/static/js/3.ca36252b.chunk.js":"d95ff1bfc80930d205651b84b3eb1c39d5e518f7b6889f9a9fc4c572af4b8389","/static/js/3.ca36252b.chunk.js.map":"11cec5525ecf6b02d69ce60d351df87eed6ced77f01867d1e44e7e20ec52a7d0","/static/js/runtime-main.0ce61def.js.map":"7bd6eb71bc7ca58ea83634307ffc2c0f998ebfe835f83330521b785adda50ceb","/logo192.png":"3ff1ba49a39217fc67f8cd77b56d568bbd0b5abd298cca4c441f601b85441bd2","/static/js/main.df7c6fd3.chunk.js":"0e89c645513c376bd18a2cb42f152547e4dfd85bbebbca37ad375fb678fe3bb6","/logo512.png":"71ddd3ce80f9c3d0d0090264ce6ea583f49d6262b31523970418643700348274","/static/js/main.df7c6fd3.chunk.js.map":"a4b34fec9cd7e07d187916f1330bb85e8a3934cb3af22b4cea156f06e67e9b85","/static/js/2.2ca62266.chunk.js":"6dcdf97b497b33ad16d420dfaaf578c93831ac76c1bb6cd6247857d64b378b86","/static/js/2.2ca62266.chunk.js.map":"b0e04dc49084dd9494fc2d2fb6a964cce45b841bc56f7a3a99938b61058b45a6"}}
+[debug] [2021-08-17T10:18:31.759Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/sites/chooseone-105a9/versions/e49de5200e2450b2:populateFiles 200
+[debug] [2021-08-17T10:18:31.759Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/sites/chooseone-105a9/versions/e49de5200e2450b2:populateFiles {"uploadRequiredHashes":["e9edb9225e38bfa452c1c61d3342d94ae5dc747c1c938c1fd1982779ffeb01d8","0e89c645513c376bd18a2cb42f152547e4dfd85bbebbca37ad375fb678fe3bb6","61230f354d0d5a393dd3d5d4e9bf7332a714f29e363e2e916d9817ff43f98c51","a4b34fec9cd7e07d187916f1330bb85e8a3934cb3af22b4cea156f06e67e9b85"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files"}
+[debug] [2021-08-17T10:18:31.762Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/e9edb9225e38bfa452c1c61d3342d94ae5dc747c1c938c1fd1982779ffeb01d8 [none]
+[debug] [2021-08-17T10:18:31.762Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/e9edb9225e38bfa452c1c61d3342d94ae5dc747c1c938c1fd1982779ffeb01d8 [stream]
+[debug] [2021-08-17T10:18:31.764Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/0e89c645513c376bd18a2cb42f152547e4dfd85bbebbca37ad375fb678fe3bb6 [none]
+[debug] [2021-08-17T10:18:31.765Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/0e89c645513c376bd18a2cb42f152547e4dfd85bbebbca37ad375fb678fe3bb6 [stream]
+[debug] [2021-08-17T10:18:31.766Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/61230f354d0d5a393dd3d5d4e9bf7332a714f29e363e2e916d9817ff43f98c51 [none]
+[debug] [2021-08-17T10:18:31.766Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/61230f354d0d5a393dd3d5d4e9bf7332a714f29e363e2e916d9817ff43f98c51 [stream]
+[debug] [2021-08-17T10:18:31.767Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/a4b34fec9cd7e07d187916f1330bb85e8a3934cb3af22b4cea156f06e67e9b85 [none]
+[debug] [2021-08-17T10:18:31.767Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/a4b34fec9cd7e07d187916f1330bb85e8a3934cb3af22b4cea156f06e67e9b85 [stream]
+[debug] [2021-08-17T10:18:31.769Z] [hosting][populate queue][FINAL] {"max":1020,"min":1020,"avg":1020,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":1027}
+[debug] [2021-08-17T10:18:31.769Z] [hosting] uploads queued: 4
+[debug] [2021-08-17T10:18:34.372Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/e9edb9225e38bfa452c1c61d3342d94ae5dc747c1c938c1fd1982779ffeb01d8 200
+[debug] [2021-08-17T10:18:34.372Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/e9edb9225e38bfa452c1c61d3342d94ae5dc747c1c938c1fd1982779ffeb01d8 [stream]
+[debug] [2021-08-17T10:18:34.424Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/a4b34fec9cd7e07d187916f1330bb85e8a3934cb3af22b4cea156f06e67e9b85 200
+[debug] [2021-08-17T10:18:34.424Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/a4b34fec9cd7e07d187916f1330bb85e8a3934cb3af22b4cea156f06e67e9b85 [stream]
+[debug] [2021-08-17T10:18:34.426Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/0e89c645513c376bd18a2cb42f152547e4dfd85bbebbca37ad375fb678fe3bb6 200
+[debug] [2021-08-17T10:18:34.426Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/0e89c645513c376bd18a2cb42f152547e4dfd85bbebbca37ad375fb678fe3bb6 [stream]
+[debug] [2021-08-17T10:18:34.743Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/61230f354d0d5a393dd3d5d4e9bf7332a714f29e363e2e916d9817ff43f98c51 200
+[debug] [2021-08-17T10:18:34.744Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/chooseone-105a9/versions/e49de5200e2450b2/files/61230f354d0d5a393dd3d5d4e9bf7332a714f29e363e2e916d9817ff43f98c51 [stream]
+[debug] [2021-08-17T10:18:34.744Z] [hosting][upload queue][FINAL] {"max":2983,"min":2612,"avg":2730.75,"active":0,"complete":4,"success":4,"errored":0,"retried":0,"total":4,"elapsed":2984}
+[info] ✔  hosting[chooseone-105a9]: file upload complete 
+[debug] [2021-08-17T10:18:34.745Z] [hosting] deploy completed after 4730ms
+[debug] [2021-08-17T10:18:34.749Z] [
+  {
+    "config": {
+      "public": "build",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "site": "chooseone-105a9"
+    },
+    "site": "chooseone-105a9",
+    "version": "sites/chooseone-105a9/versions/e49de5200e2450b2"
+  }
+]
+[info] i  hosting[chooseone-105a9]: finalizing version... 
+[debug] [2021-08-17T10:18:34.751Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-08-17T10:18:34.751Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-08-17T10:18:35.038Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Tue, 17 Aug 2021 10:18:35 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-17T10:18:35.090Z] >>> HTTP REQUEST PATCH https://firebasehosting.googleapis.com/v1beta1/sites/chooseone-105a9/versions/e49de5200e2450b2?updateMask=status  
+ {"status":"FINALIZED"}
+[debug] [2021-08-17T10:18:36.260Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 17 Aug 2021 10:18:36 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-17T10:18:36.261Z] [hosting] finalized version for chooseone-105a9: {"name":"sites/chooseone-105a9/versions/e49de5200e2450b2","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2021-08-17T10:18:29.649698Z","createUser":{"email":"horiktkth@gmail.com"},"finalizeTime":"2021-08-17T10:18:36.054322Z","finalizeUser":{"email":"horiktkth@gmail.com"}}
+[info] ✔  hosting[chooseone-105a9]: version finalized 
+[info] i  hosting[chooseone-105a9]: releasing new version... 
+[debug] [2021-08-17T10:18:36.263Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/chooseone-105a9/releases?version_name=sites/chooseone-105a9/versions/e49de5200e2450b2  
+ {"message":null}
+[debug] [2021-08-17T10:18:37.333Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 17 Aug 2021 10:18:37 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-08-17T10:18:37.334Z] [hosting] release: {"name":"sites/chooseone-105a9/releases/1629195516716267","version":{"name":"sites/chooseone-105a9/versions/e49de5200e2450b2","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2021-08-17T10:18:29.649698Z","createUser":{"email":"horiktkth@gmail.com"},"finalizeTime":"2021-08-17T10:18:36.054322Z","finalizeUser":{"email":"horiktkth@gmail.com"}},"type":"DEPLOY","releaseTime":"2021-08-17T10:18:36.716267371Z","releaseUser":{"email":"horiktkth@gmail.com"}}
+[info] ✔  hosting[chooseone-105a9]: release complete 
+[info] 
+[info] ✔  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/chooseone/overview
+[info] Hosting URL: https://chooseone-105a9.web.app
