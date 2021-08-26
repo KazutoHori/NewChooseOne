@@ -4,7 +4,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { makeStyles, createStyles } from '@material-ui/core';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
@@ -291,8 +291,7 @@ export default function QuestionDetail (props) {
               <Fragment>
                 {the_question.choices.map((choice, idx) => (
                   <div className={styles.choiceBtnPos}>
-                    {idx !== the_choice && <button onClick={() => onChoice(idx)} style={{ borderRadius: 15, width: Math.min(300, window.innerWidth*0.6)  }} type="button" name="choice" className="btn btn-outline-primary">{choice.choice_text}</button>}
-                    {idx === the_choice && <button onClick={() => onChoice(idx)} style={{ borderRadius: 15, width: Math.min(300, window.innerWidth*0.6) }} type="button" name="choice" className="btn btn-primary">{choice.choice_text}</button>}
+                    <StyledButton variant="outlined" color='primary' onClick={() => onChoice(idx)} >{choice.choice_text}</StyledButton>
                   </div>
                 ))}
               </Fragment>
@@ -378,6 +377,9 @@ export default function QuestionDetail (props) {
 }
 
 const useStyles = makeStyles(() => createStyles({
+  choiceButton: {
+    
+  },
   messageTextPos: {
     fontSize: 13,
     marginTop: 40,
@@ -539,3 +541,22 @@ const useStyles = makeStyles(() => createStyles({
     },
   },
 }));
+
+
+const StyledButton = withStyles({
+  root: {
+    borderRadius: 7,
+    borderColor: 'rgb(3, 122, 255)', 
+    color: 'rgb(3, 122, 255)', 
+    fontSize: 11, 
+    borderRadius: 15, 
+    width: Math.min(300, window.innerWidth*0.6),
+
+    '&focus': {
+      borderColor: 'yellow',
+    }
+  },
+  cate: {
+    textTransform: 'capitalize',
+  },
+})(Button);
