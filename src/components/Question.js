@@ -23,7 +23,7 @@ export default function QuestionList (props) {
     <Fragment>
       <div className='onepost'>
         
-        <p className='cali2' style={{ fontSize: 10 }}><span className='text-primary fa fa-tag'></span>
+        <p className='cali2' style={{ fontSize: 12 }}><span className='text-primary fa fa-tag'></span>
           Category:
           {notUseSkeleton && (
             <Fragment>

@@ -352,7 +352,7 @@ const useStyles = makeStyles(() => createStyles({
   },
   warning: {
     marginTop: 20,
-    fontSize: 10,
+    fontSize: 12,
   },
   titleInput: {
     width: '70%',

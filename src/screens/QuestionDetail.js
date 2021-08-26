@@ -272,8 +272,8 @@ export default function QuestionDetail (props) {
           </p>
           
           <div style={{ marginBottom: 15 }}>
-            <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' rel="noreferrer" href={loaded && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon /></a>
-            <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} rel="noreferrer" href={loaded && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon /></a>
+            <a style={{ marginRight: 10, color: '#55acee', outline: 'none', border: 'none' }} className='tip' rel="noreferrer" href={loaded && 'https://twitter.com/share?url=https://www.chooseone.app/'+the_question.slug+"/&text="+the_question.title} target="_blank" data-toggle="tooltip" title="Share"><TwitterIcon style={{ fontSize: smallDisplay && '18' }} /></a>
+            <a style={{ color: '#3B5998', outline: 'none', border: 'none' }} rel="noreferrer" href={loaded && "https://www.facebook.com/share.php?u=https://www.chooseone.app/"+the_question.slug} target="_blank" data-toggle="tooltip" title="Share"><FacebookIcon style={{ fontSize: smallDisplay && '18' }} /></a>
           </div>
 
           {answered && loaded && (
@@ -352,9 +352,9 @@ export default function QuestionDetail (props) {
             <div className={styles.buttonsPos} style={{ marginTop: 100 - answered*80 }}>
               <ThemeProvider theme={theme}>
                 <ButtonGroup size={smallDisplay ? 'small' : 'default'} variant="contained" >
-                  {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon fontSize='small'/>} color='primary' >{loaded ? the_question.likes : 'Like'}</Button>}
-                  {likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' >{loaded ? the_question.likes : 'Like'}</Button>}
-                  {madeIt && <Button onClick={() => setModalVisible(true)} startIcon={<DeleteIcon fontSize='small' />} color='secondary' >Delete</Button>}
+                  {!likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon fontSize='small'/>} color='primary' style={{ fontSize: 12 }}>{loaded ? the_question.likes : 'Like'}</Button>}
+                  {likeIt && <Button onClick={onLikeit} startIcon={<FavoriteIcon color='secondary' />} color='primary' style={{ fontSize: 12 }} >{loaded ? the_question.likes : 'Like'}</Button>}
+                  {madeIt && <Button onClick={() => setModalVisible(true)} startIcon={<DeleteIcon fontSize='small' />} style={{ fontSize: 12 }} color='secondary' >Delete</Button>}
                 </ButtonGroup>
               </ThemeProvider>
             </div>
@@ -455,7 +455,7 @@ const useStyles = makeStyles(() => createStyles({
   date: {
     marginLeft: 20,
     fontFamily: 'georgia, serif',
-    fontSize: 10,
+    fontSize: 12,
     color: '#457AFB',
   },
 
@@ -479,7 +479,7 @@ const useStyles = makeStyles(() => createStyles({
 
   warning: {
     color: 'red',
-    fontSize: 10,
+    fontSize: 12,
     margin: '0px 0px 0px 25px',
     padding: 0,
   },
@@ -489,7 +489,7 @@ const useStyles = makeStyles(() => createStyles({
       marginBottom: 10,
     },
     your_vote: {
-      fontSize: 10,
+      fontSize: 12,
       marginBottom: 10,
     },
     category: {
@@ -497,6 +497,7 @@ const useStyles = makeStyles(() => createStyles({
     },
     title: {
       fontSize: 24,
+      marginTop: 10,
     },
     mayLike: {
       margin: '40px 0px 5px 10px',
@@ -507,7 +508,7 @@ const useStyles = makeStyles(() => createStyles({
     },
     forSmallerVer: {
       paddingLeft: 15,
-      marginTop: 10,
+      // marginTop: 10,
     },
     table: {
       filter: 'drop-shadow(5px 0px 4px rgba(160, 160, 160, 0.7))',
