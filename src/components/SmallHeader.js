@@ -52,7 +52,7 @@ function ElevationScroll(props) {
 export default function SmallHeader (props) {
   
   const [query, setQuery] = useState('');
-  const classes = useStyles();
+  const styles = useStyles();
   const [questions, setQuestions] = useState([]);
   const [categoryAnchorEl, setCategoryAnchorEl] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -177,32 +177,33 @@ export default function SmallHeader (props) {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      style={{ padding: 0 }}
     >
-      <MenuItem onClick={() => window.location.href = '/'} className={classes.menuItemPos}>
+      <MenuItem onClick={() => window.location.href = '/'} className={styles.menuItemPos}>
         <IconButton style={{ outline: 'none', }}  aria-label="Home" color="inherit">
-          <HomeIcon style={{ color: 'rgb(40, 168, 69)'}}/>
+          <HomeIcon style={{ fontSize: 21, color: 'rgb(40, 168, 69)'}}/>
         </IconButton>
-        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Home</p></div>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p className={styles.menuItemFont}>Home</p></div>
       </MenuItem>
-      <MenuItem onClick={(event) => setRankingAnchorEl(event.currentTarget)} className={classes.menuItemPos}>
-        <IconButton style={{ outline: 'none' }}  aria-label="Ranking" color="inherit">
+      <MenuItem onClick={(event) => setRankingAnchorEl(event.currentTarget)} className={styles.menuItemPos}>
+        <IconButton style={{ fontSize: 21, outline: 'none' }}  aria-label="Ranking" color="inherit">
           <BsFillAwardFill color='rgb(255, 192, 8)' />
         </IconButton>
-        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Ranking</p></div>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p className={styles.menuItemFont}>Ranking</p></div>
       </MenuItem>
-      <MenuItem onClick={(event) => setCategoryAnchorEl(event.currentTarget)} className={classes.menuItemPos}>
+      <MenuItem onClick={(event) => setCategoryAnchorEl(event.currentTarget)} className={styles.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="Home" color="inherit">
-          <LocalOfferIcon style={{ color: 'rgb(3, 122, 255)' }} />
+          <LocalOfferIcon style={{ fontSize: 21, color: 'rgb(3, 122, 255)' }} />
         </IconButton>
-        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Category</p></div>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p className={styles.menuItemFont}>Category</p></div>
       </MenuItem>
-      <MenuItem onClick={() => window.location.href = '/about'}  className={classes.menuItemPos}>
+      <MenuItem onClick={() => window.location.href = '/about'}  className={styles.menuItemPos}>
         <IconButton style={{ outline: 'none' }}  aria-label="About ChooseOne" color="inherit">
-          <InfoIcon style={{ color: 'red' }} />
+          <InfoIcon style={{ fontSize: 21, color: 'red' }} />
         </IconButton>
-        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>About</p></div>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p className={styles.menuItemFont}>About</p></div>
       </MenuItem>
-      <MenuItem onClick={() => window.location.href = '/contact'}  className={classes.menuItemPos}>
+      <MenuItem onClick={() => window.location.href = '/contact'}  className={styles.menuItemPos}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -210,27 +211,27 @@ export default function SmallHeader (props) {
           color="inherit"
           style={{ outline: 'none' }} 
         >
-          <ContactSupportIcon />
+          <ContactSupportIcon style={{ fontSize: 21, }} />
         </IconButton>
-        <div style={{ display: 'flex', alignItems: 'center'}}><p style={{ margin: 0 }}>Contact</p></div>
+        <div style={{ display: 'flex', alignItems: 'center'}}><p className={styles.menuItemFont}>Contact</p></div>
       </MenuItem>
     </Menu>
   );
 
   return (
     <div>
-      <AppBar elevation={0} className={classes.grow} position="static">
+      <AppBar elevation={0} className={styles.grow} position="static">
         <Toolbar style={{paddingLeft: 9, paddingRight: 9 }}>
-          <a href="/" className={classes.logo}><img src={logoSmall} alt="ChooseOne" /></a>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
+          <a href="/" className={styles.logo}><img src={logoSmall} alt="ChooseOne" /></a>
+          <div className={styles.search}>
+            <div className={styles.searchIcon}>
               <SearchIcon size='small' />
             </div>
             <InputBase
               placeholder="Search"
               classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
+                root: styles.inputRoot,
+                input: styles.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
               value={query}
@@ -238,7 +239,7 @@ export default function SmallHeader (props) {
               onKeyDown={(e) => {if(e.key === 'Enter'){e.preventDefault(); onSubmitSearch(); }}}
             />
           </div>
-          <div className={classes.sectionMobile}>
+          <div className={styles.sectionMobile}>
             <IconButton
               aria-label="show more"
               aria-controls={mobileMenuId}
@@ -260,15 +261,22 @@ export default function SmallHeader (props) {
 }
 
 const useStyles = makeStyles((theme) => ({
+  menuItemFont: {
+    margin: 0,
+    fontSize: 14,
+  },
   menuItemPos: {
     margin: 0, 
+    paddingLeft: 0,
+    paddingTop: 3,
+    paddingBottom: 3,
   },
   grow: {
     height: 40,
-    backgroundColor: 'red',
+    // backgroundColor: '#FF3333',
+    backgroundColor: '#ff4500',
     flexGrow: 1,
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
   },
   menuButton: {

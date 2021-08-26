@@ -45,7 +45,7 @@ for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
 export default function PrimarySearchAppBar() {
   
-  const classes = useStyles();
+  const styles = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [query, setQuery] = useState('');
@@ -137,20 +137,20 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div>
-      <AppBar className={classes.grow} position="static">
+      <AppBar className={styles.grow} position="static">
         <div className={!smallDisplay && 'container'}>
           <Toolbar style={{ padding: 0 }}>
-            {smallerThan900 && <a href="/" className={classes.logo}><img src={logoSmall} alt="ChooseOne" /></a>}
-            {!smallerThan900 &&  smallerThan1200 && <a href="/" className={classes.logo}><img src={logoMedium} alt="ChooseOne" /></a>}
-            {!smallerThan1200 && <a href="/" className={classes.logo}><img src={logo} alt="ChooseOne" /></a>}
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
+            {smallerThan900 && <a href="/" className={styles.logo}><img src={logoSmall} alt="ChooseOne" /></a>}
+            {!smallerThan900 &&  smallerThan1200 && <a href="/" className={styles.logo}><img src={logoMedium} alt="ChooseOne" /></a>}
+            {!smallerThan1200 && <a href="/" className={styles.logo}><img src={logo} alt="ChooseOne" /></a>}
+            <div className={styles.search}>
+              <div className={styles.searchIcon}>
                 <SearchIcon />
               </div>
               <div style={{ width: '100%' }}>
                 <InputBase
                   placeholder="Search"
-                  className={classes.inputInput}
+                  className={styles.inputInput}
                   inputProps={{ 'aria-label': 'search' }}
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
@@ -160,38 +160,38 @@ export default function PrimarySearchAppBar() {
             </div>
             {!smallerThan900
               ?
-              <div className={classes.sectionDesktop} style={{ marginLeft: 'auto' }}>
-                <div className={classes.button} style={{ backgroundColor: 'rgb(40, 168, 69)'}}>
-                  <StyledButton onClick={() => window.location.href = '/'} startIcon={<HomeIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Home</StyledButton>
+              <div className={styles.sectionDesktop} style={{ marginLeft: 'auto' }}>
+                <div className={styles.button} style={{ backgroundColor: 'rgb(40, 168, 69)'}}>
+                  <StyledButton onClick={() => window.location.href = '/'} startIcon={<HomeIcon />} className={styles.buttonStyle} aria-label="Home">Home</StyledButton>
                 </div>
-                <div className={classes.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
-                  <StyledButton onClick={() => window.location.href = '/create'} startIcon={<IoIosAddCircle />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Add</StyledButton>
+                <div className={styles.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
+                  <StyledButton onClick={() => window.location.href = '/create'} startIcon={<IoIosAddCircle />} className={styles.buttonStyle} aria-label="Home">Add</StyledButton>
                 </div>
-                <div className={classes.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
-                  <StyledButton onClick={() => window.location.href = '/made'} startIcon={<BuildIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Made</StyledButton>
+                <div className={styles.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
+                  <StyledButton onClick={() => window.location.href = '/made'} startIcon={<BuildIcon />} className={styles.buttonStyle} aria-label="Home">Made</StyledButton>
                 </div>
-                <div className={classes.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
-                  <StyledButton onClick={() => window.location.href = '/voted'} startIcon={<ThumbUpAltIcon />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Voted</StyledButton>
+                <div className={styles.button}  style={{ backgroundColor: 'rgb(255, 192, 8)'}}>
+                  <StyledButton onClick={() => window.location.href = '/voted'} startIcon={<ThumbUpAltIcon />} className={styles.buttonStyle} aria-label="Home">Voted</StyledButton>
                 </div>
-                <div className={classes.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
-                  <StyledButton onClick={() => window.location.href = '/liked'} startIcon={<FavoriteIcon color='red' />} style={{ outline: 'none', color: 'white' }} aria-label="Home">Liked</StyledButton>
+                <div className={styles.button}  style={{ backgroundColor: 'rgb(3, 122, 255)'}}>
+                  <StyledButton onClick={() => window.location.href = '/liked'} startIcon={<FavoriteIcon />} className={styles.buttonStyle} aria-label="Home">Liked</StyledButton>
                 </div>
               </div>
               :
-              <div className={classes.sectionDesktop} style={{ marginLeft: 'auto', fontSize:15 }}>
-                <IconButton style={{backgroundColor: 'rgb(40, 168, 69)'}} onClick={() => window.location.href = '/'} className={classes.iconButton}>
+              <div className={styles.sectionDesktop} style={{ marginLeft: 'auto', fontSize:15 }}>
+                <IconButton style={{backgroundColor: 'rgb(40, 168, 69)'}} onClick={() => window.location.href = '/'} className={styles.iconButton}>
                   <HomeIcon />
                 </IconButton>
-                <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/create'} className={classes.iconButton}>
+                <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/create'} className={styles.iconButton}>
                   <IoIosAddCircle />
                 </IconButton>
-                <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/made'} className={classes.iconButton}>
+                <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/made'} className={styles.iconButton}>
                   <BuildIcon />
                 </IconButton>
-                <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/voted'} className={classes.iconButton}>
+                <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/voted'} className={styles.iconButton}>
                   <ThumbUpAltIcon />
                 </IconButton>
-                <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/liked'} className={classes.iconButton}>
+                <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/liked'} className={styles.iconButton}>
                   <FavoriteIcon />
                 </IconButton>
               </div>
@@ -223,9 +223,16 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     marginLeft: 5,
   },
+  buttonStyle: {
+    fontSize: 12, 
+    outline: 'none', 
+    color: 'white',
+  },
   grow: {
-    height: 50,
-    backgroundColor: 'red',
+    height: 44,
+    // backgroundColor: '#FF3333',
+    // backgroundColor: 'red',
+    backgroundColor: '#ff4500',
     display: 'flex',
     justifyContent: 'center',
   },

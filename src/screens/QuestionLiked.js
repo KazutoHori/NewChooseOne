@@ -51,7 +51,7 @@ export default function QuestionLiked (props) {
           { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
         ]}
       />
-      <h3 className={styles.title}>Questions You Like</h3>
+      <p className={styles.title}>Questions You Like</p>
       {questions !== null && questions.length === 0
         ?
         <pre>   There are no questions you like.</pre>
@@ -67,6 +67,7 @@ const useStyles = makeStyles(() => createStyles({
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
+    fontSize: 24,
   },
   '@media (max-width: 500px)': {
     title: {

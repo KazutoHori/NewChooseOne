@@ -46,13 +46,13 @@ export default function Home (props) {
   return (
     <Fragment>
       <div style={styles.left_side}>
-        <h5 style={styles.semiTitle} className='cali'>Categories</h5>
+        <h4 style={styles.semiTitle} className='cali'>Categories</h4>
         <ul>
           {categories.map((cate, idx) => (
             <li><a className='cali2' style={{ color: tabColors[idx] }} id="left{idx}" href={'/category/'+cate}>{cate}</a></li>
           ))}
         </ul>
-        <h5 style={styles.semiTitle} className='cali'>Today's Ranking</h5>
+        <h4 style={styles.semiTitle} className='cali'>Today's Ranking</h4>
         {todaysRanking.map((question, idx) => (
           <div className="side_question">
             <div className="title">
@@ -104,7 +104,7 @@ const styles = {
     marginRight: 30,
     backgroundColor: 'white',
     borderRadius: 15,
-    paddingTop: 15,
+    paddingTop: 5,
     paddingBottom: 15,
     height: 'fit-content',
   },

@@ -48,7 +48,13 @@ export default function App (props) {
 
 const useStyles = makeStyles(() => createStyles({
   main_list: {
-    width: 630,
+    width: 660,
     height: 'auto',
   },
+
+  '@media(max-width: 778px)': {
+    main_list: {
+      width: '100%',
+    }
+  }
 }));
