@@ -146,7 +146,7 @@ export default function QuestionList (props) {
           )}
           {notLoaded && <Skeleton style={{ marginLeft: 10 }} width={60} />}
         </p>
-        <h4 style={{ fontSize: 21 }} className='cali2'><a className={styles.link} href={'/q/'+the_question.slug}>{!notLoaded ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={'80%'} height={20}  /></SkeletonTheme> }</a></h4>
+        <h4 style={{ fontSize: 19 }} className='cali2'><a className={styles.link} href={'/q/'+the_question.slug}>{!notLoaded ? the_question.title : <SkeletonTheme color="white" highlightColor="#d3d3d3"><Skeleton duration={2.5} width={'80%'} height={20}  /></SkeletonTheme> }</a></h4>
 
         <div className={styles.choices} style={{ paddingLeft: smallDisplay && answered && 0, paddingRight: !smallDisplay && answered && 35 }}>
           <ul style={{ paddingLeft: 0 }}>
@@ -156,6 +156,8 @@ export default function QuestionList (props) {
                   <Fragment>
                     {the_question.choices.map((choice,idx) => (
                       <div>
+                        {/* <label for="choice{idx}">○ {choice.choice_text}</label>
+                        <br></br> */}
                         <StyledButton variant="outlined" onClick={() => onChoice(idx)} size="small" color="primary">
                           {choice.choice_text}
                         </StyledButton>
@@ -233,10 +235,10 @@ const useStyles = makeStyles(() => createStyles({
 const StyledButton = withStyles({
   root: {
     borderRadius: 7,
-    borderColor: '#808080', 
+    borderColor: '#696969', 
     borderWidth: 0.1,
-    color: '#808080', 
-    fontSize: 14, 
+    color: '#696969', 
+    fontSize: 11, 
     width: Math.min(200, window.innerWidth*0.5),
     textTransform: 'none',
     margin: 2,
