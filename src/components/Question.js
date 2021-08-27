@@ -31,21 +31,21 @@ if (!getApps().length){
   db = getFirestore();
 }
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: 'rgb(3, 122, 255)',
-    },
-    secondary: {
-      main: '#f50057',
-    },
-    green: {
-      main: 'rgb(40, 168, 69)',
-    }
-  },
-});
-
 export default function QuestionList (props) {
+
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: 'rgb(3, 122, 255)',
+      },
+      secondary: {
+        main: '#f50057',
+      },
+      green: {
+        main: 'rgb(40, 168, 69)',
+      }
+    },
+  });
 
   const uid = localStorage.getItem('chooseoneUid');
   // const [your_vote, setYourVote] = useState(null);
@@ -235,9 +235,9 @@ const useStyles = makeStyles(() => createStyles({
 const StyledButton = withStyles({
   root: {
     borderRadius: 7,
-    borderColor: '#696969', 
+    borderColor: '#808080', 
     borderWidth: 0.1,
-    color: '#696969', 
+    color: '#808080', 
     fontSize: 11, 
     width: Math.min(200, window.innerWidth*0.5),
     textTransform: 'none',
