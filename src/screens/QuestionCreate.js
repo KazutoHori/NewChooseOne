@@ -16,9 +16,8 @@ import { WindMillLoading } from 'react-loadingg';
 import { Helmet } from "react-helmet";
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/auth";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, arrayUnion, updateDoc, collection, query, where, getDocs, doc, setDoc } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -29,8 +28,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 var allCategories = ['Love', 'News', 'Sports', 'Pastime', 'Health', 'Living', 'Career', 'Academics', 'IT'];
 var tabColors = ['#ff69b4']
@@ -121,35 +125,33 @@ export default function QuestionCreate (props) {
 
     setVoting(true);
 
-    var how_many=0;
-    await db.collection('questions').get().then(snap => {
-      how_many = snap.size
-    });
+    var how_many = await getDocs(query(collection(db, 'questions')));
+    how_many = how_many.docs.length;
 
     var slug=slugify(finalTitle);
     if(slug === '') slug=finalTitle;
 
     var rep=0;
-    await db.collection('questions').where('slug', '==', slug).get().then(snap => {
-      rep=snap.size
-    });
+
+    const sameQ = await getDocs(query(collection(db, 'questions'), where('slug', '==', slug)));
+    rep = sameQ.docs.length;
+
     while(rep !== 0) {
       rep=rep+1;
       var conc = '___'.concat(rep);
       var now_slug=slug.concat(conc);
-      // eslint-disable-next-line no-loop-func
-      db.collection('questions').where('slug', '==', slug).get().then(snap => {
-        if(snap.size === 0){
-          slug = now_slug;
-          rep = 0;
-        }
-      });
+      
+      const sameQ = await getDocs(query(collection(db, 'questions'), where('slug', '==', now_slug)));
+      if(sameQ.docs.length === 0){
+        slug = now_slug;
+        rep = 0;
+      }
     }
 
     let current=new Date();
     current=current.toJSON();
     var day = timeToDay(current.slice(0, 10));
-    let new_question = {
+    var new_question = {
       id: how_many+1,
       title: finalTitle,
       author: uid,
@@ -166,10 +168,10 @@ export default function QuestionCreate (props) {
       SUQ: ifSuperUser,
     }
 
-    db.collection('questions').doc(slug).set(new_question);
+    await setDoc(doc(db, 'questions', slug), new_question);
 
-    await db.collection('users').doc(uid).update({
-      question_created: firebase.firestore.FieldValue.arrayUnion(slug)
+    await updateDoc(doc(db, 'users', uid), {
+      question_created: arrayUnion(slug),
     });
 
     window.location.href = "/q/" + slug;

@@ -5,9 +5,8 @@ import InfiniteScroll  from "react-infinite-scroller"
 import QuestionList from '../components/QuestionList.js';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/auth";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, orderBy, limit, startAfter, getDocs } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -18,8 +17,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 
 export default function Home () {
@@ -31,19 +35,23 @@ export default function Home () {
 
   useEffect(() => {
     if(questions.length !== 0) return null;
-    db.collection("questions").orderBy('created_at', 'desc').limit(10).get().then((docs) => {
+
+    const q = query(collection(db, 'questions'), orderBy('created_at', 'desc'), limit(10));
+    const promiseD = new Promise(function(resolve, reject) {
+      resolve(getDocs(q));
+    });
+    promiseD.then((qq) => {
       var ques = [];
-      docs.forEach((doc) => {
+      Promise.all(qq.docs.map(async doc => {
         ques.push(doc.data());
         if(ques.length === 10) setLast(doc);
-      });
-      setQuestions(ques);
+      })).then(() => {
+        setQuestions(ques);
+      })
     });
 
     if(end === null){
-      db.collection("questions").orderBy('created_at', 'asc').limit(1).get().then((doc) => {
-        setEnd(doc);
-      })
+      setEnd(query(collection(db, 'questions'), orderBy('created_at', 'asc'), limit(1)));
     }
   });
 
@@ -51,24 +59,15 @@ export default function Home () {
     var more = true;
     setHasMore(false);
 
-    await db.collection("questions").orderBy('created_at', 'desc').startAfter(last).limit(10).get().then((docs) => {
-      
-      const promise = new Promise(function(resolve, reject) {
-        var ques = [];
-        docs.forEach((doc) => {
-          ques.push(doc.data());
-          if(doc === end || ques.length === 10) {
-            if(doc === end) more = false;
-            setLast(doc);
-            resolve(ques);
-          }
-        })
-      });
-
-      promise.then((next) => {
-        setQuestions(questions.concat(next));
-      });
-    });
+    const next = await getDocs(query(collection(db, 'questions'), orderBy('created_at', 'desc'), startAfter(last), limit(10)));
+    var ques = [];
+    await Promise.all(next.docs.map(async doc => {
+      ques.push(doc.data());
+      if(doc === end || ques.length === 10) {
+        if(doc === end) more = false;
+        setLast(doc);
+      }
+    })).then(() => setQuestions(questions.concat(ques)));
 
     if(more) setHasMore(true);
     else setHasMore(false);

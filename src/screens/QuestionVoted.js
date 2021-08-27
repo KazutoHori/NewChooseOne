@@ -4,9 +4,8 @@ import { makeStyles, createStyles } from '@material-ui/core';
 import { Helmet } from "react-helmet";
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/auth";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, getDoc, doc } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -17,8 +16,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 export default function QuestionVoted (props) {
 
@@ -31,22 +35,23 @@ export default function QuestionVoted (props) {
   const styles = useStyles();
 
   useEffect(() => {
-    if (uid === null || questions !== null) return null;
-
-    db.collection("users").doc(uid).get().then((doc) => {
-      if(doc.exists){
-        var qs = doc.data().question_voted || [];
-        if(qs.length === 0) setQuestions([]);
+    const u = doc(db, 'users', uid);
+    const promise = new Promise((function(resolve) {
+      resolve(getDoc(u));
+    }));
+    promise.then((user) => {
+      if(user.exists()){
+        var qs = user.data().question_voted || [];
         const promises = qs.map((q) => {
-          return db.collection('questions').doc(q.question).get();
+          return getDoc(doc(db, 'questions', q.question));
         })
         Promise.all(promises).then((docs) => {
-          const data = docs.reverse().filter((doc) => doc.exists).map((doc) => doc.data())
+          const data = docs.reverse().filter((doc) => doc.exists()).map((doc) => doc.data())
           setQuestions(data);
         })
       }
-    });
-  });
+    })
+  }, []);
 
   return (
     <Fragment>

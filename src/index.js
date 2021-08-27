@@ -12,7 +12,6 @@ import { AiOutlinePlus } from "react-icons/ai";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import BuildIcon from '@material-ui/icons/Build';
 import { Fab, Action } from 'react-tiny-fab';
-// import Container from '@material-ui/core/Container';
 
 import Header from './components/Header';
 import SmallHeader from './components/SmallHeader';
@@ -21,9 +20,8 @@ import QuestionDetail from './screens/QuestionDetail';
 import './App.scss';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/auth";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -34,8 +32,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 export default function Routing () {
 
@@ -45,31 +48,28 @@ export default function Routing () {
 
   const [firstTime, setFirstTime] = useState(true);
 
-  const makeNewUser = () => {
+  const makeNewUser = async () => {
     let current=new Date();
     current=current.toJSON();
-    firebase.auth().signInAnonymously().then(() => {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          var userId = user.uid;
-          localStorage.setItem('chooseoneUid', userId);
-          var at = current.slice(0, 10)+ ' ' + current.slice(11, 19);
+    var at = current.slice(0, 10)+ ' ' + current.slice(11, 19);
 
-          var new_user = {
-            email: '',
-            uid: userId,
-            created_at: at,
-            question_voted: [],
-            question_created: [],
-            question_liked: [],
-            username: '',
-          };
-          db.collection('users').doc(userId).set(new_user);
-          setFirstTime(false);
-        }
-      });          
+    const promise = new Promise(function(resolve) {
+      const ref = addDoc(collection(db, 'users'), {
+        email: '',
+        created_at: at,
+        question_voted: [],
+        question_created: [],
+        question_liked: [],
+        username: '',
+      });
+      resolve(ref);
+    });
+    promise.then((ref) => {
+      localStorage.setItem('chooseoneUid', ref.id);
+    }).then(() => {
+      // setDoc(doc(db, 'users', ref.id), { uid: ref.id }, { merge: true });
+      setFirstTime(false);
     })
-
   }
 
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function Routing () {
             <Header />
           }
           
-          <div className={styles.wrapper}>
+          <div className={styles.wrapper} style={{ paddingTop: smallDisplay && 40 }}>
             <div className={!smallDisplay ? 'container' : ''}>
               <div className={styles.container}>
                 <Switch>
@@ -214,3 +214,6 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 // reportWebVitals();
+
+
+

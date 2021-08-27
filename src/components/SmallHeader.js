@@ -18,8 +18,8 @@ import { BsFillAwardFill } from 'react-icons/bs';
 import logoSmall from '../ChooseOne60.png';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, collection, orderBy, limit, query as firebaseQuery, getDocs } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -30,8 +30,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
@@ -65,14 +70,20 @@ export default function SmallHeader (props) {
   useEffect(() => {
     if(questions.length !== 0) return null;
 
-    db.collection('questions').orderBy('all_votes', 'desc').limit(3).get().then((docs) => {
-      var ques = [];
-      docs.forEach(q => {
-        ques.push(q.data());
-      });
-      setQuestions(ques);
+    const q = firebaseQuery(collection(db, 'questions'), orderBy('all_votes', 'desc'), limit(3));
+    const promise = new Promise(function(resolve) {
+      resolve(getDocs(q));
     });
-  });
+    promise.then((qq) => {
+      var ques = [];
+      Promise.all(qq.docs.map(doc => {
+        ques.push(doc.data());
+        return null;
+      })).then(() => {
+        setQuestions(ques);
+      });
+    })
+  }, []);
 
   const onSubmitSearch = (event) => {
     if(query.length === 0) return null;
@@ -272,6 +283,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 3,
   },
   grow: {
+    position: 'fixed',
+    width: '100%',
     height: 40,
     // backgroundColor: '#FF3333',
     backgroundColor: '#ff4500',

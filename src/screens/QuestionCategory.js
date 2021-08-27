@@ -6,9 +6,8 @@ import { makeStyles, createStyles } from '@material-ui/core';
 import QuestionList from '../components/QuestionList.js';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/auth";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs, orderBy, limit, startAfter } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -19,9 +18,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
-
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 export default function QuestionCategory (props) {
 
@@ -34,19 +37,23 @@ export default function QuestionCategory (props) {
 
   useEffect(() => {
     if(questions.length !== 0) return null;
-    db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').limit(10).get().then((docs) => {
+
+    const q = query(collection(db, 'questions'), where('category', 'array-contains', category), orderBy('created_at', 'desc'), limit(10));
+    const promise = new Promise(function(resolve, reject) {
+      resolve(getDocs(q));
+    });
+    promise.then((qq) => {
       var ques = [];
-      docs.forEach((doc) => {
+      Promise.all(qq.docs.map(async doc => {
         ques.push(doc.data());
         if(ques.length === 10) setLast(doc);
-      });
-      setQuestions(ques);
+      })).then(() => {
+        setQuestions(ques);
+      })
     });
 
     if(end === null){
-      db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'asc').limit(1).get().then((doc) => {
-        setEnd(doc);
-      })
+      setEnd(query(collection(db, 'questions'), where('category', 'array-contains', category), orderBy('created_at', 'asc'), limit(1)));
     }
   });
 
@@ -54,24 +61,15 @@ export default function QuestionCategory (props) {
     var more = true;
     setHasMore(false);
 
-    await db.collection("questions").where('category', 'array-contains', category).orderBy('created_at', 'desc').startAfter(last).limit(10).get().then((docs) => {
-      
-      const promise = new Promise(function(resolve, reject) {
-        var ques = [];
-        docs.forEach((doc) => {
-          ques.push(doc.data());
-          if(doc === end || ques.length === 10) {
-            if(doc === end) more = false;
-            setLast(doc);
-            resolve(ques);
-          }
-        })
-      });
-
-      promise.then((next) => {
-        setQuestions(questions.concat(next));
-      });
-    });
+    const next = await getDocs(query(collection(db, 'questions'), where('category', 'array-contains', category), orderBy('created_at', 'desc'), startAfter(last), limit(10)));
+    var ques = [];
+    await Promise.all(next.docs.map(async doc => {
+      ques.push(doc.data());
+      if(doc === end || ques.length === 10) {
+        if(doc === end) more = false;
+        setLast(doc);
+      }
+    })).then(() => setQuestions(questions.concat(ques)));
 
     if(more) setHasMore(true);
     else setHasMore(false);
@@ -85,7 +83,7 @@ export default function QuestionCategory (props) {
           { name: 'description', content: 'ChooseOne lets you have access to general understandings through user-interactive questions. The more you vote, the more you can influence the results, and it can be helpful to all the people who want to know the results.' }
         ]}
       />
-      <h3 className={styles.title}>Questions Categorized as {category}</h3>
+      <p className={styles.title}>Questions Categorized as {category}</p>
       <InfiniteScroll
         loadMore={loadMore}
         hasMore={hasMore}
@@ -103,6 +101,7 @@ const useStyles = makeStyles(() => createStyles({
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
+    fontSize: 24,
   },
 
   '@media (max-width: 500px)': {

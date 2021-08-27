@@ -3,8 +3,8 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { timeToDay } from '../utils/Funcs.js';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -15,8 +15,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 var categories = ['Love', 'News', 'Sports', 'Pastime', 'Health', 'Living', 'Career', 'Academics', 'IT'];
 var tabColors = ['#ff69b4']
@@ -25,23 +30,27 @@ for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 export default function Home (props) {
 
   const [todaysRanking, setTodaysRanking] = useState([]);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if(loaded) return null;
-    setLoaded(true);
     let current=new Date();
     current=current.toJSON();
     var today = timeToDay(current.slice(0, 10));
 
-    db.collection('questions').where('created_on', '==', today).orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
-      var ques = [];
-      docs.forEach(q => {
-        ques.push(q.data());
-      });
-      setTodaysRanking(ques);
+    const q = query(collection(db, 'questions'), where('created_on', '==', today), orderBy('all_votes', 'desc'), limit(10));
+
+    const promise = new Promise(function(resolve, reject) {
+      resolve(getDocs(q));
     });
-  });
+    promise.then((qq) => {
+      var ques = [];
+      Promise.all(qq.docs.map(doc => {
+        ques.push(doc.data());
+        return null;
+      })).then(() => {
+        setTodaysRanking(ques);
+      });
+    })
+  }, [todaysRanking]);
   
   return (
     <Fragment>

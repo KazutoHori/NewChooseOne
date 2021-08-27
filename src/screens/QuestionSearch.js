@@ -7,9 +7,8 @@ import { Helmet } from "react-helmet";
 import QuestionList from '../components/QuestionList.js';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/auth";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -20,8 +19,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 
 export default function QuestionSearch (props) {
@@ -34,15 +38,20 @@ export default function QuestionSearch (props) {
 
   useEffect(() => {
     if(results !== null) return null;
-    db.collection("questions").get().then((querySnapshot) => {
-      var ques = [];
-      querySnapshot.forEach((doc) => {
-        var question = doc.data();
+
+    const promise = new Promise(function(resolve) {
+      resolve(getDocs(collection(db, 'questions')))
+    })
+    var ques = [];
+    promise.then((qq) => {
+      Promise.all(qq.docs.map(que => {
+        var question = que.data();
         if(question.slug.includes('___')) var slug = question.slug.split('___')[0];
         else var slug = question.slug;
         var titleWords = slug.split('-');
-        if(titleWords.includes(q))ques.unshift(question);
-        else{
+        if(titleWords.includes(q)) {
+          ques.unshift(question);
+        }else{
           for(var i=0; i<question.choices.length; i++){
             var c = question.choices[i].choice_text.toLowerCase().split(' ');
             if(c.includes(q)){ 
@@ -51,15 +60,17 @@ export default function QuestionSearch (props) {
             }
           }
         }
-      }); 
-      setResults(ques); 
-    });
+        return null;
+      }));
+    }).then(() => {
+      setResults(ques);
+    })
   });
 
   if(results === null){
     return (
       <Fragment>
-        <h3 className={styles.title}>Search Results</h3>
+        <p className={styles.title}>Search Results</p>
         <div><pre>      Searching...</pre></div>
         <div className={styles.loadingPos}>
           <WindMillLoading className={styles.loadingPos} speed={1.2} size={smallDisplay ? 'small' : 'large'} />
@@ -93,6 +104,7 @@ const useStyles = makeStyles(() => createStyles({
     fontFamily: 'lust-script, sans-serif',
     fontStyle: 'normal',
     fontWeight: 700,
+    fontSize: 24,
   },
   loadingPos: {
     marginTop: 50,

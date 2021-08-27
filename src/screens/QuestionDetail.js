@@ -12,7 +12,7 @@ import { WindMillLoading } from 'react-loadingg';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Helmet } from "react-helmet";
 import { Wave } from "react-animated-text";
-
+import InfiniteScroll  from "react-infinite-scroller"
 
 import QuestionList from '../components/QuestionList';
 import ModalDelete from '../components/ModalDelete';
@@ -20,9 +20,9 @@ import PieChart from '../components/PieChart';
 import BarChart from '../components/BarChart';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-import "firebase/auth";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, updateDoc, increment, collection, deleteDoc, startAfter, arrayRemove, arrayUnion, query, 
+      where, getDoc, doc, getDocs, orderBy, limit } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -33,8 +33,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
@@ -67,6 +72,9 @@ export default function QuestionDetail (props) {
   var choicesSorted = [];
   const [relatedQues, setRelatedQues] = useState([]);
   const [answered, setAnswered] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [end, setEnd] = useState(null);
+  const [last, setLast] = useState(null);
 
   const loaded = relatedQues.length !== 0;
   const styles = useStyles();
@@ -82,6 +90,9 @@ export default function QuestionDetail (props) {
     }
   }
 
+  const questionRef = doc(db, 'questions', the_slug);
+  const userRef = user !== null ? doc(db, 'users', uid) : '';
+
   // QuestionDetail
   const [warning, setWarning] = useState(null);
   const [the_choice, setTheChoice] = useState(null);
@@ -94,9 +105,13 @@ export default function QuestionDetail (props) {
     if(uid === null || user !== null) return null;
 
     if(user === null){
-      db.collection('users').doc(uid).get().then((doc) => {
-        if(doc.exists){
-          var the_user = doc.data()
+      const u = doc(db, 'users', uid);
+      const promise = new Promise(function(resolve) {
+        resolve(getDoc(u));
+      })
+      promise.then((us) => {
+        if(us.exists){
+          var the_user = us.data();
           setUser(the_user);
 
           if (the_user.question_liked.includes(the_slug)){
@@ -121,22 +136,54 @@ export default function QuestionDetail (props) {
       })
     }
 
-    db.collection('questions').doc(the_slug).get().then((doc) => {
+    const qu = doc(db, 'questions', the_slug);
+    const promiseD = new Promise(function(resolve, reject) {
+      resolve(getDoc(qu));
+    })
+    promiseD.then((doc) => {
       if(doc.exists){
-        db.collection('questions').where('category', 'array-contains-any', doc.data().category).orderBy('created_at', 'desc').limit(30).get().then(docs => {
-          var questionSimilar = [];
-          docs.forEach(doc => {
-            if(doc.data().slug !== the_slug) questionSimilar.push(doc.data());
-          });
-          setRelatedQues(questionSimilar);
-        })
         setTheQuestion(doc.data());
+        const ques = query(collection(db, 'questions'), where('category', 'array-contains-any', doc.data().category), orderBy('created_at', 'desc'), limit(10));
+        const promiseDD = new Promise(function(resolve) {
+          resolve(getDocs(ques));
+        })
+        
+        promiseDD.then(qq => {
+          var questionSimilar = [];
+          Promise.all(qq.docs.map(async doc => {
+            questionSimilar.push(doc.data());
+            if(questionSimilar.length === 10) setLast(doc);
+          })).then(() => {
+            setRelatedQues(questionSimilar);
+          });
+        })
       }else{
         window.location.href = '/';
       }
     });
 
+    if(end === null){
+      setEnd(query(collection(db, 'questions'), orderBy('created_at', 'asc'), limit(1)));
+    }
   });
+
+  const loadMore = async () => {
+    var more = true;
+    setHasMore(false);
+
+    const next = await getDocs(query(collection(db, 'questions'), where('category', 'array-contains-any', the_question.category), orderBy('created_at', 'desc'), startAfter(last), limit(10)));
+    var ques = [];
+    await Promise.all(next.docs.map(async doc => {
+      ques.push(doc.data());
+      if(doc === end || ques.length === 10) {
+        if(doc === end) more = false;
+        setLast(doc);
+      }
+    })).then(() => setRelatedQues(relatedQues.concat(ques)));
+
+    if(more) setHasMore(true);
+    else setHasMore(false);
+  }
 
   const onChoice = async (idx) => {
     const the_choice = idx;
@@ -152,49 +199,43 @@ export default function QuestionDetail (props) {
     
     setTheQuestion(copy.__proto__);
 
-    await db.collection('questions').doc(the_slug).update({
-      choices: copy.choices
+    await updateDoc(questionRef, {
+      choices: copy.choices,
+      all_votes: increment(1),
+      users_voted: arrayUnion(uid),
     });
 
-    await db.collection('questions').doc(the_slug).update({
-      all_votes: firebase.firestore.FieldValue.increment(1)
+    await updateDoc(userRef, {
+      question_voted: arrayUnion({ question: the_slug, answer: your_vote }),
     })
-
-    await db.collection('users').doc(user.uid).update({
-      question_voted: firebase.firestore.FieldValue.arrayUnion({ question: the_slug, answer: your_vote}) },
-    );
-
-    await db.collection('questions').doc(the_slug).update({
-      users_voted: firebase.firestore.FieldValue.arrayUnion(user.uid) },
-    );
   }
 
-  const onLikeit = () => {
+  const onLikeit = async () => {
     if(likeIt){
       setLikeIt(false);
-      db.collection("users").doc(user.uid).update({
-        question_liked: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
+      await updateDoc(userRef, {
+        question_liked: arrayRemove(the_question.slug),
       });
-      db.collection("questions").doc(the_question.slug).update({
-        likes: firebase.firestore.FieldValue.increment(-1)
+      await updateDoc(questionRef, {
+        likes: increment(-1),
       });
       setTheQuestion({ ...the_question, likes: the_question.likes-1 });
     }else{
       setLikeIt(true);
-      db.collection("users").doc(user.uid).update({
-        question_liked: firebase.firestore.FieldValue.arrayUnion(the_question.slug)
+      await updateDoc(userRef, {
+        question_liked: arrayUnion(the_question.slug),
       });
-      db.collection("questions").doc(the_question.slug).update({
-        likes: firebase.firestore.FieldValue.increment(1)
+      await updateDoc(questionRef, {
+        likes: increment(1),
       });
       setTheQuestion({ ...the_question, likes: the_question.likes+1 })
     }
   }
 
   const onDelete = async () => {
-    await db.collection("questions").doc(the_question.slug).delete();
-    await db.collection("users").doc(user.uid).update({
-      question_created: firebase.firestore.FieldValue.arrayRemove(the_question.slug)
+    await deleteDoc(questionRef);
+    await updateDoc(userRef, {
+      question_created: arrayRemove(the_question.slug),
     })
 
     window.location.href = "/";
@@ -364,7 +405,15 @@ export default function QuestionDetail (props) {
               <div>
                 <h3 className={styles.mayLike}>Questions You May Like</h3>
                 <div className={styles.similarPostsPos}>
-                  {relatedQues.length !== 0 && <QuestionList questions={relatedQues} />}
+                  <InfiniteScroll
+                    loadMore={loadMore}
+                    hasMore={hasMore}
+                    threshold={500}
+                    loader={<div></div> }
+                  >
+                    {relatedQues.length !== 0 && <QuestionList questions={relatedQues} />}
+                  </InfiniteScroll>
+                  
                   {relatedQues.length === 0 && <WindMillLoading style={{ position: 'relative', marginTop: 50, marginLeft: 50,}} color='rgb(39, 169, 68)' speed={1.2} size='large' />}
                 </div>
               </div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, Fragment } from 'react';
 
 // Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
+import { getApps, initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
   authDomain: "chooseone-105a9.firebaseapp.com",
@@ -13,9 +13,13 @@ const firebaseConfig = {
   appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
   measurementId: "G-YJ97DZH6V5"
 };
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
-
+var db = '';
+if (!getApps().length){ 
+  const firebaseApp = initializeApp(firebaseConfig);
+  db = getFirestore(firebaseApp);
+}else{
+  db = getFirestore();
+}
 export default function RightBar (props) {
 
   const [questionPopular, setQuestionPopular] = useState([]);
@@ -23,14 +27,21 @@ export default function RightBar (props) {
   useEffect(() => {
     if(questionPopular.length !== 0) return null;
 
-    db.collection('questions').orderBy('all_votes', 'desc').limit(10).get().then((docs) => {
-      var ques = [];
-      docs.forEach(q => {
-        ques.push(q.data());
-      });
-      setQuestionPopular(ques);
+    const q = query(collection(db, 'questions'), orderBy('all_votes', 'desc'), limit(10));
+
+    const promise = new Promise(function(resolve, reject) {
+      resolve(getDocs(q));
     });
-  });
+    promise.then((qq) => {
+      var ques = [];
+      Promise.all(qq.docs.map(doc => {
+        ques.push(doc.data());
+        return null;
+      })).then(() => {
+        setQuestionPopular(ques);
+      });
+    });
+  }, [questionPopular]);
 
   return (
     <Fragment>

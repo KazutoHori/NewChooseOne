@@ -23,22 +23,6 @@ import logo from '../ChooseOne1.png';
 import logoSmall from '../ChooseOne60.png';
 import logoMedium from '../ChooseOne80.png';
 
-// Firebase
-import firebase from 'firebase/app';
-import "firebase/firestore";
-const firebaseConfig = {
-  apiKey: "AIzaSyArjDv3hS4_rw1YyNz-JFXDX1ufF72bqr8",
-  authDomain: "chooseone-105a9.firebaseapp.com",
-  databaseURL: "https://chooseone-default-rtdb.firebaseio.com",
-  projectId: "chooseone",
-  storageBucket: "chooseone.appspot.com",
-  messagingSenderId: "722704825746",
-  appId: "1:722704825746:web:73f11551b9e59f4bc2d54b",
-  measurementId: "G-YJ97DZH6V5"
-};
-if (firebase.apps.length === 0){ firebase.initializeApp(firebaseConfig); }
-var db = firebase.firestore();
-
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
@@ -137,13 +121,13 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div>
-      <AppBar className={styles.grow} position="static">
+      <AppBar className={styles.grow} style={{ height: smallerThan900 ? 35 : smallerThan1200 ? 40 : 44 }} position="static">
         <div className={!smallDisplay && 'container'}>
           <Toolbar style={{ padding: 0 }}>
             {smallerThan900 && <a href="/" className={styles.logo}><img src={logoSmall} alt="ChooseOne" /></a>}
             {!smallerThan900 &&  smallerThan1200 && <a href="/" className={styles.logo}><img src={logoMedium} alt="ChooseOne" /></a>}
             {!smallerThan1200 && <a href="/" className={styles.logo}><img src={logo} alt="ChooseOne" /></a>}
-            <div className={styles.search}>
+            <div className={styles.search} style={{ height: smallerThan900 ? 28 : smallerThan1200 ? '60%' : '80%' }} >
               <div className={styles.searchIcon}>
                 <SearchIcon />
               </div>
@@ -180,19 +164,19 @@ export default function PrimarySearchAppBar() {
               :
               <div className={styles.sectionDesktop} style={{ marginLeft: 'auto', fontSize:15 }}>
                 <IconButton style={{backgroundColor: 'rgb(40, 168, 69)'}} onClick={() => window.location.href = '/'} className={styles.iconButton}>
-                  <HomeIcon />
+                  <HomeIcon style={{ fontSize: 18 }} />
                 </IconButton>
                 <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/create'} className={styles.iconButton}>
-                  <IoIosAddCircle />
+                  <IoIosAddCircle style={{ fontSize: 18 }} />
                 </IconButton>
                 <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/made'} className={styles.iconButton}>
-                  <BuildIcon />
+                  <BuildIcon style={{ fontSize: 18 }} />
                 </IconButton>
                 <IconButton style={{backgroundColor: 'rgb(255, 192, 8)'}} onClick={() => window.location.href = '/voted'} className={styles.iconButton}>
-                  <ThumbUpAltIcon />
+                  <ThumbUpAltIcon style={{ fontSize: 18 }} />
                 </IconButton>
                 <IconButton style={{backgroundColor: 'rgb(3, 122, 255)'}} onClick={() => window.location.href = '/liked'} className={styles.iconButton}>
-                  <FavoriteIcon />
+                  <FavoriteIcon style={{ fontSize: 18 }} />
                 </IconButton>
               </div>
             }
@@ -229,7 +213,6 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
   },
   grow: {
-    height: 44,
     // backgroundColor: '#FF3333',
     // backgroundColor: 'red',
     backgroundColor: '#ff4500',
@@ -274,6 +257,8 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create('width'),
     color: 'white',
     width: '100%',
+    paddingTop: 1,
+    fontSize: 15,
   },
   sectionDesktop: {
     display: 'flex',
