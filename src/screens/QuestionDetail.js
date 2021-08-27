@@ -597,18 +597,11 @@ const useStyles = makeStyles(() => createStyles({
 
 const StyledButton = withStyles({
   root: {
-    borderRadius: 7,
     borderColor: 'rgb(3, 122, 255)', 
     color: 'rgb(3, 122, 255)', 
     fontSize: 11, 
     borderRadius: 15, 
     width: Math.min(300, window.innerWidth*0.6),
-
-    '&focus': {
-      borderColor: 'yellow',
-    }
-  },
-  cate: {
-    textTransform: 'capitalize',
+    textTransform: 'none',
   },
 })(Button);

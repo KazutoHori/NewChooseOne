@@ -48,7 +48,7 @@ export default function Home () {
       })).then(() => {
         setQuestions(ques);
       })
-    });
+    }, []);
 
     if(end === null){
       setEnd(query(collection(db, 'questions'), orderBy('created_at', 'asc'), limit(1)));
