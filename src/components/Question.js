@@ -3,6 +3,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import { Bar } from 'react-chartjs-2';
 
@@ -175,9 +176,11 @@ export default function QuestionList (props) {
         </div>
         <div className={styles.more}>
           <ThemeProvider theme={theme}>
-            <Button variant='contained' onClick={() => window.location.href = '/q/'+the_question.slug } color="primary">
-              More
-            </Button>
+            <ButtonGroup size={smallDisplay ? 'small' : 'default'} disableElevation variant="contained" >
+              <Button variant='contained' onClick={() => window.location.href = '/q/'+the_question.slug } color="primary">
+                More
+              </Button>
+            </ButtonGroup>
           </ThemeProvider>
         </div>
       </div>
@@ -232,8 +235,8 @@ const useStyles = makeStyles(() => createStyles({
 const StyledButton = withStyles({
   root: {
     borderRadius: 7,
-    borderColor: '#d3d3d3', 
-    borderWidth: 0.01,
+    borderColor: '#696969', 
+    borderWidth: 0.1,
     color: '#696969', 
     fontSize: 11, 
     width: Math.min(200, window.innerWidth*0.5),
