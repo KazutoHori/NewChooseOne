@@ -48,14 +48,14 @@ export default function QuestionList (props) {
 
   const uid = localStorage.getItem('chooseoneUid');
   // const [your_vote, setYourVote] = useState(null);
-  const [answered, setAnswered] = useState(null);
+  const [answered, setAnswered] = useState(false);
   const styles = useStyles();
   var l = [];
   var v = [];
   var c = [];
 
   const the_question = props.the_question;
-  const notLoaded = (the_question.category === null || the_question.category === undefined || answered === null);
+  const notLoaded = (the_question.category === null || the_question.category === undefined);
   const smallDisplay = useMediaQuery('(max-width:500px)');
   var choiceSkeleton = [];
 
@@ -99,24 +99,20 @@ export default function QuestionList (props) {
 
         if(the_user.question_voted.some((q) => q.question === the_question.slug)){
           setAnswered(true);
-        }else{
-          setAnswered(false);
         }
       }
     });
   });
 
   const onChoice = async (idx) => {
-    const the_choice = idx;
-
     var the_slug = the_question.slug;
-    var your_vote = the_question.choices[the_choice].choicse_text;
+    var your_vote = the_question.choices[idx].choice_text;
 
     setAnswered(true);
 
     var copy = Object.create(the_question);
 
-    copy.choices[the_choice].votes=parseInt(copy.choices[the_choice].votes, 10)+1;
+    copy.choices[idx].votes=parseInt(copy.choices[idx].votes, 10)+1;
     
 
     await updateDoc(doc(db, 'questions', the_question.slug), {

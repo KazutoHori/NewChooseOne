@@ -41,19 +41,6 @@ if (!getApps().length){
 var tabColors = ['#ff69b4']
 for(var i=1; i<11; i++) tabColors.push('hsla('+(i*100)+', 75%, 55%, 1)');
 
-function ElevationScroll(props) {
-  const { children, window } = props;
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0,
-    target: window ? window() : undefined,
-  });
-
-  return React.cloneElement(children, {
-    elevation: trigger ? 4 : 0,
-  });
-}
-
 export default function SmallHeader (props) {
   
   const [query, setQuery] = useState('');

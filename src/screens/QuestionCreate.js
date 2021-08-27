@@ -158,7 +158,7 @@ export default function QuestionCreate (props) {
       category: categories,
       slug: slug,
       created_on: day,
-      created_at: current.slice(0, 10)+current.slice(11, 19),
+      created_at: current.slice(0, 10)+' '+current.slice(11, 19),
       choices: new_choices,
       comments: [],
       users_voted: [],
