@@ -13,7 +13,14 @@ import InfoIcon from '@material-ui/icons/Info';
 import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 import HomeIcon from '@material-ui/icons/Home';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import { BsFillAwardFill } from 'react-icons/bs';
+import { BsFillAwardFill, BsMusicNoteBeamed } from 'react-icons/bs';
+import { BiNews } from 'react-icons/bi';
+import { AiFillHeart } from 'react-icons/ai';
+import { FcSportsMode } from 'react-icons/fc';
+import { MdWork } from 'react-icons/md';
+import { IoIosSchool } from 'react-icons/io';
+import { RiComputerFill } from 'react-icons/ri';
+import { GiSofa, GiHealthPotion } from 'react-icons/gi';
 
 import logoSmall from '../ChooseOne60.png';
 
@@ -106,15 +113,15 @@ export default function SmallHeader (props) {
       open={isCategoryMenuOpen}
       onClose={handleCategoryMenuClose}
     >
-      <MenuItem style={{color: tabColors[0] }} onClick={() => window.location.href = '/category/Love'}>Love</MenuItem>
-      <MenuItem style={{color: tabColors[1] }} onClick={() => window.location.href = '/category/News'}>News</MenuItem>
-      <MenuItem style={{color: tabColors[2] }} onClick={() => window.location.href = '/category/Sports'}>Sports</MenuItem>
-      <MenuItem style={{color: tabColors[3] }} onClick={() => window.location.href = '/category/Pastime'}>Pastime</MenuItem>
-      <MenuItem style={{color: tabColors[4] }} onClick={() => window.location.href = '/category/Health'}>Health</MenuItem>
-      <MenuItem style={{color: tabColors[5] }} onClick={() => window.location.href = '/category/Living'}>Living</MenuItem>
-      <MenuItem style={{color: tabColors[6] }} onClick={() => window.location.href = '/category/Career'}>Career</MenuItem>
-      <MenuItem style={{color: tabColors[7] }} onClick={() => window.location.href = '/category/'}>Academics</MenuItem>
-      <MenuItem style={{color: tabColors[8] }} onClick={() => window.location.href = '/category/IT'}>IT</MenuItem>
+      <MenuItem style={{color: tabColors[0] }} className={styles.cateItem} onClick={() => window.location.href = '/category/Love'}><AiFillHeart style={{ fontSize: 15, marginRight: 3 }} />Love</MenuItem>
+      <MenuItem style={{color: tabColors[1] }} className={styles.cateItem} onClick={() => window.location.href = '/category/News'}><BiNews style={{ fontSize: 17, marginRight: 3 }} />News</MenuItem>
+      <MenuItem style={{color: tabColors[2] }} className={styles.cateItem} onClick={() => window.location.href = '/category/Sports'}><FcSportsMode style={{ fontSize: 17, marginRight: 3 }} />Sports</MenuItem>
+      <MenuItem style={{color: tabColors[3] }} className={styles.cateItem} onClick={() => window.location.href = '/category/Pastime'}><BsMusicNoteBeamed style={{ fontSize: 17, marginRight: 3 }} />Pastime</MenuItem>
+      <MenuItem style={{color: tabColors[4] }} className={styles.cateItem} onClick={() => window.location.href = '/category/Health'}><GiHealthPotion style={{ fontSize: 17, marginRight: 3 }} />Health</MenuItem>
+      <MenuItem style={{color: tabColors[5] }} className={styles.cateItem} onClick={() => window.location.href = '/category/Living'}><GiSofa style={{ fontSize: 17, marginRight: 3 }} />Living</MenuItem>
+      <MenuItem style={{color: tabColors[6] }} className={styles.cateItem} onClick={() => window.location.href = '/category/Career'}><MdWork style={{ fontSize: 17, marginRight: 3 }}/>Career</MenuItem>
+      <MenuItem style={{color: tabColors[7] }} className={styles.cateItem} onClick={() => window.location.href = '/category/'}><IoIosSchool style={{ fontSize: 17, marginRight: 3 }} />Academics</MenuItem>
+      <MenuItem style={{color: tabColors[8] }} className={styles.cateItem} onClick={() => window.location.href = '/category/IT'}><RiComputerFill style={{ fontSize: 17, marginRight: 3 }}/>IT</MenuItem>
     </Menu>
   );
 
@@ -259,6 +266,13 @@ export default function SmallHeader (props) {
 }
 
 const useStyles = makeStyles((theme) => ({
+  cateItem: {
+    fontSize: 11, 
+    // justifyContent: 'center', 
+    paddingTop: 0, 
+    paddingBottom: 0,
+    marginRight: -6,
+  },
   menuItemFont: {
     margin: 0,
     fontSize: 14,
